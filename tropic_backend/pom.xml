@@ -12,5 +12,6 @@
     <module>tropic_backend-ejb</module>
     <module>tropic_backend_client-ejb</module>
     <module>tropic_backend_sql-ejb</module>
+    <module>tropic_base</module>
   </modules>
 </project>

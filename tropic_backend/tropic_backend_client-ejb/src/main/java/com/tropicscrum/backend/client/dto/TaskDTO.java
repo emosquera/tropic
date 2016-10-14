@@ -26,6 +26,7 @@ public class TaskDTO extends GeneralDTO{
     private GeneralStatus status;
     private UserDTO authorDTO;
     private List<UserEstimateDTO> userEstimateDTOs;
+    private List<TaskProgressDTO> taskProgressDTOs;
 
     public String getContent() {
         return content;
@@ -100,6 +101,17 @@ public class TaskDTO extends GeneralDTO{
 
     public void setUserEstimateDTOs(List<UserEstimateDTO> userEstimateDTOs) {
         this.userEstimateDTOs = userEstimateDTOs;
+    }
+
+    public List<TaskProgressDTO> getTaskProgressDTOs() {
+        if (taskProgressDTOs == null) {
+            taskProgressDTOs = new ArrayList<>();
+        }
+        return taskProgressDTOs;
+    }
+
+    public void setTaskProgressDTOs(List<TaskProgressDTO> taskProgressDTOs) {
+        this.taskProgressDTOs = taskProgressDTOs;
     }
     
     @Override

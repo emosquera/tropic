@@ -5,6 +5,7 @@
  */
 package com.tropicscrum.backend.client.dto;
 
+import com.tropicscrum.backend.client.enums.Gender;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,6 +21,7 @@ public class UserDTO extends GeneralDTO{
     private String email;
     private String password;
     private String avatar;
+    private Gender gender;
     private List<ProjectDTO> projectDTOs;    
 
     public String getFirstName() {
@@ -61,6 +63,14 @@ public class UserDTO extends GeneralDTO{
     public void setAvatar(String Avatar) {
         this.avatar = Avatar;
     } 
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
     
     public List<ProjectDTO> getProjectDTOs() {
         if (projectDTOs == null) {

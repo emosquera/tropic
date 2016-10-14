@@ -20,7 +20,7 @@
     </properties>
 
     <dependencies>
-        <dependency>
+<!--        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.oracle</artifactId>
             <version>2.5.2</version>
@@ -79,6 +79,11 @@
             <artifactId>javax.persistence</artifactId>
             <version>SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>tropic_backend_client-ejb</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
@@ -136,12 +141,5 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>
-    <repositories>
-        <repository>
-            <id>unknown-jars-temp-repo</id>
-            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
-            <url>file:${project.basedir}/lib</url>
-        </repository>
-    </repositories>
+    </build>    
 </project>

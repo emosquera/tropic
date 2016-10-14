@@ -23,6 +23,7 @@ public class SprintUserDTO extends GeneralDTO{
     private ScrumRole role;
     private Boolean createTask;
     private List<UserScheduleDTO> userScheduleDTOs;
+    private List<TaskProgressDTO> taskProgressDTOs;
 
     public SprintDTO getSprintDTO() {
         return sprintDTO;
@@ -73,6 +74,17 @@ public class SprintUserDTO extends GeneralDTO{
 
     public void setUserScheduleDTOs(List<UserScheduleDTO> userScheduleDTOs) {
         this.userScheduleDTOs = userScheduleDTOs;
+    }
+
+    public List<TaskProgressDTO> getTaskProgressDTOs() {
+        if (taskProgressDTOs == null) {
+            taskProgressDTOs = new ArrayList<>();
+        }
+        return taskProgressDTOs;
+    }
+
+    public void setTaskProgressDTOs(List<TaskProgressDTO> taskProgressDTOs) {
+        this.taskProgressDTOs = taskProgressDTOs;
     }
     
     @Override
