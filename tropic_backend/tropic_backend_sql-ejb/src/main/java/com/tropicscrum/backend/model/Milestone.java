@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.model;
 
-import com.tropicscrum.backend.client.dto.ProjectDTO;
+import com.tropicscrum.backend.client.dto.MilestoneDTO;
 import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
 import com.tropicscrum.backend.listener.BasicAttributeListener;
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -29,16 +28,17 @@ import javax.persistence.Version;
  * @author syslife02
  */
 @Entity
-@Table(name = "project")
+@Table(name = "milestone")
 @EntityListeners(BasicAttributeListener.class)
-public class Project extends ProjectDTO implements BasicAttributesFacade {
+public class Milestone extends MilestoneDTO implements BasicAttributesFacade {
+
+    private List<Task> tasks;
 
     private static final long serialVersionUID = 1L;
-    private BasicAttributes basicAttributes;     
+    private BasicAttributes basicAttributes;
     private Users author;
-    private List<History> histories;
-    private List<Users> collaborators;
-        
+    private History history;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     public Users getAuthor() {
@@ -51,28 +51,20 @@ public class Project extends ProjectDTO implements BasicAttributesFacade {
     public void setAuthor(Users author) {
         this.author = author;
     }
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Override
-    public Long getId() {
-        return super.getId(); //To change body of generated methods, choose Tools | Templates.
-    }    
 
-    @Column(name = "description")
-    @Override
-    public String getDescription() {
-        return super.getDescription(); //To change body of generated methods, choose Tools | Templates.
+    @ManyToOne
+    @JoinColumn(name = "history_id")
+    public History getHistory() {
+        if (history == null) {
+            return new History();
+        }
+        return history;
     }
 
-    @Version
-    @Column(name = "version")
-    @Override
-    public Integer getVersion() {
-        return super.getVersion(); //To change body of generated methods, choose Tools | Templates.
+    public void setHistory(History history) {
+        this.history = history;
     }
-    
+
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
@@ -83,30 +75,26 @@ public class Project extends ProjectDTO implements BasicAttributesFacade {
         this.basicAttributes = basicAttributes;
     }
 
-    @OneToMany(mappedBy = "project")
-    public List<History> getHistories() {
-        if (histories == null) {
-            return new ArrayList<>();
-        }
-        return histories;
+    @Override
+    public String getMilestone() {
+        return super.getMilestone(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Version
+    @Column(name = "version")
+    @Override    
+    public Integer getVersion() {
+        return super.getVersion(); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void setHistories(List<History> histories) {
-        this.histories = histories;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @Override
+    public Long getId() {
+        return super.getId(); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @ManyToMany
-    public List<Users> getCollaborators() {
-        if (collaborators == null) {
-            return new ArrayList<>();
-        }
-        return collaborators;
-    }
-
-    public void setCollaborators(List<Users> collaborators) {
-        this.collaborators = collaborators;
-    }
-            
+        
     @Override
     public int hashCode() {
         int hash = 0;
@@ -117,19 +105,28 @@ public class Project extends ProjectDTO implements BasicAttributesFacade {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Project)) {
+        if (!(object instanceof Milestone)) {
             return false;
         }
-        Project other = (Project) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        Milestone other = (Milestone) object;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "com.tropicscrum.backend.model.Project[ id=" + id + " ]";
+        return "com.tropicscrum.backend.model.Milestone[ id=" + id + " ]";
+    }
+
+    @OneToMany(mappedBy = "milestone")
+    public List<Task> getTasks() {
+        if (tasks == null) {
+            return new ArrayList<>();
+        }
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
     
 }

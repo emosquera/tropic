@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author syslife02
  */
 @XmlRootElement(name = "user_estimate")
-public class UserEstimateDTO {
+public class UserEstimateDTO extends GeneralDTO{
     private SprintUserDTO sprintUserDTO;
     private TaskDTO taskDTO;
     private int points;
@@ -44,7 +44,8 @@ public class UserEstimateDTO {
     @Override
     public String toString() {
         return new StringBuilder().
-                append("UserEstimateDTO{sprintUserDTO = ").append(sprintUserDTO.toString()).
+                append("UserEstimateDTO{id = ").append(this.id).
+                append(", sprintUserDTO = ").append(sprintUserDTO.toString()).
                 append(", taskDTO = ").append(taskDTO.toString()).
                 append(", points = ").append(points).
                 append('}').toString();

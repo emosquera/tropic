@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tropicscrum.backend.facade;
+package com.tropicscrum.backend.sql.facade;
 
-import com.tropicscrum.backend.model.Users;
+import com.tropicscrum.backend.model.History;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author syslife02
  */
 @Stateless
-public class UsersFacade extends AbstractFacade<Users> implements UsersFacadeLocal {
+public class HistoryFacade extends AbstractFacade<History> implements HistoryFacadeLocal {
 
     @PersistenceContext(unitName = "tropic_backend_PU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class UsersFacade extends AbstractFacade<Users> implements UsersFacadeLoc
         return em;
     }
 
-    public UsersFacade() {
-        super(Users.class);
+    public HistoryFacade() {
+        super(History.class);
     }
     
 }

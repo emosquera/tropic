@@ -7,7 +7,7 @@ package com.tropicscrum.backend.model;
 
 import com.tropicscrum.backend.client.dto.UserDTO;
 import com.tropicscrum.backend.client.enums.Gender;
-import com.tropicscrum.backend.facade.BasicAttributesFacade;
+import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
 import com.tropicscrum.backend.listener.BasicAttributeListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -33,6 +34,10 @@ import javax.persistence.Version;
 @Table(name = "users")
 @EntityListeners(BasicAttributeListener.class)
 public class Users extends UserDTO implements BasicAttributesFacade {
+
+    private List<SprintUser> sprintUsers;
+
+    private List<Project> projects_collaborator;
 
     private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes; 
@@ -133,5 +138,40 @@ public class Users extends UserDTO implements BasicAttributesFacade {
     public void setProjects(List<Project> projects) {
         this.projects = projects;
     }
+
+    @ManyToMany(mappedBy = "collaborators")
+    public List<Project> getProjects_collaborator() {
+        if (projects_collaborator == null) {
+            return new ArrayList<>();
+        }
+        return projects_collaborator;
+    }
+
+    public void setProjects_collaborator(List<Project> projects_collaborator) {
+        this.projects_collaborator = projects_collaborator;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public List<SprintUser> getSprintUsers() {
+        if (sprintUsers == null) {
+            return new ArrayList<>();
+        }
+        return sprintUsers;
+    }
+
+    public void setSprintUsers(List<SprintUser> sprintUsers) {
+        this.sprintUsers = sprintUsers;
+    }
+
+    public Users() {
+    }
     
+    public Users(UserDTO userDTO) {
+        super.setId(userDTO.getId());
+        super.setFirstName(userDTO.getFirstName());
+        super.setLastName(userDTO.getLastName());
+        super.setGender(userDTO.getGender());
+        super.setAvatar(userDTO.getAvatar());
+        super.setPassword(userDTO.getPassword());        
+    }
 }

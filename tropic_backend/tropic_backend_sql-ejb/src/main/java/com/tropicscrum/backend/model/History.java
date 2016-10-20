@@ -7,8 +7,10 @@ package com.tropicscrum.backend.model;
 
 import com.tropicscrum.backend.client.dto.HistoryDTO;
 import com.tropicscrum.backend.client.enums.GeneralStatus;
-import com.tropicscrum.backend.facade.BasicAttributesFacade;
+import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
 import com.tropicscrum.backend.listener.BasicAttributeListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -19,7 +21,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -31,6 +35,8 @@ import javax.persistence.Table;
 @EntityListeners(BasicAttributeListener.class)
 public class History extends HistoryDTO implements BasicAttributesFacade {
 
+    private List<Sprint> sprints;
+    private List<Milestone> milestones;
     private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private Project project;
@@ -119,6 +125,30 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
     @Override
     public String toString() {
         return "com.tropicscrum.backend.model.History[ id=" + id + " ]";
+    }
+
+    @OneToMany(mappedBy = "history")
+    public List<Milestone> getMilestones() {
+        if (milestones == null) {
+            return new ArrayList<>();
+        }
+        return milestones;
+    }
+
+    public void setMilestones(List<Milestone> milestones) {
+        this.milestones = milestones;
+    }
+
+    @ManyToMany(mappedBy = "histories")
+    public List<Sprint> getSprints() {
+        if (sprints == null) {
+            return new ArrayList<>();
+        }
+        return sprints;
+    }
+
+    public void setSprints(List<Sprint> sprints) {
+        this.sprints = sprints;
     }
     
 }

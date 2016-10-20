@@ -23,6 +23,7 @@ public class UserDTO extends GeneralDTO{
     private String avatar;
     private Gender gender;
     private List<ProjectDTO> projectDTOs;    
+    private List<ProjectDTO> projects_collaboratorDTOs;
 
     public String getFirstName() {
         return firstName;
@@ -85,6 +86,17 @@ public class UserDTO extends GeneralDTO{
     
     public String getName() {
         return new StringBuilder().append(firstName).append(" ").append(lastName).toString();
+    }
+
+    public List<ProjectDTO> getProjects_collaboratorDTOs() {
+        if (projects_collaboratorDTOs == null) {
+            return new ArrayList<>();
+        }
+        return projects_collaboratorDTOs;
+    }
+
+    public void setProjects_collaboratorDTOs(List<ProjectDTO> projects_collaboratorDTOs) {
+        this.projects_collaboratorDTOs = projects_collaboratorDTOs;
     }
     
     @Override

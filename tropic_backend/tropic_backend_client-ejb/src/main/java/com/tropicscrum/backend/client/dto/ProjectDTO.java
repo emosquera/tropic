@@ -19,7 +19,7 @@ public class ProjectDTO extends GeneralDTO{
     private String description;
     private UserDTO authorDTO;
     private List<HistoryDTO> historyDTOs;
-    private List<CollaboratorDTO> collaboratorDTOs;
+    private List<UserDTO> collaboratorDTOs;
 
     public String getDescription() {
         return description;
@@ -48,14 +48,14 @@ public class ProjectDTO extends GeneralDTO{
         this.historyDTOs = historyDTOs;
     }
 
-    public List<CollaboratorDTO> getCollaboratorDTOs() {
+    public List<UserDTO> getCollaboratorDTOs() {
         if (collaboratorDTOs == null) {
             collaboratorDTOs = new ArrayList<>();
         }
         return collaboratorDTOs;
     }
 
-    public void setCollaboratorDTOs(List<CollaboratorDTO> collaboratorDTOs) {
+    public void setCollaboratorDTOs(List<UserDTO> collaboratorDTOs) {
         this.collaboratorDTOs = collaboratorDTOs;
     }
     

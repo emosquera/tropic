@@ -1,0 +1,35 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.tropicscrum.backend.client.facade;
+
+import com.tropicscrum.backend.client.dto.UserScheduleDTO;
+import com.tropicscrum.base.locator.ServiceVerifier;
+import java.util.List;
+import javax.ejb.Remote;
+
+/**
+ *
+ * @author syslife02
+ */
+
+@Remote
+public interface UserScheduleFacadeRemote extends ServiceVerifier {
+    public final String JNDI_REMOTE_NAME = "ejb/userScheduleFacadeRemote";
+    
+    UserScheduleDTO create(UserScheduleDTO userScheduleDTO);
+
+    UserScheduleDTO edit(UserScheduleDTO userScheduleDTO);
+
+    void remove(UserScheduleDTO userScheduleDTO);
+
+    UserScheduleDTO find(Object id);
+
+    List<UserScheduleDTO> findAll();
+
+    List<UserScheduleDTO> findRange(int[] range);
+
+    int count();
+}

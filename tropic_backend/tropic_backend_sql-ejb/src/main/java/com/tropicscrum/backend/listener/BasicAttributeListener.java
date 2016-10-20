@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.listener;
 
-import com.tropicscrum.backend.facade.BasicAttributesFacade;
+import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 

@@ -22,6 +22,7 @@ public class HistoryDTO extends GeneralDTO{
     private UserDTO authorDTO;
     private GeneralStatus status;
     private List<SprintDTO> sprintDTOs;
+    private List<MilestoneDTO> milestoneDTOs;
 
     public String getTitle() {
         return title;
@@ -40,6 +41,9 @@ public class HistoryDTO extends GeneralDTO{
     }
 
     public ProjectDTO getProjectDTO() {
+        if (projectDTO == null) {
+            return new ProjectDTO();
+        }
         return projectDTO;
     }
 
@@ -48,6 +52,9 @@ public class HistoryDTO extends GeneralDTO{
     }
 
     public UserDTO getAuthorDTO() {
+        if (authorDTO == null) {
+            return new UserDTO();
+        }
         return authorDTO;
     }
 
@@ -72,6 +79,17 @@ public class HistoryDTO extends GeneralDTO{
 
     public void setSprintDTOs(List<SprintDTO> sprintDTOs) {
         this.sprintDTOs = sprintDTOs;
+    }
+
+    public List<MilestoneDTO> getMilestoneDTOs() {
+        if (milestoneDTOs == null) {
+            milestoneDTOs = new ArrayList<>();
+        }
+        return milestoneDTOs;
+    }
+
+    public void setMilestoneDTOs(List<MilestoneDTO> milestoneDTOs) {
+        this.milestoneDTOs = milestoneDTOs;
     }
     
     @Override

@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.client.dto;
 
-import java.sql.Time;
+import java.util.Calendar;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,8 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class UserScheduleDTO extends GeneralDTO {
     private SprintUserDTO sprintUserDTO;
     private int dayOfWeek;
-    private Time start;
-    private Time end;
+    private Calendar start;
+    private Calendar end;
 
     public SprintUserDTO getSprintUserDTO() {
         return sprintUserDTO;
@@ -35,19 +35,19 @@ public class UserScheduleDTO extends GeneralDTO {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public Time getStart() {
+    public Calendar getStart() {
         return start;
     }
 
-    public void setStart(Time start) {
+    public void setStart(Calendar start) {
         this.start = start;
     }
 
-    public Time getEnd() {
+    public Calendar getEnd() {
         return end;
     }
 
-    public void setEnd(Time end) {
+    public void setEnd(Calendar end) {
         this.end = end;
     }
     
