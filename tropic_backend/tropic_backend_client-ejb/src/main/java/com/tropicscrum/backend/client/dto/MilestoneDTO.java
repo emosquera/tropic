@@ -48,6 +48,9 @@ public class MilestoneDTO extends GeneralDTO{
     }
 
     public UserDTO getAuthorDTO() {
+        if (authorDTO == null) {
+            authorDTO = new UserDTO();
+        }
         return authorDTO;
     }
 

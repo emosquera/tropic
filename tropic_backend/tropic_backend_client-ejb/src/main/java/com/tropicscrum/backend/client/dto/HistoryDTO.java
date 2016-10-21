@@ -42,7 +42,7 @@ public class HistoryDTO extends GeneralDTO{
 
     public ProjectDTO getProjectDTO() {
         if (projectDTO == null) {
-            return new ProjectDTO();
+            projectDTO = new ProjectDTO();
         }
         return projectDTO;
     }
@@ -53,7 +53,7 @@ public class HistoryDTO extends GeneralDTO{
 
     public UserDTO getAuthorDTO() {
         if (authorDTO == null) {
-            return new UserDTO();
+            authorDTO = new UserDTO();
         }
         return authorDTO;
     }

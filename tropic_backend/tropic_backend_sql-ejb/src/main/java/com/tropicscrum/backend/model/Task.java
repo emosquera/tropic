@@ -40,7 +40,6 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
 
     private List<UserEstimate> userEstimates;
 
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private Milestone milestone;
     private Users author;
@@ -97,7 +96,7 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
     @JoinColumn(name = "milestone_id")
     public Milestone getMilestone() {
         if (milestone == null) {
-            return new Milestone();
+            milestone = new Milestone();
         }
         return milestone;
     }
@@ -110,7 +109,7 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
     @JoinColumn(name = "user_id")
     public Users getAuthor() {
         if (author == null) {
-            return new Users();
+            author = new Users();
         }
         return author;
     }
@@ -123,7 +122,7 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
     @JoinColumn(name = "sprint_id")
     public Sprint getSprint() {
         if (sprint == null) {
-            return new Sprint();
+            sprint = new Sprint();
         }
         return sprint;
     }
@@ -157,9 +156,13 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
     
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -179,7 +182,7 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "task")
     public List<TaskProgress> getTaskProgresss() {
         if (taskProgresss == null) {
-            return new ArrayList<>();
+            taskProgresss = new ArrayList<>();
         }
         return taskProgresss;
     }

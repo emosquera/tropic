@@ -32,8 +32,6 @@ import javax.persistence.Version;
 @Table(name = "project")
 @EntityListeners(BasicAttributeListener.class)
 public class Project extends ProjectDTO implements BasicAttributesFacade {
-
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;     
     private Users author;
     private List<History> histories;
@@ -43,7 +41,7 @@ public class Project extends ProjectDTO implements BasicAttributesFacade {
     @JoinColumn(name = "user_id")
     public Users getAuthor() {
         if (author == null) {
-            return new Users();
+            author = new Users();
         }
         return author;
     }
@@ -76,9 +74,13 @@ public class Project extends ProjectDTO implements BasicAttributesFacade {
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -86,7 +88,7 @@ public class Project extends ProjectDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "project")
     public List<History> getHistories() {
         if (histories == null) {
-            return new ArrayList<>();
+            histories = new ArrayList<>();
         }
         return histories;
     }
@@ -98,7 +100,7 @@ public class Project extends ProjectDTO implements BasicAttributesFacade {
     @ManyToMany
     public List<Users> getCollaborators() {
         if (collaborators == null) {
-            return new ArrayList<>();
+            collaborators = new ArrayList<>();
         }
         return collaborators;
     }

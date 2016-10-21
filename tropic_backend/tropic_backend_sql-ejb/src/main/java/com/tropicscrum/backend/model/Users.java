@@ -37,18 +37,20 @@ public class Users extends UserDTO implements BasicAttributesFacade {
 
     private List<SprintUser> sprintUsers;
 
-    private List<Project> projects_collaborator;
-
-    private static final long serialVersionUID = 1L;
+    private List<Project> projectsCollaborator;
     private BasicAttributes basicAttributes; 
     private List<Project> projects;
 
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
-    }
-
+    }   
+    
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -85,7 +87,7 @@ public class Users extends UserDTO implements BasicAttributesFacade {
         return super.getLastName(); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Column(name = "fisrt_name")
+    @Column(name = "first_name")
     @Override
     public String getFirstName() {
         return super.getFirstName(); //To change body of generated methods, choose Tools | Templates.
@@ -130,7 +132,7 @@ public class Users extends UserDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "author")
     public List<Project> getProjects() {
         if (projects == null) {
-            return new ArrayList<>();
+            projects = new ArrayList<>();
         }
         return projects;
     }
@@ -140,21 +142,21 @@ public class Users extends UserDTO implements BasicAttributesFacade {
     }
 
     @ManyToMany(mappedBy = "collaborators")
-    public List<Project> getProjects_collaborator() {
-        if (projects_collaborator == null) {
-            return new ArrayList<>();
+    public List<Project> getProjectsCollaborator() {
+        if (projectsCollaborator == null) {
+            projectsCollaborator = new ArrayList<>();
         }
-        return projects_collaborator;
+        return projectsCollaborator;
     }
 
-    public void setProjects_collaborator(List<Project> projects_collaborator) {
-        this.projects_collaborator = projects_collaborator;
+    public void setProjectsCollaborator(List<Project> projectsCollaborator) {
+        this.projectsCollaborator = projectsCollaborator;
     }
 
     @OneToMany(mappedBy = "user")
     public List<SprintUser> getSprintUsers() {
         if (sprintUsers == null) {
-            return new ArrayList<>();
+            sprintUsers = new ArrayList<>();
         }
         return sprintUsers;
     }
@@ -170,6 +172,7 @@ public class Users extends UserDTO implements BasicAttributesFacade {
         super.setId(userDTO.getId());
         super.setFirstName(userDTO.getFirstName());
         super.setLastName(userDTO.getLastName());
+        super.setEmail(userDTO.getEmail());
         super.setGender(userDTO.getGender());
         super.setAvatar(userDTO.getAvatar());
         super.setPassword(userDTO.getPassword());        

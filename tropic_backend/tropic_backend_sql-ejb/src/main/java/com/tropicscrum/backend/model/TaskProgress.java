@@ -34,7 +34,6 @@ import javax.persistence.Version;
 @EntityListeners(BasicAttributeListener.class)
 public class TaskProgress extends TaskProgressDTO implements BasicAttributesFacade {
 
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private SprintUser sprintUser;
     private Task task;
@@ -43,7 +42,7 @@ public class TaskProgress extends TaskProgressDTO implements BasicAttributesFaca
     @JoinColumn(name = "sprint_user_id")
     public SprintUser getSprintUser() {
         if (sprintUser == null) {
-            return new SprintUser();
+            sprintUser = new SprintUser();
         }
         return sprintUser;
     }
@@ -56,7 +55,7 @@ public class TaskProgress extends TaskProgressDTO implements BasicAttributesFaca
     @JoinColumn(name = "task_id")
     public Task getTask() {
         if (task == null) {
-            return new Task();
+            task = new Task();
         }
         return task;
     }
@@ -68,9 +67,13 @@ public class TaskProgress extends TaskProgressDTO implements BasicAttributesFaca
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }

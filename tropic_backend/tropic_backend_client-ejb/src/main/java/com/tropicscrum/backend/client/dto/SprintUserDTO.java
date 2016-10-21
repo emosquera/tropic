@@ -26,6 +26,9 @@ public class SprintUserDTO extends GeneralDTO{
     private List<TaskProgressDTO> taskProgressDTOs;
 
     public SprintDTO getSprintDTO() {
+        if (sprintDTO == null) {
+            sprintDTO = new SprintDTO();
+        }
         return sprintDTO;
     }
 
@@ -34,6 +37,9 @@ public class SprintUserDTO extends GeneralDTO{
     }
 
     public UserDTO getUserDTO() {
+        if (userDTO == null) {
+            userDTO = new UserDTO();
+        }
         return userDTO;
     }
 

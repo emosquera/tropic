@@ -36,9 +36,13 @@ public class UserEstimate extends UserEstimateDTO implements BasicAttributesFaca
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -68,7 +72,7 @@ public class UserEstimate extends UserEstimateDTO implements BasicAttributesFaca
     @JoinColumn(name = "sprint_user_id")
     public SprintUser getSprintUser() {
         if (sprintUser == null) {
-            return new SprintUser();
+            sprintUser = new SprintUser();
         }
         return sprintUser;
     }
@@ -81,7 +85,7 @@ public class UserEstimate extends UserEstimateDTO implements BasicAttributesFaca
     @JoinColumn(name = "task_id")
     public Task getTask() {
         if (task == null) {
-            return new Task();
+            task = new Task();
         }
         return task;
     }

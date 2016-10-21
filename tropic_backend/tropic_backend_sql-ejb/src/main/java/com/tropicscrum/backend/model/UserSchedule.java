@@ -8,8 +8,6 @@ package com.tropicscrum.backend.model;
 import com.tropicscrum.backend.client.dto.UserScheduleDTO;
 import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
 import com.tropicscrum.backend.listener.BasicAttributeListener;
-import java.io.Serializable;
-import java.sql.Time;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -33,7 +31,6 @@ import javax.persistence.Version;
 @EntityListeners(BasicAttributeListener.class)
 public class UserSchedule extends UserScheduleDTO implements BasicAttributesFacade {
 
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private SprintUser sprintUser;
 
@@ -41,7 +38,7 @@ public class UserSchedule extends UserScheduleDTO implements BasicAttributesFaca
     @JoinColumn(name = "sprint_user_id")
     public SprintUser getSprintUser() {
         if (sprintUser == null) {
-            return new SprintUser();
+            sprintUser = new SprintUser();
         }
         return sprintUser;
     }
@@ -53,9 +50,13 @@ public class UserSchedule extends UserScheduleDTO implements BasicAttributesFaca
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }

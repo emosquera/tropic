@@ -13,4 +13,5 @@ import com.tropicscrum.backend.model.BasicAttributes;
  */
 public interface BasicAttributesFacade {
     public BasicAttributes getBasicAttributes();
+    public void setBasicAttributes(BasicAttributes basicAttributes);
 }

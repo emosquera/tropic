@@ -33,8 +33,6 @@ import javax.persistence.Version;
 public class Milestone extends MilestoneDTO implements BasicAttributesFacade {
 
     private List<Task> tasks;
-
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private Users author;
     private History history;
@@ -43,7 +41,7 @@ public class Milestone extends MilestoneDTO implements BasicAttributesFacade {
     @JoinColumn(name = "user_id")
     public Users getAuthor() {
         if (author == null) {
-            return new Users();
+            author = new Users();
         }
         return author;
     }
@@ -56,7 +54,7 @@ public class Milestone extends MilestoneDTO implements BasicAttributesFacade {
     @JoinColumn(name = "history_id")
     public History getHistory() {
         if (history == null) {
-            return new History();
+            history = new History();
         }
         return history;
     }
@@ -68,9 +66,13 @@ public class Milestone extends MilestoneDTO implements BasicAttributesFacade {
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -120,7 +122,7 @@ public class Milestone extends MilestoneDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "milestone")
     public List<Task> getTasks() {
         if (tasks == null) {
-            return new ArrayList<>();
+            tasks = new ArrayList<>();
         }
         return tasks;
     }

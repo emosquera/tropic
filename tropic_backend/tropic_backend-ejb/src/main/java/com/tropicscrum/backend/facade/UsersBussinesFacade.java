@@ -27,9 +27,13 @@ public class UsersBussinesFacade implements UsersFacadeRemote {
 
     @Override
     public UserDTO create(UserDTO userDTO) {
-        Users user = new Users(userDTO);
-        usersFacadeLocal.create(user);
-        return user;
+        try {
+            Users user = new Users(userDTO);
+            usersFacadeLocal.create(user);
+            return user;
+        } catch (Exception ex) {
+            return new UserDTO();
+        }
     }
 
     @Override
@@ -46,8 +50,12 @@ public class UsersBussinesFacade implements UsersFacadeRemote {
 
     @Override
     public UserDTO find(Object id) {
-        Users user = usersFacadeLocal.find(id);
-        return user;
+        try {
+            Users user = usersFacadeLocal.find(id);
+            return user;
+        } catch (Exception ex) {
+            return new UserDTO();
+        }
     }
 
     @Override
@@ -65,4 +73,7 @@ public class UsersBussinesFacade implements UsersFacadeRemote {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public boolean isAlive() {
+        return true;
+    }              
 }

@@ -37,7 +37,6 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
 
     private List<Sprint> sprints;
     private List<Milestone> milestones;
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private Project project;
     private Users author;
@@ -45,9 +44,13 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -83,7 +86,7 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
     @JoinColumn(name = "project_id")
     public Project getProject() {
         if (project == null) {
-            return new Project();
+            project = new Project();
         }
         return project;
     }
@@ -96,7 +99,7 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
     @JoinColumn(name = "user_id")
     public Users getAuthor() {
         if (author == null) {
-            return new Users();
+            author = new Users();
         }
         return author;
     }
@@ -130,7 +133,7 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "history")
     public List<Milestone> getMilestones() {
         if (milestones == null) {
-            return new ArrayList<>();
+            milestones = new ArrayList<>();
         }
         return milestones;
     }
@@ -142,7 +145,7 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
     @ManyToMany(mappedBy = "histories")
     public List<Sprint> getSprints() {
         if (sprints == null) {
-            return new ArrayList<>();
+            sprints = new ArrayList<>();
         }
         return sprints;
     }

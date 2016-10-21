@@ -18,7 +18,7 @@ public class GeneralDTO implements Serializable{
     public Integer version; 
     private Calendar created;
     private Calendar modified;
-
+    
     public Long getId() {
         return id;
     }

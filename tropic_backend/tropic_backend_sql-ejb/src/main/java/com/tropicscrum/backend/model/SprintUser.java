@@ -41,8 +41,6 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
     private List<UserSchedule> userSchedules;
 
     private List<UserEstimate> userEstimates;
-
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private Sprint sprint;
     private Users user;
@@ -50,9 +48,13 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -96,7 +98,7 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
     @JoinColumn(name = "sprint_id")
     public Sprint getSprint() {
         if (sprint == null) {
-            return new Sprint();
+            sprint = new Sprint();
         }
         return sprint;
     }
@@ -109,7 +111,7 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
     @JoinColumn(name = "user_id")
     public Users getUser() {
         if (user == null) {
-            return new Users();
+            user = new Users();
         }
         return user;
     }
@@ -143,7 +145,7 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "sprintUser")
     public List<UserEstimate> getUserEstimates() {
         if (userEstimates == null) {
-            return new ArrayList<>();
+            userEstimates = new ArrayList<>();
         }
         return userEstimates;
     }
@@ -155,7 +157,7 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "sprintUser")
     public List<UserSchedule> getUserSchedules() {
         if (userSchedules == null) {
-            return new ArrayList<>();
+            userSchedules = new ArrayList<>();
         }
         return userSchedules;
     }
@@ -167,7 +169,7 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "sprintUser")
     public List<TaskProgress> getTaskProgresss() {
         if (taskProgresss == null) {
-            return new ArrayList<>();
+            taskProgresss = new ArrayList<>();
         }
         return taskProgresss;
     }

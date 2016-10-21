@@ -22,6 +22,9 @@ public class TaskProgressDTO extends GeneralDTO {
     private GeneralStatus finalStatus;
 
     public SprintUserDTO getSprintUserDTO() {
+        if (sprintUserDTO == null) {
+            sprintUserDTO = new SprintUserDTO();
+        }
         return sprintUserDTO;
     }
 
@@ -30,6 +33,9 @@ public class TaskProgressDTO extends GeneralDTO {
     }
 
     public TaskDTO getTaskDTO() {
+        if (taskDTO == null) {
+            taskDTO = new TaskDTO();
+        }
         return taskDTO;
     }
 

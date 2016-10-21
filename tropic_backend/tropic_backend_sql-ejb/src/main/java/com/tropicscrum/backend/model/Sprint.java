@@ -42,8 +42,6 @@ public class Sprint extends SprintDTO implements BasicAttributesFacade {
 
     private List<Task> tasks;
     private List<History> histories;
-
-    private static final long serialVersionUID = 1L;
     private BasicAttributes basicAttributes;
     private Users author;
 
@@ -51,7 +49,7 @@ public class Sprint extends SprintDTO implements BasicAttributesFacade {
     @JoinColumn(name = "user_id")
     public Users getAuthor() {
         if (author == null) {
-            return new Users();
+            author = new Users();
         }
         return author;
     }
@@ -63,9 +61,13 @@ public class Sprint extends SprintDTO implements BasicAttributesFacade {
     @Embedded
     @Override
     public BasicAttributes getBasicAttributes() {
+        if (basicAttributes == null) {
+            basicAttributes = new BasicAttributes();
+        }
         return basicAttributes;
     }
 
+    @Override
     public void setBasicAttributes(BasicAttributes basicAttributes) {
         this.basicAttributes = basicAttributes;
     }
@@ -130,7 +132,7 @@ public class Sprint extends SprintDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "sprint")
     public List<Task> getTasks() {
         if (tasks == null) {
-            return new ArrayList<>();
+            tasks = new ArrayList<>();
         }
         return tasks;
     }
@@ -142,7 +144,7 @@ public class Sprint extends SprintDTO implements BasicAttributesFacade {
     @ManyToMany
     public List<History> getHistories() {
         if (histories == null) {
-            return new ArrayList<>();
+            histories = new ArrayList<>();
         }
         return histories;
     }
@@ -154,7 +156,7 @@ public class Sprint extends SprintDTO implements BasicAttributesFacade {
     @OneToMany(mappedBy = "sprint")
     public List<SprintUser> getSprintUsers() {
         if (sprintUsers == null) {
-            return new ArrayList<>();
+            sprintUsers = new ArrayList<>();
         }
         return sprintUsers;
     }

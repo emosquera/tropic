@@ -20,6 +20,9 @@ public class UserScheduleDTO extends GeneralDTO {
     private Calendar end;
 
     public SprintUserDTO getSprintUserDTO() {
+        if (sprintUserDTO == null) {
+            sprintUserDTO = new SprintUserDTO();
+        }
         return sprintUserDTO;
     }
 

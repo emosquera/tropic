@@ -10,6 +10,7 @@ import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -22,7 +23,7 @@ public class BasicAttributes implements Serializable {
     private Calendar created;
     
     @Column(name = "modified")
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     public Calendar getModified() {
         return modified;
     }
@@ -32,7 +33,7 @@ public class BasicAttributes implements Serializable {
     }
 
     @Column(name = "created")
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     public Calendar getCreated() {
         return created;
     }

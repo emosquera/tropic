@@ -37,6 +37,9 @@ public class TaskDTO extends GeneralDTO{
     }
 
     public SprintDTO getSprintDTO() {
+        if (sprintDTO == null) {
+            sprintDTO = new SprintDTO();
+        }
         return sprintDTO;
     }
 
@@ -45,6 +48,9 @@ public class TaskDTO extends GeneralDTO{
     }
 
     public MilestoneDTO getMilestoneDTO() {
+        if (milestoneDTO == null) {
+            milestoneDTO = new MilestoneDTO();
+        }
         return milestoneDTO;
     }
 
@@ -85,6 +91,9 @@ public class TaskDTO extends GeneralDTO{
     }
 
     public UserDTO getAuthorDTO() {
+        if (authorDTO == null) {
+            authorDTO = new UserDTO();
+        }
         return authorDTO;
     }
 

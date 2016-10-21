@@ -18,6 +18,9 @@ public class UserEstimateDTO extends GeneralDTO{
     private int points;
 
     public SprintUserDTO getSprintUserDTO() {
+        if (sprintUserDTO == null) {
+            sprintUserDTO = new SprintUserDTO();
+        }
         return sprintUserDTO;
     }
 
@@ -26,6 +29,9 @@ public class UserEstimateDTO extends GeneralDTO{
     }
 
     public TaskDTO getTaskDTO() {
+        if (taskDTO == null) {
+            taskDTO = new TaskDTO();
+        }
         return taskDTO;
     }
 
