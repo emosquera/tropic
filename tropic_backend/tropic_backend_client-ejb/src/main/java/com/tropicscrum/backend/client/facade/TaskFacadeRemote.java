@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.TaskDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.Task;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface TaskFacadeRemote extends ServiceVerifier {
+public interface TaskFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/taskFacadeRemote";
     
-    TaskDTO create(TaskDTO taskDTO);
+    Task create(Task task);
 
-    TaskDTO edit(TaskDTO taskDTO);
+    Task edit(Task task);
 
-    void remove(TaskDTO taskDTO);
+    void remove(Task task);
 
-    TaskDTO find(Object id);
+    Task find(Object id);
 
-    List<TaskDTO> findAll();
+    List<Task> findAll();
 
-    List<TaskDTO> findRange(int[] range);
+    List<Task> findRange(int[] range);
 
     int count();
 }

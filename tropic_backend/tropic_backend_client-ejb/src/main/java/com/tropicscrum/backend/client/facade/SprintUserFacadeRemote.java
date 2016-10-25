@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.SprintUserDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.SprintUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface SprintUserFacadeRemote extends ServiceVerifier {
+public interface SprintUserFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/sprintUserFacadeRemote";
     
-    SprintUserDTO create(SprintUserDTO sprintUserDTO);
+    SprintUser create(SprintUser sprintUser);
 
-    SprintUserDTO edit(SprintUserDTO sprintUserDTO);
+    SprintUser edit(SprintUser sprintUser);
 
-    void remove(SprintUserDTO sprintUserDTO);
+    void remove(SprintUser sprintUser);
 
-    SprintUserDTO find(Object id);
+    SprintUser find(Object id);
 
-    List<SprintUserDTO> findAll();
+    List<SprintUser> findAll();
 
-    List<SprintUserDTO> findRange(int[] range);
+    List<SprintUser> findRange(int[] range);
 
     int count();
 }

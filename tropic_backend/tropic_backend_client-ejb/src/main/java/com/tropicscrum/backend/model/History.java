@@ -5,21 +5,13 @@
  */
 package com.tropicscrum.backend.model;
 
-import com.tropicscrum.backend.client.dto.HistoryDTO;
 import com.tropicscrum.backend.client.enums.GeneralStatus;
-import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
-import com.tropicscrum.backend.listener.BasicAttributeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -32,54 +24,41 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "history")
-@EntityListeners(BasicAttributeListener.class)
-public class History extends HistoryDTO implements BasicAttributesFacade {
-
+public class History extends BasicAttributes {
+    private String title;
+    private String content;
+    private GeneralStatus status;
     private List<Sprint> sprints;
     private List<Milestone> milestones;
-    private BasicAttributes basicAttributes;
     private Project project;
-    private Users author;
+    private User author;
 
-    @Embedded
-    @Override
-    public BasicAttributes getBasicAttributes() {
-        if (basicAttributes == null) {
-            basicAttributes = new BasicAttributes();
-        }
-        return basicAttributes;
+    @Column(name = "title")
+    public String getTitle() {
+        return title;
     }
 
-    @Override
-    public void setBasicAttributes(BasicAttributes basicAttributes) {
-        this.basicAttributes = basicAttributes;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Override
-    public Long getId() {
-        return super.getId(); //To change body of generated methods, choose Tools | Templates.
+    @Column(name = "content")
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    @Override
     public GeneralStatus getStatus() {
-        return super.getStatus(); //To change body of generated methods, choose Tools | Templates.
+        return status;
     }
 
-    @Column(name = "content")
-    @Override
-    public String getContent() {
-        return super.getContent(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Column(name = "title")
-    @Override
-    public String getTitle() {
-        return super.getTitle(); //To change body of generated methods, choose Tools | Templates.
+    public void setStatus(GeneralStatus status) {
+        this.status = status;
     }
 
     @ManyToOne
@@ -97,21 +76,21 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    public Users getAuthor() {
+    public User getAuthor() {
         if (author == null) {
-            author = new Users();
+            author = new User();
         }
         return author;
     }
 
-    public void setAuthor(Users author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
     
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (this.getId() != null ? this.getId().hashCode() : 0);
         return hash;
     }
 
@@ -122,12 +101,12 @@ public class History extends HistoryDTO implements BasicAttributesFacade {
             return false;
         }
         History other = (History) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        return !((this.getId() == null && other.getId() != null) || (this.getId() != null && !this.getId().equals(other.getId())));
     }
 
     @Override
     public String toString() {
-        return "com.tropicscrum.backend.model.History[ id=" + id + " ]";
+        return "com.tropicscrum.backend.model.History[ id=" + this.getId() + " ]";
     }
 
     @OneToMany(mappedBy = "history")

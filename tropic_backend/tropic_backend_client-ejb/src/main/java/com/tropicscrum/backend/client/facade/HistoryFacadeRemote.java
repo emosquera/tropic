@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.HistoryDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.History;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface HistoryFacadeRemote extends ServiceVerifier {
+public interface HistoryFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/historyFacadeRemote";
     
-    HistoryDTO create(HistoryDTO historyDTO);
+    History create(History history);
 
-    HistoryDTO edit(HistoryDTO historyDTO);
+    History edit(History history);
 
-    void remove(HistoryDTO historyDTO);
+    void remove(History history);
 
-    HistoryDTO find(Object id);
+    History find(Object id);
 
-    List<HistoryDTO> findAll();
+    List<History> findAll();
 
-    List<HistoryDTO> findRange(int[] range);
+    List<History> findRange(int[] range);
 
     int count();
 }

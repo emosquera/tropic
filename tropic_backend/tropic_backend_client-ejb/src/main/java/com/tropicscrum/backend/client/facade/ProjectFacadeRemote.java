@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.ProjectDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.Project;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface ProjectFacadeRemote extends ServiceVerifier {
+public interface ProjectFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/projectFacadeRemote";
     
-    ProjectDTO create(ProjectDTO projectDTO);
+    Project create(Project project);
 
-    ProjectDTO edit(ProjectDTO projectDTO);
+    Project edit(Project project);
 
-    void remove(ProjectDTO projectDTO);
+    void remove(Project project);
 
-    ProjectDTO find(Object id);
+    Project find(Object id);
 
-    List<ProjectDTO> findAll();
+    List<Project> findAll();
 
-    List<ProjectDTO> findRange(int[] range);
+    List<Project> findRange(int[] range);
 
     int count();
 }

@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.UserEstimateDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.UserEstimate;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface UserEstimateFacadeRemote extends ServiceVerifier {
+public interface UserEstimateFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/userEstimateFacadeRemote";
     
-    UserEstimateDTO create(UserEstimateDTO userEstimateDTO);
+    UserEstimate create(UserEstimate userEstimate);
 
-    UserEstimateDTO edit(UserEstimateDTO userEstimateDTO);
+    UserEstimate edit(UserEstimate userEstimate);
 
-    void remove(UserEstimateDTO userEstimateDTO);
+    void remove(UserEstimate userEstimate);
 
-    UserEstimateDTO find(Object id);
+    UserEstimate find(Object id);
 
-    List<UserEstimateDTO> findAll();
+    List<UserEstimate> findAll();
 
-    List<UserEstimateDTO> findRange(int[] range);
+    List<UserEstimate> findRange(int[] range);
 
     int count();
 }

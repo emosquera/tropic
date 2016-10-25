@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.UserScheduleDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.UserSchedule;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface UserScheduleFacadeRemote extends ServiceVerifier {
+public interface UserScheduleFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/userScheduleFacadeRemote";
     
-    UserScheduleDTO create(UserScheduleDTO userScheduleDTO);
+    UserSchedule create(UserSchedule userSchedule);
 
-    UserScheduleDTO edit(UserScheduleDTO userScheduleDTO);
+    UserSchedule edit(UserSchedule userSchedule);
 
-    void remove(UserScheduleDTO userScheduleDTO);
+    void remove(UserSchedule userSchedule);
 
-    UserScheduleDTO find(Object id);
+    UserSchedule find(Object id);
 
-    List<UserScheduleDTO> findAll();
+    List<UserSchedule> findAll();
 
-    List<UserScheduleDTO> findRange(int[] range);
+    List<UserSchedule> findRange(int[] range);
 
     int count();
 }

@@ -5,11 +5,12 @@
  */
 package com.tropicscrum.frontend.controllers.application;
 
-import com.tropicscrum.backend.client.delegate.UsersDelegate;
-import com.tropicscrum.backend.client.dto.UserDTO;
+import com.tropicscrum.backend.model.User;
 import com.tropicscrum.backend.client.enums.Gender;
+import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.ApplicationScoped;
 
@@ -20,14 +21,16 @@ import javax.enterprise.context.ApplicationScoped;
 @Named(value = "createUserTest")
 @ApplicationScoped
 public class createUserTest implements Serializable {
-    private UserDTO user;
-    private final UsersDelegate userDelegate = new UsersDelegate();
+    private User user;
+    
+    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
+    UsersFacadeRemote userFacadeRemote;
 
-    public UserDTO getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserDTO user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -40,15 +43,14 @@ public class createUserTest implements Serializable {
     
     @PostConstruct
     public void init() {
-       UserDTO newUser = new UserDTO();
-       newUser.setFirstName("Edgar");
-       newUser.setLastName("Mosquera");
+       User newUser = new User();
+       newUser.setFirstName("Edgar Francisco");
+       newUser.setLastName("Mosquera Mosquera");
        newUser.setEmail("edgarmosquera@gmail.com");
        newUser.setGender(Gender.MALE);
        newUser.setPassword("admin");
-       newUser.setVersion(0);
        
-       this.user = userDelegate.create(newUser);
+       this.user = userFacadeRemote.create(newUser);
     }
     
 }

@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.sql.facade;
 
-import com.tropicscrum.backend.model.Users;
+import com.tropicscrum.backend.model.User;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -16,17 +16,17 @@ import javax.ejb.Local;
 @Local
 public interface UsersFacadeLocal {
 
-    void create(Users users);
+    void create(User users);
 
-    void edit(Users users);
+    void edit(User users);
 
-    void remove(Users users);
+    void remove(User users);
 
-    Users find(Object id);
+    User find(Object id);
 
-    List<Users> findAll();
+    List<User> findAll();
 
-    List<Users> findRange(int[] range);
+    List<User> findRange(int[] range);
 
     int count();
     

@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.MilestoneDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.Milestone;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface MilestoneFacadeRemote extends ServiceVerifier {
+public interface MilestoneFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/milestoneFacadeRemote";
     
-    MilestoneDTO create(MilestoneDTO milestoneDTO);
+    Milestone create(Milestone milestone);
 
-    MilestoneDTO edit(MilestoneDTO milestoneDTO);
+    Milestone edit(Milestone milestone);
 
-    void remove(MilestoneDTO milestoneDTO);
+    void remove(Milestone milestone);
 
-    MilestoneDTO find(Object id);
+    Milestone find(Object id);
 
-    List<MilestoneDTO> findAll();
+    List<Milestone> findAll();
 
-    List<MilestoneDTO> findRange(int[] range);
+    List<Milestone> findRange(int[] range);
 
     int count();
 }

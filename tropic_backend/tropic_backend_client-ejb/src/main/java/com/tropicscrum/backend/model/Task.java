@@ -5,27 +5,18 @@
  */
 package com.tropicscrum.backend.model;
 
-import com.tropicscrum.backend.client.dto.TaskDTO;
 import com.tropicscrum.backend.client.enums.GeneralStatus;
 import com.tropicscrum.backend.client.enums.TaskType;
-import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
-import com.tropicscrum.backend.listener.BasicAttributeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 /**
  *
@@ -33,63 +24,63 @@ import javax.persistence.Version;
  */
 @Entity
 @Table(name = "task")
-@EntityListeners(BasicAttributeListener.class)
-public class Task extends TaskDTO implements BasicAttributesFacade {
-
+public class Task extends BasicAttributes {
+    private String content;
+    private Double points;
+    private Double estimatedDuration;
+    private TaskType type;
+    private GeneralStatus status;
     private List<TaskProgress> taskProgresss;
-
     private List<UserEstimate> userEstimates;
-
-    private BasicAttributes basicAttributes;
     private Milestone milestone;
-    private Users author;
+    private User author;
     private Sprint sprint;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    @Override
-    public GeneralStatus getStatus() {
-        return super.getStatus(); //To change body of generated methods, choose Tools | Templates.
+    @Column(name = "content")
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Column(name = "points")
+    public Double getPoints() {
+        return points;
+    }
+
+    public void setPoints(Double points) {
+        this.points = points;
+    }
+
+    @Column(name = "estimated_duration")
+    public Double getEstimatedDuration() {
+        return estimatedDuration;
+    }
+
+    public void setEstimatedDuration(Double estimatedDuration) {
+        this.estimatedDuration = estimatedDuration;
     }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    @Override
     public TaskType getType() {
-        return super.getType(); //To change body of generated methods, choose Tools | Templates.
+        return type;
     }
 
-    @Column(name = "estimated_duration")
-    @Override
-    public Double getEstimatedDuration() {
-        return super.getEstimatedDuration(); //To change body of generated methods, choose Tools | Templates.
+    public void setType(TaskType type) {
+        this.type = type;
     }
 
-    @Column(name = "points")
-    @Override
-    public Double getPoints() {
-        return super.getPoints(); //To change body of generated methods, choose Tools | Templates.
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    public GeneralStatus getStatus() {
+        return status;
     }
 
-    @Column(name = "content")
-    @Override
-    public String getContent() {
-        return super.getContent(); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Version
-    @Column(name = "version")
-    @Override
-    public Integer getVersion() {
-        return super.getVersion(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Override
-    public Long getId() {
-        return super.getId(); //To change body of generated methods, choose Tools | Templates.
+    public void setStatus(GeneralStatus status) {
+        this.status = status;
     }
 
     @ManyToOne
@@ -107,14 +98,14 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    public Users getAuthor() {
+    public User getAuthor() {
         if (author == null) {
-            author = new Users();
+            author = new User();
         }
         return author;
     }
 
-    public void setAuthor(Users author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -134,7 +125,7 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (getId() != null ? getId().hashCode() : 0);
         return hash;
     }
 
@@ -145,32 +136,18 @@ public class Task extends TaskDTO implements BasicAttributesFacade {
             return false;
         }
         Task other = (Task) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        return !((this.getId() == null && other.getId() != null) || (this.getId() != null && !this.getId().equals(other.getId())));
     }
 
     @Override
     public String toString() {
-        return "com.tropicscrum.backend.model.Task[ id=" + id + " ]";
-    }
-
-    @Embedded
-    @Override
-    public BasicAttributes getBasicAttributes() {
-        if (basicAttributes == null) {
-            basicAttributes = new BasicAttributes();
-        }
-        return basicAttributes;
-    }
-    
-    @Override
-    public void setBasicAttributes(BasicAttributes basicAttributes) {
-        this.basicAttributes = basicAttributes;
+        return "com.tropicscrum.backend.model.Task[ id=" + getId() + " ]";
     }
 
     @OneToMany(mappedBy = "task")
     public List<UserEstimate> getUserEstimates() {
         if (userEstimates == null) {
-            return new ArrayList<>();
+            userEstimates = new ArrayList<>();
         }
         return userEstimates;
     }

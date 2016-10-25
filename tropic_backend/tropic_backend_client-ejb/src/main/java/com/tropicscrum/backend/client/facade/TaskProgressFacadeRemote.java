@@ -5,8 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.client.dto.TaskProgressDTO;
-import com.tropicscrum.base.locator.ServiceVerifier;
+import com.tropicscrum.backend.model.TaskProgress;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,20 +15,20 @@ import javax.ejb.Remote;
  */
 
 @Remote
-public interface TaskProgressFacadeRemote extends ServiceVerifier {
+public interface TaskProgressFacadeRemote {
     public final String JNDI_REMOTE_NAME = "ejb/taskProgressFacadeRemote";
     
-    TaskProgressDTO create(TaskProgressDTO taskProgressDTO);
+    TaskProgress create(TaskProgress taskProgress);
 
-    TaskProgressDTO edit(TaskProgressDTO taskProgressDTO);
+    TaskProgress edit(TaskProgress taskProgress);
 
-    void remove(TaskProgressDTO taskProgressDTO);
+    void remove(TaskProgress taskProgress);
 
-    TaskProgressDTO find(Object id);
+    TaskProgress find(Object id);
 
-    List<TaskProgressDTO> findAll();
+    List<TaskProgress> findAll();
 
-    List<TaskProgressDTO> findRange(int[] range);
+    List<TaskProgress> findRange(int[] range);
 
     int count();
 }

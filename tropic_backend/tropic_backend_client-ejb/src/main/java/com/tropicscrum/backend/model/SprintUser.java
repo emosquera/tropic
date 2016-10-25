@@ -5,27 +5,18 @@
  */
 package com.tropicscrum.backend.model;
 
-import com.tropicscrum.backend.client.dto.SprintUserDTO;
 import com.tropicscrum.backend.client.enums.Color;
 import com.tropicscrum.backend.client.enums.ScrumRole;
-import com.tropicscrum.backend.sql.facade.BasicAttributesFacade;
-import com.tropicscrum.backend.listener.BasicAttributeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 /**
  *
@@ -33,65 +24,43 @@ import javax.persistence.Version;
  */
 @Entity
 @Table(name = "sprint_user")
-@EntityListeners(BasicAttributeListener.class)
-public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
-
+public class SprintUser extends BasicAttributes {
+    private Color color;
+    private ScrumRole role;
+    private Boolean createTask;
     private List<TaskProgress> taskProgresss;
-
     private List<UserSchedule> userSchedules;
-
     private List<UserEstimate> userEstimates;
-    private BasicAttributes basicAttributes;
     private Sprint sprint;
-    private Users user;
+    private User user;    
 
-    @Embedded
-    @Override
-    public BasicAttributes getBasicAttributes() {
-        if (basicAttributes == null) {
-            basicAttributes = new BasicAttributes();
-        }
-        return basicAttributes;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "color")
+    public Color getColor() {
+        return color;
     }
 
-    @Override
-    public void setBasicAttributes(BasicAttributes basicAttributes) {
-        this.basicAttributes = basicAttributes;
-    }
-
-    @Column(name = "create_task")
-    @Override
-    public Boolean getCreateTask() {
-        return super.getCreateTask(); //To change body of generated methods, choose Tools | Templates.
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "team_role")
-    @Override
     public ScrumRole getRole() {
-        return super.getRole(); //To change body of generated methods, choose Tools | Templates.
+        return role;
     }
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "color")
-    @Override
-    public Color getColor() {
-        return super.getColor(); //To change body of generated methods, choose Tools | Templates.
+    public void setRole(ScrumRole role) {
+        this.role = role;
     }
 
-    @Version
-    @Column(name = "version")
-    @Override
-    public Integer getVersion() {
-        return super.getVersion(); //To change body of generated methods, choose Tools | Templates.
+    @Column(name = "create_task")
+    public Boolean getCreateTask() {
+        return createTask;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Override
-    public Long getId() {
-        return super.getId(); //To change body of generated methods, choose Tools | Templates.
+    public void setCreateTask(Boolean createTask) {
+        this.createTask = createTask;
     }
 
     @ManyToOne
@@ -109,21 +78,21 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    public Users getUser() {
+    public User getUser() {
         if (user == null) {
-            user = new Users();
+            user = new User();
         }
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (getId() != null ? getId().hashCode() : 0);
         return hash;
     }
 
@@ -134,12 +103,12 @@ public class SprintUser extends SprintUserDTO implements BasicAttributesFacade {
             return false;
         }
         SprintUser other = (SprintUser) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        return !((this.getId() == null && other.getId() != null) || (this.getId() != null && !this.getId().equals(other.getId())));
     }
 
     @Override
     public String toString() {
-        return "com.tropicscrum.backend.model.SprintUser[ id=" + id + " ]";
+        return "com.tropicscrum.backend.model.SprintUser[ id=" + getId() + " ]";
     }
 
     @OneToMany(mappedBy = "sprintUser")

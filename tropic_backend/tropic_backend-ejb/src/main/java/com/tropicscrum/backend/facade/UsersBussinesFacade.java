@@ -5,9 +5,8 @@
  */
 package com.tropicscrum.backend.facade;
 
-import com.tropicscrum.backend.client.dto.UserDTO;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
-import com.tropicscrum.backend.model.Users;
+import com.tropicscrum.backend.model.User;
 import com.tropicscrum.backend.sql.facade.UsersFacadeLocal;
 import java.util.List;
 import javax.ejb.EJB;
@@ -18,7 +17,7 @@ import javax.ejb.Stateless;
  *
  * @author syslife02
  */
-@Stateless(name = "TerminalBussinesFacade", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
+@Stateless(name = "UserBussinesFacade", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(UsersFacadeRemote.class)
 public class UsersBussinesFacade implements UsersFacadeRemote {
     
@@ -26,45 +25,43 @@ public class UsersBussinesFacade implements UsersFacadeRemote {
     UsersFacadeLocal usersFacadeLocal;
 
     @Override
-    public UserDTO create(UserDTO userDTO) {
+    public User create(User user) {
         try {
-            Users user = new Users(userDTO);
             usersFacadeLocal.create(user);
             return user;
         } catch (Exception ex) {
-            return new UserDTO();
+            return new User();
         }
     }
 
     @Override
-    public UserDTO edit(UserDTO userDTO) {
-        Users user = new Users(userDTO);
+    public User edit(User user) {
         usersFacadeLocal.edit(user);
         return user;
     }
 
     @Override
-    public void remove(UserDTO userDTO) {
+    public void remove(User user) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public UserDTO find(Object id) {
+    public User find(Object id) {
         try {
-            Users user = usersFacadeLocal.find(id);
+            User user = usersFacadeLocal.find(id);
             return user;
         } catch (Exception ex) {
-            return new UserDTO();
+            return new User();
         }
     }
 
     @Override
-    public List<UserDTO> findAll() {
+    public List<User> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<UserDTO> findRange(int[] range) {
+    public List<User> findRange(int[] range) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

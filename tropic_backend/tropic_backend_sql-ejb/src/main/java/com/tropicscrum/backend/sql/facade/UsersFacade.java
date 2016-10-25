@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.sql.facade;
 
-import com.tropicscrum.backend.model.Users;
+import com.tropicscrum.backend.model.User;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author syslife02
  */
 @Stateless
-public class UsersFacade extends AbstractFacade<Users> implements UsersFacadeLocal {
+public class UsersFacade extends AbstractFacade<User> implements UsersFacadeLocal {
 
     @PersistenceContext(unitName = "tropic_backend_PU")
     private EntityManager em;
@@ -26,7 +26,7 @@ public class UsersFacade extends AbstractFacade<Users> implements UsersFacadeLoc
     }
 
     public UsersFacade() {
-        super(Users.class);
+        super(User.class);
     }
     
 }
