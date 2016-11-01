@@ -33,6 +33,7 @@ public class User extends BasicAttributes {
     private String password;
     private String avatar;
     private Gender gender;
+    private Boolean confirmed = false;
     private List<SprintUser> sprintUsers;
     private List<Project> projectsCollaborator;
     private List<Project> projects;
@@ -90,6 +91,15 @@ public class User extends BasicAttributes {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    @Column(name = "confirmed")
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
     @OneToMany(mappedBy = "author")

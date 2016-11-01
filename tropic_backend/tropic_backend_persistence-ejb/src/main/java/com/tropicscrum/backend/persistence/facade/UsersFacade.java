@@ -35,6 +35,11 @@ public class UsersFacade extends AbstractFacade<User> implements UsersFacadeLoca
     public User login(String email, String password) throws InvalidCredentials {     
         try {
             User user = (User) em.createNamedQuery("findByEmail").setParameter("email", email).getSingleResult();  
+            
+            if (!user.getConfirmed()) {
+                throw new InvalidCredentials("Debes activar tu usuario usando el link en el correo que enviamos a tu cuenta");
+            }
+            
             if (user.getPassword().equals(password)) {
                 return user;
             } else {

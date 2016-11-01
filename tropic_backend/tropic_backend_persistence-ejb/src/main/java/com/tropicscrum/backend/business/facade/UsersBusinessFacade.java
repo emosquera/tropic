@@ -83,12 +83,7 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
             User user = usersFacadeLocal.login(email, password);
             return user;
         } catch (InvalidCredentials e) {
-            if (e.getCause() instanceof NoResultException) {
-                throw new LoginException("Usuario no encontrado");
-            } else {
-                throw new LoginException("Password Incorrecto");
-            }
-            
+            throw new LoginException(e.getMessage());            
         }
     }
 
