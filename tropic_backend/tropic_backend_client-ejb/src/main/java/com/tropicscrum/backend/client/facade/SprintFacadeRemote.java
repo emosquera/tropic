@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.model.Sprint;
+import com.tropicscrum.backend.client.model.Sprint;
 import java.util.List;
 import javax.ejb.Remote;
 

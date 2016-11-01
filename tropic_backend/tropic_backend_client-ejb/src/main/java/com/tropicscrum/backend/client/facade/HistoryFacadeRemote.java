@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.model.History;
+import com.tropicscrum.backend.client.model.History;
 import java.util.List;
 import javax.ejb.Remote;
 

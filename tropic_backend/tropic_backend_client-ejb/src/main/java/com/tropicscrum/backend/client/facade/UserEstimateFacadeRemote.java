@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.model.UserEstimate;
+import com.tropicscrum.backend.client.model.UserEstimate;
 import java.util.List;
 import javax.ejb.Remote;
 

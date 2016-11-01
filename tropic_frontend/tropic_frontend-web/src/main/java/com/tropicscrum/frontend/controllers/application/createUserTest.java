@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.frontend.controllers.application;
 
-import com.tropicscrum.backend.model.User;
+import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.client.enums.Gender;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import java.io.Serializable;

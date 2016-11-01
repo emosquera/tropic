@@ -5,7 +5,9 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.model.User;
+import com.tropicscrum.backend.client.exceptions.LoginException;
+import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.locator.ServiceVerifier;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -14,7 +16,7 @@ import javax.ejb.Remote;
  * @author syslife02
  */
 @Remote
-public interface UsersFacadeRemote {
+public interface UsersFacadeRemote extends ServiceVerifier {
     public final String JNDI_REMOTE_NAME = "ejb/usersFacadeRemote";
     
     User create(User user);
@@ -30,4 +32,8 @@ public interface UsersFacadeRemote {
     List<User> findRange(int[] range);
 
     int count();
+    
+    User login(String email, String password) throws LoginException;
+    
+    Boolean emailExist(String email);
 }

@@ -40,7 +40,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>/tropic/*</url-pattern>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
     <session-config>
@@ -49,5 +49,5 @@
     <mime-mapping>
         <extension>ttf</extension>
         <mime-type>application/x-font-ttf</mime-type>
-    </mime-mapping>
+    </mime-mapping>        
 </web-app>

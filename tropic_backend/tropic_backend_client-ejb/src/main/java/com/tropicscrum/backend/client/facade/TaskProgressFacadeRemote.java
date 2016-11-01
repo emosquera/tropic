@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
-import com.tropicscrum.backend.model.TaskProgress;
+import com.tropicscrum.backend.client.model.TaskProgress;
 import java.util.List;
 import javax.ejb.Remote;
 
