@@ -52,7 +52,7 @@
 
             </p:fileUpload>
             <p:graphicImage id="avatar" url="#{registerViewBean.avatarURL}" width="150" height="150"/>                    
-            <p:commandButton actionListener="#{registerRequestBean.registerUser}" update="form" value="Registrar"/>            
+            <p:commandButton action="thanks_register" actionListener="#{registerRequestBean.registerUser}" update="form" value="Registrar"/>            
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
         </h:form>
     </body>

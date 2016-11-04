@@ -36,4 +36,6 @@ public interface UsersFacadeRemote extends ServiceVerifier {
     User login(String email, String password) throws LoginException;
     
     Boolean emailExist(String email);
+    
+    void sendConfirmEmail(User user, String emailContent);
 }

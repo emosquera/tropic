@@ -12,5 +12,7 @@
     <module>tropic_backend_client-ejb</module>
     <module>tropic_base</module>
     <module>tropic_backend_persistence-ejb</module>
+    <module>tropic_backend_emailsender-ejb</module>
+    <module>tropic_backend_emailsender_client-ejb</module>
   </modules>
 </project>

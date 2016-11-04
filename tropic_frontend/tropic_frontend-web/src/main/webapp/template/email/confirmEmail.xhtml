@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>            
+    </h:head>
+    <body>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0"
+           style="background-color: #FFF;">
+        <tr>
+            <td width="100%">
+                <table width="600" border="0" cellspacing="0" cellpadding="0"
+                       style="box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
+             font-family:Arial, Helvetica, sans-serif; border:2px solid #f2f2f2; margin:auto; border-bottom: 8px solid #2692b4; border-top: 8px solid #2692b4">
+                    <tr height="30">
+                        <td width="600">
+                            <table width="600" height="30" border="0" cellspacing="0" cellpadding="0"
+                                   style="border-top: 30px solid #00acc4; border-bottom: 8px solid #2692b4;">
+                            </table>
+                        </td>
+                    </tr>
+                    <tr height="80">
+                        <td width="600">
+                            <table width="600" height="60" border="0" cellspacing="0" cellpadding="0"
+                                   style="margin: auto">
+                                <tr>
+                                    <td width="600"
+                                        style="text-align: center; color: #066f7d; font-size: 28px; font-weight: bold">
+                                        Hola #{confirmEmail.user.firstName}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="600">
+                            <table width="600" height="250" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="600">
+                                        <img id="avatar" src="#{confirmEmail.applicationPath}/static/images/email/icono.png"/>                                        
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr height="150">
+                        <td width="600">
+                            <table width="500" height="150" border="0" cellspacing="0" cellpadding="0"
+                                   style="margin: auto;">
+                                <tr>
+                                    <td width="500"
+                                        style="text-align: center; border-radius: 5px;">
+              <span style="font-size: 22px; font-weight: 100; display:block; padding-bottom:10px;">
+             Gracias por registrarte en Tropic Scrum. Debes <strong>activar</strong> tu cuenta haciendo click en el link de abajo</span>
+                                        <img id="avatar" src="#{confirmEmail.applicationPath}/static/images/email/flecha.png"/>                                                  
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="250">
+                            <table width="250" height="40" border="0" cellspacing="0" cellpadding="0"
+                                   style="margin: auto; margin-bottom:40px; background-color: #8cc63f">
+                                <tr>
+                                    <td width="250" style="text-align: center">
+                                        <a href="#{confirmEmail.applicationPath}/activateUser.xhtml?id=#{confirmEmail.encodedId}" 
+                                           style="font-size: 20px;font-weight: 100; color: #fff; text-decoration:none">
+                                            <strong>Activar Mi Cuenta</strong>
+                                        </a>                                        
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="600">
+                            <table width="600" height="20" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="600"
+                                        style="background-color: #f2f2f2; text-align: center; color: black; font-size: 14px">
+                                        <span>Equipo de Tropic Scrum</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>                    
+                    <tr>
+                        <td width="600">
+                            <table width="600" height="20" border="0" cellspacing="0" cellpadding="0"
+                                   style="padding-bottom:10px">
+                                <tr>
+                                    <td width="600"
+                                        style="background-color: #f2f2f2; padding-left: 190px; color: black; font-size: 14px">
+                                        <span><img id="avatar" src="#{confirmEmail.applicationPath}/static/images/email/Email-icon.png"/></span>
+                                    </td>
+                                    <td width="600"
+                                        style="background-color: #f2f2f2; padding-right: 170px; color: black; font-size: 14px; padding-bottom:5px">
+                                       <a style="display:block; color: #000000; text-decoration: none;" href="mailto:soporte@tropicscrum.com" target="_blank">soporte@tropicscrum.com</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    </body>
+</html>

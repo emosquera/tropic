@@ -8,12 +8,14 @@ package com.tropicscrum.backend.business.facade;
 import com.tropicscrum.backend.client.exceptions.LoginException;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.backend.emailsender.facade.remote.EmailSenderFacadeRemote;
 import com.tropicscrum.backend.persistence.exceptions.InvalidCredentials;
 import com.tropicscrum.backend.persistence.facade.UsersFacadeLocal;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.mail.MessagingException;
 import javax.persistence.NoResultException;
 
 /**
@@ -23,9 +25,12 @@ import javax.persistence.NoResultException;
 @Stateless(name = "UserBussinesFacade", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(UsersFacadeRemote.class)
 public class UsersBusinessFacade implements UsersFacadeRemote {
-    
+
     @EJB
     UsersFacadeLocal usersFacadeLocal;
+    
+    @EJB(lookup = EmailSenderFacadeRemote.JNDI_REMOTE_NAME)
+    EmailSenderFacadeRemote emailSenderFacadeRemote;
 
     @Override
     public User create(User user) {
@@ -51,7 +56,7 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
     @Override
     public User find(Object id) {
         try {
-            return usersFacadeLocal.find(id);            
+            return usersFacadeLocal.find(id);
         } catch (NoResultException ex) {
             return new User();
         }
@@ -71,11 +76,11 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
     public int count() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public boolean isAlive() {
         return true;
-    }              
+    }
 
     @Override
     public User login(String email, String password) throws LoginException {
@@ -83,12 +88,17 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
             User user = usersFacadeLocal.login(email, password);
             return user;
         } catch (InvalidCredentials e) {
-            throw new LoginException(e.getMessage());            
+            throw new LoginException(e.getMessage());
         }
     }
 
     @Override
     public Boolean emailExist(String email) {
         return usersFacadeLocal.emailExist(email);
+    }
+
+    @Override
+    public void sendConfirmEmail(User user, String emailContent) {
+        emailSenderFacadeRemote.createAndSendEmail(user.getEmail(), "Tropic Scrum. Activacion de Cuenta", emailContent, true);     
     }
 }
