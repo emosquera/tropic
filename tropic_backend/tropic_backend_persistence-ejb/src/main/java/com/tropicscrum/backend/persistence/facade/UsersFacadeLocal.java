@@ -34,4 +34,6 @@ public interface UsersFacadeLocal {
     User login(String email, String password) throws InvalidCredentials;
     
     Boolean emailExist(String email);
+    
+    List<User> findOtherByEmail(User you, String email);    
 }

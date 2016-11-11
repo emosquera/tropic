@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,11 +23,23 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "project")
+@NamedQueries({
+    @NamedQuery(name = "findAllByUser", query = "Select p from Project p where p.author = :user")})
 public class Project extends BasicAttributes {
+    private String code;
     private String description;
     private User author;
     private List<History> histories;
     private List<User> collaborators;
+
+    @Column(name = "code")
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     @Column(name = "description")
     public String getDescription() {

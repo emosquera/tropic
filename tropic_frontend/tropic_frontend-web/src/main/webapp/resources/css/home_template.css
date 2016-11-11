@@ -1,0 +1,89 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 08/11/2016, 01:51:53 PM
+    Author     : syslife02
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Heebo:100, 300, 400');
+@import url('https://fonts.googleapis.com/css?family=Dosis:200, 300, 400');
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0!important;
+    height: 100%;
+}
+
+.completeWidth {
+    width: 100%;
+    height: 100%
+}
+
+.verticalBottom {
+    vertical-align: bottom;
+}
+
+.verticalTop {
+    vertical-align: top;
+}
+
+td {
+    border: 0!important;
+}
+
+.noPadding {
+    padding: 0!important;
+}
+
+.tabsHome .ui-tabs-nav {
+    background-color: #F0F1F3;
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    font-weight: 200;    
+    padding: 15px 0!important;
+}
+
+.tabsHome .ui-tabs-nav li:hover a {
+    font-weight: 400;
+}
+
+.tabsHome .ui-state-active {
+    font-weight: 600;
+}
+
+.tabsHome .ui-state-active:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 15px 15px 0 15px;
+    border-color: #F0F1F3 transparent transparent transparent;
+    position: absolute;
+    top: 145%;
+    left: 45%;
+}
+
+.tabsHome .ui-tabs-selected a:focus {
+    outline: none;
+}
+
+.tabsHome .ui-tabs-nav li {
+    margin: 0!important;
+    width: 20%;
+    text-align: center;
+}
+
+.tabsHome .ui-tabs-nav a {
+    color: #43528B!important;
+    float: none!important;
+}
+
+.sizeTwenty {
+    width: 20%;
+}

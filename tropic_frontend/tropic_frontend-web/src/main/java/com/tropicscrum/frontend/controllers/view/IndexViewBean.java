@@ -5,11 +5,9 @@
  */
 package com.tropicscrum.frontend.controllers.view;
 
-import com.tropicscrum.backend.client.model.User;
 import java.io.Serializable;
-import javax.annotation.PostConstruct;
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 /**
  *
@@ -19,26 +17,28 @@ import javax.faces.view.ViewScoped;
 @ViewScoped
 public class IndexViewBean implements Serializable {
 
-    private User user;
+    private String userName;
+    private String password;
 
-    public User getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
      * Creates a new instance of indexViewBean
      */
     public IndexViewBean() {        
-    }
-    
-    @PostConstruct
-    public void init() {
-        user = new User();
-    }
-    
-    
+    }        
 }

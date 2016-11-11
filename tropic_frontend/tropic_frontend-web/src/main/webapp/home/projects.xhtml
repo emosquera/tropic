@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">    
+    <ui:define name="header">        
+        <h:outputStylesheet library="css" name="project.css" />
+        <p:panelGrid class="generalHeaderUserInfo" columns="4" style="float: right">      
+            <p:graphicImage id="avatar" class="imageAvatar iconHeader iconHeaderSmall" url="../#{headerViewBean.user.avatar}" width="40" height="40"/>
+            <p:outputLabel class="notificationsHeader iconHeader">0 </p:outputLabel>
+            <p:graphicImage url="/resources/images/edit16.png" class="iconHeader iconHeaderSmall"/>       
+            <p:commandLink id="logoutLink" action="#{logoutRequestBean.logout}">
+                <p:graphicImage url="/resources/images/logout16.png" class="iconHeader iconHeaderSmall"/>
+            </p:commandLink>                                                                                                                
+        </p:panelGrid>
+        <p:outputLabel class="nameHeader titlePage">Crea un nuevo Proyecto</p:outputLabel>
+        <p:commandLink class="iconNew" actionListener="#{projectRequestBean.newProject}" update="projectData">
+            <p:graphicImage url="/resources/images/new.png"/>
+        </p:commandLink>         
+    </ui:define>
+
+    <ui:define name="content">
+        <p:panelGrid id="projectData">
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="projectCode">CODIGO</p:outputLabel>
+                    <p:inputText id="projectCode" class="boxInput codeWidth" value="#{projectViewBean.project.code}" placeholder="Escribe un codigo que identifique tu proyecto"/>                    
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="projectText">DESCRIPCION</p:outputLabel>
+                    <p:inputTextarea id="projectText" class="boxInput" rows="5" cols="100" value="#{projectViewBean.project.description}" placeholder="Escribe una descripcion de tu proyecto. Tipo de Proyecto, Tecnologia, Empresa"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="projectColab">COLABORADORES</p:outputLabel>
+                    <p:autoComplete id="projectColab"
+                                    class="boxInput"
+                                    minQueryLength="3" 
+                                    multiple="true"
+                                    value="#{projectViewBean.project.collaborators}" 
+                                    completeMethod="#{findUsersRequestBean.getUsersByEmail}"
+                                    forceSelection="true"
+                                    converter="#{genericUserConverter}"
+                                    var="collaborator" itemLabel="#{collaborator.firstName} #{collaborator.lastName}"
+                                    itemValue="#{collaborator}"
+                                    placeholder="Anade un colaborador escribiendo su email">
+                        <p:column>
+                            <p:graphicImage class="imageAvatar iconHeader iconHeaderSmall" url="../#{collaborator.avatar}" width="40" height="40"/>
+                        </p:column>                        
+                        <p:column>
+                            <h:outputText value="#{collaborator.firstName} #{collaborator.lastName}" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText value="#{collaborator.email}" />
+                        </p:column>
+                    </p:autoComplete>
+                </p:column>                
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column id="buttons">
+                    <p:commandButton class="boxInput succesText" actionListener="#{projectRequestBean.registerProject}" value="Crear Proyecto" rendered="#{not projectViewBean.modify}" update="buttons, allProjects"/>
+                    <p:commandButton class="boxInput infoText" id="modifyButton" actionListener="#{projectRequestBean.updateProject}" value="Modificar Proyecto" rendered="#{projectViewBean.modify}"/>
+                    <p:commandButton class="boxInput errorText" value="Eliminar Proyecto" rendered="#{projectViewBean.modify}"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="allProjects">MIS PROYECTOS</p:outputLabel>
+                    <p:dataList id="allProjects" class="boxInput" value="#{projectViewBean.myProyects}"
+                                var="project">
+                        <p:commandLink update=":form:projectData"  >
+                            <f:setPropertyActionListener value="true" target="#{projectViewBean.modify}" />
+                            <f:setPropertyActionListener value="#{project}" target="#{projectViewBean.project}" />
+                            <h:outputText value="#{project.code}, #{project.description}"/>
+                        </p:commandLink>
+                    </p:dataList>
+                </p:column>
+            </p:row>
+        </p:panelGrid>        
+    </ui:define>
+</ui:composition>

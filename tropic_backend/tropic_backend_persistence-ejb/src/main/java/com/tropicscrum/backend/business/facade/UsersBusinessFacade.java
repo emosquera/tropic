@@ -15,14 +15,13 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
-import javax.mail.MessagingException;
 import javax.persistence.NoResultException;
 
 /**
  *
  * @author syslife02
  */
-@Stateless(name = "UserBussinesFacade", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
+@Stateless(name = "userBussinesFacade", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(UsersFacadeRemote.class)
 public class UsersBusinessFacade implements UsersFacadeRemote {
 
@@ -100,5 +99,21 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
     @Override
     public void sendConfirmEmail(User user, String emailContent) {
         emailSenderFacadeRemote.createAndSendEmail(user.getEmail(), "Tropic Scrum. Activacion de Cuenta", emailContent, true);     
+    }
+
+    @Override
+    public List<User> getAllContainsEmailExceptYou(User you, String email) {
+        return usersFacadeLocal.findOtherByEmail(you, email);
+    }
+
+    @Override
+    public User findWithProjects(Object id) {
+        try {
+            User u = usersFacadeLocal.find(id);
+            u.getProjects().size();
+            return u;
+        } catch (NoResultException ex) {
+            return new User();
+        }
     }
 }

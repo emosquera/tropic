@@ -1,0 +1,53 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.tropicscrum.frontend.converters;
+
+import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
+import com.tropicscrum.backend.client.model.User;
+import javax.ejb.EJB;
+import javax.enterprise.context.Dependent;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
+import javax.inject.Named;
+
+/**
+ *
+ * @author syslife02
+ */
+@Named(value = "genericUserConverter")
+@Dependent
+public class GenericUserConverter implements Converter {
+    
+    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
+    UsersFacadeRemote usersFacadeRemote;
+
+    @Override
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
+        if (value.trim().equals("")) {
+            return null;
+        } else {
+            try {
+                int numero = Integer.parseInt(value);
+                return usersFacadeRemote.find(new Long(numero));                
+            } catch (NumberFormatException exception) {
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Usuario Invalido"));
+            }
+        }        
+    }
+
+    @Override
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
+        if (value == null || value.equals("")) {
+            return "";
+        } else {
+            return String.valueOf(((User) value).getId());
+        }
+    }
+    
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/homeTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="header">
+        <div class="divIconHeader">                            
+            <p:commandLink id="logoutLink" action="#{logoutRequestBean.logout}">
+                <p:graphicImage url="/resources/images/logout.png" class="iconHeader"/>
+            </p:commandLink>                            
+            <p:graphicImage url="/resources/images/edit.png" class="iconHeader"/>                            
+        </div>
+        <p:panelGrid class="tableHeader">
+            <p:row>
+                <p:column rowspan="2">
+                    <p:graphicImage id="avatar" class="imageAvatar" url="../#{homeViewBean.user.avatar}" width="100" height="100"/>
+                </p:column>
+                <p:column class="verticalBottom">
+                    <p:outputLabel class="nameHeader">#{homeViewBean.user.firstName} #{homeViewBean.user.lastName}</p:outputLabel>
+                </p:column>
+            </p:row>
+            <p:row>  
+                <p:column class="verticalTop">
+                    <p:outputLabel class="notificationsHeader">0 NOTIFICACIONES</p:outputLabel>
+                </p:column>                                
+            </p:row>                
+        </p:panelGrid>    
+    </ui:define>
+    <ui:define name="content">
+        <p:tabView class="tabsHome noPadding">
+            <p:tab title="Resumen">
+
+            </p:tab>
+            <p:tab title="Mis Proyectos">
+
+            </p:tab>
+            <p:tab title="Mis Sprints">
+
+            </p:tab>
+            <p:tab title="Mis Tareas">
+
+            </p:tab>
+            <p:tab title="Mis Incidencias">
+
+            </p:tab>
+        </p:tabView>
+    </ui:define>
+</ui:composition>

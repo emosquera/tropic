@@ -8,6 +8,7 @@ package com.tropicscrum.backend.client.model;
 import com.tropicscrum.backend.client.enums.Gender;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,15 +19,17 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 /**
  *
  * @author syslife02
  */
 @Entity
 @Table(name = "users")
-@NamedQueries({@NamedQuery(name = "findByEmail", query = "Select u from User u where u.email = :email")})
+@NamedQueries({
+    @NamedQuery(name = "findByEmail", query = "Select u from User u where u.email = :email"),
+    @NamedQuery(name = "findOtherByEmail", query = "Select u from User u where u != :user and u.email like concat('%', :email, '%')")})
 public class User extends BasicAttributes {
+
     private String firstName;
     private String lastName;
     private String email;
@@ -102,7 +105,7 @@ public class User extends BasicAttributes {
         this.confirmed = confirmed;
     }
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     public List<Project> getProjects() {
         if (projects == null) {
             projects = new ArrayList<>();
@@ -137,7 +140,7 @@ public class User extends BasicAttributes {
     public void setSprintUsers(List<SprintUser> sprintUsers) {
         this.sprintUsers = sprintUsers;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -158,5 +161,5 @@ public class User extends BasicAttributes {
     @Override
     public String toString() {
         return "com.tropicscrum.backend.model.User[ id=" + getId() + " ]";
-    }        
+    }
 }

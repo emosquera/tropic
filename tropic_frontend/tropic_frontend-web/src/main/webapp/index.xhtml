@@ -4,27 +4,35 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-    
+
     <h:head>
         <title>::Tropic Scrum::</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>            
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>   
+        <h:outputStylesheet library="css" name="login.css" />
     </h:head>
     <body>
-        <h:form id="form">            
-            <h:panelGrid columns="2" cellpadding="1" id="content" style="height: 100%; width: 100%;">
-                <p:inputText id="email" required="true" requiredMessage="Debes ingresar un correo electronico"
-                             validatorMessage="Email invalido" value="#{indexViewBean.user.email}" placeholder="Correo Electronico">
-                    <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-                </p:inputText>
-                <p:message for="email"/>
-                
-                <p:password id="pass" value="#{indexViewBean.user.password}" required="true" placeholder="Contrasena" 
-                            requiredMessage="Debes ingresar una contrasena" autocomplete="off"/>
-                <p:message for="pass"/>                                                                
-            </h:panelGrid>            
-            <p:commandButton actionListener="#{loginRequestBean.login}" update="form" value="Ingresar"/>
-            <p:link outcome="register" value="Registrate"></p:link>
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
-        </h:form>
+        <div class="divDarked">
+            <h:form id="form"> 
+                <p:panelGrid columns="1" class="panelTable">
+
+                    <h:outputLabel class="titleLogin">Tropic Scrum</h:outputLabel>
+                    <p:inputText id="email" class="emailIcon" required="true" requiredMessage="Debes ingresar un correo electronico"
+                                 validatorMessage="Email invalido" value="#{indexViewBean.userName}" placeholder="Correo Electronico"
+                                 autocomplete="off">
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                    </p:inputText>
+                    <p:message for="email"/>
+
+                    <p:password class="passwordIcon" id="pass" value="#{indexViewBean.password}" required="true" placeholder="Contrasena" 
+                                requiredMessage="Debes ingresar una contrasena" autocomplete="off"/>
+                    <p:message for="pass"/>          
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+                    <p:commandButton id="botonLogin" action="#{loginRequestBean.login}" update="form" value="ENTRAR"/>
+                    <p:link class="registerLink" outcome="register" value="Registrate"/>
+                    <p:separator/>
+                    <p:commandLink class="forgotLink" update="botonLogin" value="Olvidaste tu contrasena?"/>                    
+                </p:panelGrid>
+            </h:form>
+        </div>
     </body>
 </html>

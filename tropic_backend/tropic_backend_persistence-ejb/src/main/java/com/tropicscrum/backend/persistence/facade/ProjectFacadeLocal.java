@@ -6,6 +6,7 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.User;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -29,5 +30,7 @@ public interface ProjectFacadeLocal {
     List<Project> findRange(int[] range);
 
     int count();
+    
+    List<Project> findAllByUser(User user);
     
 }

@@ -1,0 +1,73 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 08/11/2016, 03:49:06 PM
+    Author     : syslife02
+*/
+
+.headerContent {
+    height: 186px;
+    background-color: #F0F1F3;
+    border-bottom: 1px solid #E8E8E8!important;
+    padding: 0!important;
+}
+
+.generalHeaderContent {
+    height: 80px;
+}
+
+.tableHeader {
+    margin: auto;
+}
+
+.imageAvatar {
+    border-radius: 50%;
+    -webkit-filter: grayscale(50%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(50%);
+}
+
+.nameHeader {
+    font-family: 'Heebo', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    color: #43528B;
+}
+
+.notificationsHeader {
+    font-family: 'Heebo', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #43528B;
+    background-image: url(#{resource["images:message.png"]});   
+    background-repeat: no-repeat;
+    padding: 0 22px 0 0!important;
+    background-position: right;
+    background-position-y: 5px;
+}
+
+.divIconHeader {
+    display: inline-block;
+    width: 100%;
+}
+
+.iconHeader {
+    float: right;
+    display: inline-block;
+    padding: 0 15px;
+}
+
+.titlePage {    
+    display: inline-block;
+    padding: 10px 0 0 30px;
+}
+
+.generalHeaderUserInfo td {
+    padding: 10px!important;
+}
+
+.iconHeaderSmall {    
+    padding: 0;
+}

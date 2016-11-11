@@ -6,6 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.User;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -31,4 +32,6 @@ public interface ProjectFacadeRemote {
     List<Project> findRange(int[] range);
 
     int count();
+    
+    List<Project> findAllMine(User you);
 }

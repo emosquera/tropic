@@ -1,0 +1,141 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 08/11/2016, 01:16:46 PM
+    Author     : syslife02
+*/
+.divTitleMenu {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0 10px 0;
+}
+
+.titleMenu {
+    font-size: 25px;
+    color: #FFFFFF;
+    font-weight: 300;
+}
+
+.menuContent {
+    background-color: #313e47;
+    font-family: 'Heebo', sans-serif;
+    padding: 0!important;
+    width: 300px;
+}
+
+
+
+.ui-menu {
+    padding: 0!important;
+    width: 100%!important;
+}
+
+.ui-menu .ui-menu-list .ui-widget-header {
+    width: 100%!important;
+    padding: 6px 0;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.ui-menu .ui-menuitem {
+    margin: 0!important;
+}
+
+.ui-menuitem:hover .ui-menuitem-link {
+    color: #FFFFFF;
+}
+
+.ui-menuitem-link {
+    color: #969B9E;
+    font-size: 17px;
+    padding: 12px!important;
+}
+
+.ui-menu .ui-menuitem-text {
+    padding-top: 4px;
+}
+
+.ui-menuitem-icon {
+    height: 24px;
+    width: 60px;
+    background-position: center;
+}
+
+.ui-menuitem:nth-child(even) {
+    background-color: #3A454E;
+}
+
+.dashboard-icon {
+    background-image: url(#{resource["images:dashboard.png"]});    
+}
+
+.product-icon {
+    background-image: url(#{resource["images:product.png"]});
+}
+
+.collaborator-icon {
+    background-image: url(#{resource["images:collaborator.png"]});
+}
+
+.history-icon {
+    background-image: url(#{resource["images:history.png"]});
+}
+
+.sprint-icon {
+    background-image: url(#{resource["images:sprint.png"]});
+}
+
+.team-icon {
+    background-image: url(#{resource["images:team.png"]});
+}
+
+.milestone-icon {
+    background-image: url(#{resource["images:milestone.png"]});
+}
+
+.task-icon {
+    background-image: url(#{resource["images:task.png"]});
+}
+
+.poker-icon {
+    background-image: url(#{resource["images:poker.png"]});
+}
+
+.daily-icon {
+    background-image: url(#{resource["images:daily.png"]});
+}
+
+.process-icon {
+    background-image: url(#{resource["images:process.png"]});
+}
+
+.burndown-task-icon {
+    background-image: url(#{resource["images:burndown-task.png"]});
+}
+
+.burndown-hour-icon {
+    background-image: url(#{resource["images:burndown-hour.png"]});
+}
+
+.detail-plan-icon {
+    background-image: url(#{resource["images:detail-plan.png"]});
+}
+
+li h3 {
+    font-weight: 400;
+}
+
+.yellowMenuItem {    
+    background: #ECC64B!important;    
+}
+
+.blueMenuItem {    
+    background: #58A0E0!important;    
+}
+
+.greenMenuItem {    
+    background: #67AF8B!important;    
+}

@@ -26,6 +26,8 @@ public interface UsersFacadeRemote extends ServiceVerifier {
     void remove(User user);
 
     User find(Object id);
+    
+    User findWithProjects(Object id);
 
     List<User> findAll();
 
@@ -38,4 +40,6 @@ public interface UsersFacadeRemote extends ServiceVerifier {
     Boolean emailExist(String email);
     
     void sendConfirmEmail(User user, String emailContent);
+    
+    List<User> getAllContainsEmailExceptYou(User you, String email);
 }

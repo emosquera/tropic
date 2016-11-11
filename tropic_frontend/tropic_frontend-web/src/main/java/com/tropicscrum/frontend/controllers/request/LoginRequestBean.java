@@ -7,18 +7,17 @@ package com.tropicscrum.frontend.controllers.request;
 
 import com.tropicscrum.backend.client.exceptions.LoginException;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
+import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.client.utils.Md5Converter;
 import com.tropicscrum.frontend.controllers.view.IndexViewBean;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -28,7 +27,7 @@ import javax.inject.Inject;
 @RequestScoped
 public class LoginRequestBean {
 
-    private final Md5Converter md5Converter = new Md5Converter();
+    private final Md5Converter md5Converter = new Md5Converter();    
     
     @Inject
     IndexViewBean indexViewBean;
@@ -36,19 +35,26 @@ public class LoginRequestBean {
     @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
     UsersFacadeRemote userFacadeRemote;
     
-    public void login(ActionEvent actionEvent) throws LoginException {        
+    public String login() throws LoginException {        
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         try {
             try {
-                userFacadeRemote.login(indexViewBean.getUser().getEmail(), md5Converter.StringToMD5(indexViewBean.getUser().getPassword()));
+                User user = userFacadeRemote.login(indexViewBean.getUserName(), md5Converter.StringToMD5(indexViewBean.getPassword()));  
+                session.setAttribute("user", user);                
+                return "/home/home.xhtml?faces-redirect=true";
             } catch (NoSuchAlgorithmException ex) {
-                Logger.getLogger(LoginRequestBean.class.getName()).log(Level.SEVERE, null, ex);
+                session.setAttribute("user", null);
+                return null;
             }
-        } catch (LoginException ex) {
+        } catch (LoginException ex) {            
+            session.setAttribute("user", null);
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", ex.getMessage()));
-            indexViewBean.getUser().setPassword("");
+            indexViewBean.setPassword("");
+            return null;
         }        
     }
+
     /**
      * Creates a new instance of LoginRequestBean
      */
