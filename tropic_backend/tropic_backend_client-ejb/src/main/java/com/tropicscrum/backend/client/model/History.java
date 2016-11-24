@@ -15,6 +15,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -24,7 +26,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "history")
+@NamedQueries({
+    @NamedQuery(name = "findAllHistoriesByUser", query = "Select h from History h where h.author = :user"),
+    @NamedQuery(name = "findAllHistoriesByCollaborator", query = "Select DISTINCT h from History h where :user != h.author and (:user MEMBER OF h.project.collaborators or :user = h.project.author)"),
+    @NamedQuery(name = "findByProject", query = "Select h from History h where h.project = :project"),
+})
 public class History extends BasicAttributes {
+    private String code;
     private String title;
     private String content;
     private GeneralStatus status;
@@ -32,6 +40,15 @@ public class History extends BasicAttributes {
     private List<Milestone> milestones;
     private Project project;
     private User author;
+
+    @Column(name = "code")
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     @Column(name = "title")
     public String getTitle() {

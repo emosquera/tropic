@@ -6,6 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.exceptions.LoginException;
+import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.base.locator.ServiceVerifier;
 import java.util.List;
@@ -21,7 +22,7 @@ public interface UsersFacadeRemote extends ServiceVerifier {
     
     User create(User user);
 
-    User edit(User user);
+    User edit(User user) throws UpdateException;
 
     void remove(User user);
 

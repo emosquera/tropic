@@ -6,6 +6,9 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.History;
+import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.User;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +30,21 @@ public class HistoryFacade extends AbstractFacade<History> implements HistoryFac
 
     public HistoryFacade() {
         super(History.class);
+    }
+
+    @Override
+    public List<History> findAllByUser(User user) {
+        return em.createNamedQuery("findAllHistoriesByUser").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public List<History> findAllByCollaborator(User user) {
+        return em.createNamedQuery("findAllHistoriesByCollaborator").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public List<History> findByProject(Project project) {
+        return em.createNamedQuery("findByProject").setParameter("project", project).getResultList();
     }
     
 }

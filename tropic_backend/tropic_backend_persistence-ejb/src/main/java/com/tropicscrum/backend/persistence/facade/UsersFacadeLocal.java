@@ -7,6 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.InvalidCredentials;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -19,7 +20,7 @@ public interface UsersFacadeLocal {
 
     void create(User users);
 
-    void edit(User users);
+    void edit(User users) throws OldVersionException;
 
     void remove(User users);
 
@@ -31,7 +32,7 @@ public interface UsersFacadeLocal {
 
     int count();
     
-    User login(String email, String password) throws InvalidCredentials;
+    User findByEmail(String email) throws InvalidCredentials ;
     
     Boolean emailExist(String email);
     

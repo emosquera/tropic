@@ -7,53 +7,59 @@
 
     <h:head>
         <title>::Tropic Scrum::</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>            
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>           
+        <h:outputStylesheet library="css" name="login.css" />
     </h:head>
     <body>
-        <h:form id="form" enctype="multipart/form-data">            
-            <h:panelGrid columns="2" cellpadding="1" id="content" style="height: 100%; width: 100%;">
-                <p:inputText id="name" required="true" requiredMessage="Debes ingresar tu Nombre"
-                             value="#{registerViewBean.user.firstName}" placeholder="Ingresa tu Nombre">                    
-                </p:inputText>
-                <p:message for="name"/>
+        <h:form id="form" enctype="multipart/form-data">      
+            <div class="divRegister">
+                <h:panelGrid id="content" style="height: 100%; width: 100%;">
+                    <h:outputLabel class="titleLogin">Completa tus Datos</h:outputLabel>
+                    <p:inputText id="name" class="fistNameIcon" required="true" requiredMessage="Debes ingresar tu Nombre"
+                                 value="#{registerViewBean.user.firstName}" placeholder="Ingresa tu Nombre">                    
+                    </p:inputText>
+                    <p:message for="name"/>
 
-                <p:inputText id="last_name" required="true" requiredMessage="Debes ingresar tu Apellido"
-                             value="#{registerViewBean.user.lastName}" placeholder="Ingresa tu Appelido">                    
-                </p:inputText>
-                <p:message for="last_name"/>
+                    <p:inputText id="last_name" class="lastNameIcon" required="true" requiredMessage="Debes ingresar tu Apellido"
+                                 value="#{registerViewBean.user.lastName}" placeholder="Ingresa tu Appelido">                    
+                    </p:inputText>
+                    <p:message for="last_name"/>
 
-                <p:inputText id="email" required="true" requiredMessage="Debes ingresar un correo electronico"
-                             value="#{registerViewBean.user.email}" placeholder="Correo Electronico"
-                             validator="#{emailValidator.validate}">               
-                </p:inputText>
-                <p:message for="email"/>
+                    <p:inputText id="email" class="emailIcon" required="true" requiredMessage="Debes ingresar un correo electronico"
+                                 value="#{registerViewBean.user.email}" placeholder="Correo Electronico"
+                                 validator="#{emailValidator.validate}">               
+                    </p:inputText>
+                    <p:message for="email"/>
 
-                <h:selectOneMenu id="gender" value="#{registerViewBean.user.gender}" required="true">
-                    <f:selectItems value="#{registerViewBean.genders}" var="gender"
-                                   itemValue="#{gender}" itemLabel="#{gender.label}" />
-                </h:selectOneMenu>
-                <p:message for="gender"/>
+                    <h:selectOneMenu id="gender" class="selectGender" value="#{registerViewBean.user.gender}" required="true">
+                        <f:selectItems value="#{registerViewBean.genders}" var="gender"
+                                       itemValue="#{gender}" itemLabel="#{gender.label}" />
+                    </h:selectOneMenu>
+                    <p:message for="gender"/>
 
-                <p:password id="pass" value="#{registerViewBean.user.password}" required="true" placeholder="Contrasena" 
-                            requiredMessage="Debes ingresar una contrasena" autocomplete="off" feedback="true"
-                            validatorMessage="Las contrasenas no coinciden" match="pass2"
-                            promptLabel="Escriba su contrasena" weakLabel="Debil"
-                            goodLabel="Pudiera ser mejor" strongLabel="Dificil de hackear!"/>
-                <p:message for="pass"/>    
+                    <p:password id="pass" class="passwordIcon" value="#{registerViewBean.user.password}" required="true" placeholder="Contrasena" 
+                                requiredMessage="Debes ingresar una contrasena" autocomplete="off" feedback="true"
+                                validatorMessage="Las contrasenas no coinciden" match="pass2"
+                                promptLabel="Escriba su contrasena" weakLabel="Debil"
+                                goodLabel="Pudiera ser mejor" strongLabel="Dificil de hackear!"
+                                inline="true"/>
+                    <p:message for="pass"/>    
 
-                <p:password id="pass2" value="#{registerViewBean.user.password}" required="true" placeholder="Repita Contrasena"
-                            requiredMessage="Debes confirmar la contrasena"/>
-                <p:message for="pass2"/>                                  
-            </h:panelGrid> 
-            <p:fileUpload update="avatar" auto="true" mode="advanced" fileUploadListener="#{fileUploadRequestBean.handleFileUpload}"
-                          sizeLimit="1000000" label="Elige una imagen para mostrar" invalidSizeMessage="La imagen no puede ser mayor a 500 Kb"
-                          invalidFileMessage="Solo se permiten imagenes de tipo PNG, JPEG y GIF"
-                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
+                    <p:password id="pass2" class="passwordIcon" value="#{registerViewBean.user.password}" required="true" placeholder="Repita Contrasena"
+                                requiredMessage="Debes confirmar la contrasena"/>
+                    <p:message for="pass2"/>   
+                    <p:fileUpload class="avatarContent" 
+                                  update="avatar" auto="true" mode="advanced" fileUploadListener="#{fileUploadRequestBean.handleFileUpload}"
+                                  sizeLimit="1000000" label="Elige una imagen para mostrar" invalidSizeMessage="La imagen no puede ser mayor a 500 Kb"
+                                  invalidFileMessage="Solo se permiten imagenes de tipo PNG, JPEG y GIF"
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/">
 
-            </p:fileUpload>
-            <p:graphicImage id="avatar" url="#{registerViewBean.avatarURL}" width="150" height="150"/>                    
-            <p:commandButton action="thanks_register" actionListener="#{registerRequestBean.registerUser}" update="form" value="Registrar"/>            
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+                    </p:fileUpload>
+                    <p:imageCropper immediate="true" id="avatar" class="avatar" value="#{registerViewBean.croppedImage}" image="#{request.requestURL.substring(0, request.requestURL.length() - request.requestURI.length())}#{request.contextPath}#{registerViewBean.avatarURL}" aspectRatio="1.0" minSize="150" maxSize="250" initialCoords="10, 10, 160, 160"/>                  
+                    <p:commandButton class="registerLink registerWidth" action="#{registerRequestBean.registerUser}" update="form" value="Registrar"/>            
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+                </h:panelGrid> 
+            </div>
         </h:form>
     </body>
 </html>

@@ -47,10 +47,28 @@ public class FileUploadRequestBean implements Serializable {
             
             //Se procede a cambiar el tamano de la imagen a 150 x 150 px
             BufferedImage imageUploaded = ImageIO.read(event.getFile().getInputstream());            
-            BufferedImage outputImage = new BufferedImage(150, 150, imageUploaded.getType());
+
+            int newHeight = imageUploaded.getHeight();
+            int newWidth = imageUploaded.getWidth();
+            
+            if (newHeight > 250) {
+                newHeight = 250;
+                newWidth = newHeight * imageUploaded.getWidth() / imageUploaded.getHeight();
+            } else if (newHeight < 150) {
+                newHeight = 150;
+                newWidth = newHeight * imageUploaded.getWidth() / imageUploaded.getHeight();
+            }                         
+
+            if (newWidth > 550) {                
+                newWidth = 550;
+            } else if (newWidth < 150 ) {
+                newWidth = 150;
+            }
+            
+            BufferedImage outputImage = new BufferedImage(newWidth, newHeight, imageUploaded.getType());
             
             Graphics2D g2d = outputImage.createGraphics();
-            g2d.drawImage(imageUploaded, 0, 0, 150, 150, null);
+            g2d.drawImage(imageUploaded, 0, 0, newWidth, newHeight, null);
             g2d.dispose();
             
             final Properties settingsProps = new Properties();
@@ -60,11 +78,11 @@ public class FileUploadRequestBean implements Serializable {
             if (extension.contains("jpeg")) {
                 extension = "jpg";
             }
-            String path = settingsProps.getProperty("staticPath") + settingsProps.getProperty("folderImages") + "/" + name + "." + extension;
+            String path = "/" + settingsProps.getProperty("staticPath") + settingsProps.getProperty("folderImages") + "/" + name + "." + extension;
             
             ImageIO.write(outputImage, extension, new File(path));
 
-            registerViewBean.setAvatarURL(settingsProps.getProperty("folderImages") + "/" + name + "." + extension);                        
+            registerViewBean.setAvatarURL("/" + settingsProps.getProperty("folderImages") + "/" + name + "." + extension);                        
             
         } catch (IOException ex) {
             Logger.getLogger(FileUploadRequestBean.class.getName()).log(Level.SEVERE, null, ex);

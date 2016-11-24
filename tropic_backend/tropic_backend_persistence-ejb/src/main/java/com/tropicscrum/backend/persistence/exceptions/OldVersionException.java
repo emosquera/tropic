@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tropicscrum.backend.client.exceptions;
+package com.tropicscrum.backend.persistence.exceptions;
 
 import javax.ejb.ApplicationException;
 
@@ -12,12 +12,10 @@ import javax.ejb.ApplicationException;
  * @author syslife02
  */
 @ApplicationException(rollback=true)
-public class LoginException extends Exception {
-    public LoginException(String message) {
-        super(message);
-    }    
+public class OldVersionException extends Exception {
 
-    public LoginException(String message, Throwable cause) {
-        super(message, cause);
-    }        
+    public OldVersionException(String message) {
+        super(message);
+    }
+    
 }

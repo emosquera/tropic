@@ -6,10 +6,12 @@
 package com.tropicscrum.backend.business.facade;
 
 import com.tropicscrum.backend.client.exceptions.LoginException;
+import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.emailsender.facade.remote.EmailSenderFacadeRemote;
 import com.tropicscrum.backend.persistence.exceptions.InvalidCredentials;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.UsersFacadeLocal;
 import java.util.List;
 import javax.ejb.EJB;
@@ -42,8 +44,13 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
     }
 
     @Override
-    public User edit(User user) {
-        usersFacadeLocal.edit(user);
+    public User edit(User user) throws UpdateException {
+        try {
+            usersFacadeLocal.edit(user);
+        } catch (OldVersionException e) {
+            throw new UpdateException("No se puede actualizar el Usuario. Este ha sido modificado en otra sesion. Se muestra el Usuario actualizado");
+        }
+        
         return user;
     }
 
@@ -84,11 +91,18 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
     @Override
     public User login(String email, String password) throws LoginException {
         try {
-            User user = usersFacadeLocal.login(email, password);
-            return user;
+            User user = usersFacadeLocal.findByEmail(email);            
+            if (!user.getConfirmed()) {
+                throw new LoginException("Debes activar tu usuario usando el link en el correo que enviamos a tu cuenta");
+            }            
+            if (user.getPassword().equals(password)) {
+                return user;
+            } else {
+              throw new LoginException("Password icorrecto");
+            }                        
         } catch (InvalidCredentials e) {
-            throw new LoginException(e.getMessage());
-        }
+            throw new LoginException("Email no se encuentra registrado");
+        } 
     }
 
     @Override

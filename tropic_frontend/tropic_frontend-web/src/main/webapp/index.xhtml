@@ -15,7 +15,7 @@
             <h:form id="form"> 
                 <p:panelGrid columns="1" class="panelTable">
 
-                    <h:outputLabel class="titleLogin">Tropic Scrum</h:outputLabel>
+                    <h:outputLabel class="titleLogin">Inicia Sesion</h:outputLabel>
                     <p:inputText id="email" class="emailIcon" required="true" requiredMessage="Debes ingresar un correo electronico"
                                  validatorMessage="Email invalido" value="#{indexViewBean.userName}" placeholder="Correo Electronico"
                                  autocomplete="off">
@@ -30,7 +30,7 @@
                     <p:commandButton id="botonLogin" action="#{loginRequestBean.login}" update="form" value="ENTRAR"/>
                     <p:link class="registerLink" outcome="register" value="Registrate"/>
                     <p:separator/>
-                    <p:commandLink class="forgotLink" update="botonLogin" value="Olvidaste tu contrasena?"/>                    
+                    <p:commandLink class="forgotLink" value="Olvidaste tu contrasena?"/>       
                 </p:panelGrid>
             </h:form>
         </div>

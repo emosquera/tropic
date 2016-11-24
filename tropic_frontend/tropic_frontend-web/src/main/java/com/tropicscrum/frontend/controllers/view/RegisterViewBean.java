@@ -11,6 +11,7 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import org.primefaces.model.CroppedImage;
 
 /**
  *
@@ -22,6 +23,7 @@ public class RegisterViewBean implements Serializable {
 
     private User user;
     private String avatarURL;
+    private CroppedImage croppedImage;
 
     public User getUser() {
         return user;
@@ -37,7 +39,7 @@ public class RegisterViewBean implements Serializable {
 
     public String getAvatarURL() {
         if (user.getAvatar() == null) {
-            avatarURL = "/static/images/default-user.png";
+            avatarURL = "/images/default-user.png";
         }
         return avatarURL;
     }
@@ -45,6 +47,14 @@ public class RegisterViewBean implements Serializable {
     public void setAvatarURL(String avatarURL) {
         this.avatarURL = avatarURL;
         user.setAvatar(avatarURL);
+    }
+
+    public CroppedImage getCroppedImage() {    
+        return croppedImage;
+    }
+
+    public void setCroppedImage(CroppedImage croppedImage) {
+        this.croppedImage = croppedImage;
     }
 
     
@@ -57,5 +67,5 @@ public class RegisterViewBean implements Serializable {
     @PostConstruct
     public void init() {
         user = new User();
-    }
+    }        
 }

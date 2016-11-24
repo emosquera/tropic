@@ -24,7 +24,15 @@
                         <p:separator style="border-color: #7A7D80;"/>
                         <p:menu model="#{menuSessionBean.model}" />
                     </p:column>
-                    <p:column class="headerContent generalHeaderContent">
+                    <p:column class="headerContent generalHeaderContent">                        
+                        <p:panelGrid class="generalHeaderUserInfo" columns="4" style="float: right">      
+                            <p:graphicImage id="avatar" class="imageAvatar iconHeader iconHeaderSmall" url="../#{headerViewBean.user.avatar}" width="40" height="40"/>
+                            <p:outputLabel class="notificationsHeader iconHeader">0 </p:outputLabel>
+                            <p:graphicImage url="#{resource['images:edit16.png']}" class="iconHeader iconHeaderSmall"/>       
+                            <p:commandLink id="logoutLink" action="#{logoutRequestBean.logout}" process="@this">
+                                <p:graphicImage url="#{resource['images:logout16.png']}" class="iconHeader iconHeaderSmall"/>
+                            </p:commandLink>                                                                                                                
+                        </p:panelGrid>
                         <ui:insert name="header"></ui:insert>                                                
                     </p:column>
                 </p:row>

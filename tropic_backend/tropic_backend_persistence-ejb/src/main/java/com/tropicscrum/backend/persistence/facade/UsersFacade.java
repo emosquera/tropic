@@ -31,25 +31,6 @@ public class UsersFacade extends AbstractFacade<User> implements UsersFacadeLoca
 
     public UsersFacade() {
         super(User.class);
-    }
-
-    @Override
-    public User login(String email, String password) throws InvalidCredentials {     
-        try {
-            User user = (User) em.createNamedQuery("findByEmail").setParameter("email", email).getSingleResult();  
-            
-            if (!user.getConfirmed()) {
-                throw new InvalidCredentials("Debes activar tu usuario usando el link en el correo que enviamos a tu cuenta");
-            }
-            
-            if (user.getPassword().equals(password)) {
-                return user;
-            } else {
-              throw new InvalidCredentials("Password icorrecto");
-            }            
-        } catch (NoResultException e) {
-            throw new InvalidCredentials("Usuario no Encontrado", e);
-        }        
     }    
 
     @Override
@@ -70,5 +51,15 @@ public class UsersFacade extends AbstractFacade<User> implements UsersFacadeLoca
         } catch (NoResultException e) {
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public User findByEmail(String email) throws InvalidCredentials {
+        try {
+            return (User) em.createNamedQuery("findByEmail").setParameter("email", email).getSingleResult();                
+        } catch (NoResultException e) {
+            throw new InvalidCredentials("Email no existe");
+        }
+        
     }
 }

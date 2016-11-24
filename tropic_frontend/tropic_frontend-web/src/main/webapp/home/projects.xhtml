@@ -7,33 +7,48 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">    
     <ui:define name="header">        
-        <h:outputStylesheet library="css" name="project.css" />
-        <p:panelGrid class="generalHeaderUserInfo" columns="4" style="float: right">      
-            <p:graphicImage id="avatar" class="imageAvatar iconHeader iconHeaderSmall" url="../#{headerViewBean.user.avatar}" width="40" height="40"/>
-            <p:outputLabel class="notificationsHeader iconHeader">0 </p:outputLabel>
-            <p:graphicImage url="/resources/images/edit16.png" class="iconHeader iconHeaderSmall"/>       
-            <p:commandLink id="logoutLink" action="#{logoutRequestBean.logout}">
-                <p:graphicImage url="/resources/images/logout16.png" class="iconHeader iconHeaderSmall"/>
-            </p:commandLink>                                                                                                                
-        </p:panelGrid>
+        <h:outputStylesheet library="css" name="project.css" />        
         <p:outputLabel class="nameHeader titlePage">Crea un nuevo Proyecto</p:outputLabel>
-        <p:commandLink class="iconNew" actionListener="#{projectRequestBean.newProject}" update="projectData">
-            <p:graphicImage url="/resources/images/new.png"/>
+        <p:commandLink class="iconNew" actionListener="#{projectRequestBean.newProject}" process="@this" update="projectData focusCode">
+            <p:graphicImage url="#{resource['images:new.png']}"/>
+            <p:resetInput target="projectData" />
         </p:commandLink>         
     </ui:define>
 
     <ui:define name="content">
-        <p:panelGrid id="projectData">
+        <p:focus id="focusCode"/>
+        <p:panelGrid id="projectData" style="width: 100%">
             <p:row>
                 <p:column>
                     <p:outputLabel class="boxInput" for="projectCode">CODIGO</p:outputLabel>
-                    <p:inputText id="projectCode" class="boxInput codeWidth" value="#{projectViewBean.project.code}" placeholder="Escribe un codigo que identifique tu proyecto"/>                    
+                    <p:inputText id="projectCode" 
+                                 class="boxInput codeWidth" 
+                                 value="#{projectViewBean.project.code}" 
+                                 placeholder="Escribe un codigo que identifique tu proyecto" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UN CODIGO DE PROYECTO"/>                    
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:message class="boxInput" for="projectCode"/>
                 </p:column>
             </p:row>
             <p:row>
                 <p:column>
                     <p:outputLabel class="boxInput" for="projectText">DESCRIPCION</p:outputLabel>
-                    <p:inputTextarea id="projectText" class="boxInput" rows="5" cols="100" value="#{projectViewBean.project.description}" placeholder="Escribe una descripcion de tu proyecto. Tipo de Proyecto, Tecnologia, Empresa"/>
+                    <p:inputTextarea id="projectText" 
+                                     class="boxInput" 
+                                     rows="5" cols="100" 
+                                     value="#{projectViewBean.project.description}" 
+                                     placeholder="Escribe una descripcion de tu proyecto. Tipo de Proyecto, Tecnologia, Empresa" 
+                                     required="true"
+                                     requiredMessage="DEBE INGRESAR UNA DESCRIPCION DEL PROYECTO"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:message class="boxInput" for="projectText"/>
                 </p:column>
             </p:row>
             <p:row>
@@ -44,12 +59,15 @@
                                     minQueryLength="3" 
                                     multiple="true"
                                     value="#{projectViewBean.project.collaborators}" 
-                                    completeMethod="#{findUsersRequestBean.getUsersByEmail}"
+                                    completeMethod="#{projectRequestBean.getUsersByEmail}"
                                     forceSelection="true"
                                     converter="#{genericUserConverter}"
-                                    var="collaborator" itemLabel="#{collaborator.firstName} #{collaborator.lastName}"
+                                    var="collaborator" itemLabel="#{collaborator.firstName} #{collaborator.lastName}"                                     
                                     itemValue="#{collaborator}"
-                                    placeholder="Anade un colaborador escribiendo su email">
+                                    placeholder="Anade un colaborador escribiendo su email"
+                                    at="top">
+                        <p:ajax event="itemSelect" />
+                        <p:ajax event="itemUnselect" />
                         <p:column>
                             <p:graphicImage class="imageAvatar iconHeader iconHeaderSmall" url="../#{collaborator.avatar}" width="40" height="40"/>
                         </p:column>                        
@@ -65,29 +83,101 @@
             </p:row>
             <p:row>
                 <p:column>
-                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+                    <p:accordionPanel class="boxInput" rendered="#{projectViewBean.modify}" activeIndex="-1">
+                        <p:tab title="HISTORIAS DEL PROYECTO">
+                            <p:dataList id="projectHistories" class="boxInput" value="#{projectViewBean.projectHistories}"
+                                        var="projectHistory" emptyMessage="El Proyecto no tiene Historias creadas">
+                                <p:commandLink action="#{projectRequestBean.goToHistory}" process="@this" >
+                                    <p:resetInput target=":form:projectData" />  
+                                    <f:setPropertyActionListener value="#{projectHistory}" target="#{projectRequestBean.historyRedirect}" />
+                                    <p:panelGrid>
+                                        <p:row>
+                                            <p:column style="width: 10%">                                                                                    
+                                                #{projectHistory.code}                                        
+                                            </p:column>
+                                            <p:column style="width: 60%">                                                                                    
+                                                #{projectHistory.title}                                        
+                                            </p:column>
+                                            <p:column style="width: 30%">
+                                                #{projectHistory.author.firstName} #{projectHistory.author.lastName}
+                                            </p:column>  
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:commandLink>                                             
+                            </p:dataList>
+                        </p:tab>
+                    </p:accordionPanel>
                 </p:column>
             </p:row>
             <p:row>
+                <p:column>
+                    <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+                </p:column>
+            </p:row> 
+            <p:row>
                 <p:column id="buttons">
-                    <p:commandButton class="boxInput succesText" actionListener="#{projectRequestBean.registerProject}" value="Crear Proyecto" rendered="#{not projectViewBean.modify}" update="buttons, allProjects"/>
-                    <p:commandButton class="boxInput infoText" id="modifyButton" actionListener="#{projectRequestBean.updateProject}" value="Modificar Proyecto" rendered="#{projectViewBean.modify}"/>
-                    <p:commandButton class="boxInput errorText" value="Eliminar Proyecto" rendered="#{projectViewBean.modify}"/>
+                    <p:commandButton class="boxInput succesText" actionListener="#{projectRequestBean.registerProject}" value="Crear Proyecto" rendered="#{not projectViewBean.modify}" update="form"/>
+                    <p:commandButton class="boxInput infoText" id="modifyButton" actionListener="#{projectRequestBean.updateProject}" value="Modificar Proyecto" rendered="#{projectViewBean.modify}" update="form"/>
+                    <p:commandButton class="boxInput errorText" value="Eliminar Proyecto" rendered="#{projectViewBean.delete}" actionListener="#{projectRequestBean.deleteProject}" update="form">
+                        <p:confirm header="Confirmacion" message="Seguro deseas eliminar el Proyecto?"/>
+                    </p:commandButton>
                 </p:column>
             </p:row>
             <p:row>
                 <p:column>
                     <p:outputLabel class="boxInput" for="allProjects">MIS PROYECTOS</p:outputLabel>
-                    <p:dataList id="allProjects" class="boxInput" value="#{projectViewBean.myProyects}"
-                                var="project">
-                        <p:commandLink update=":form:projectData"  >
-                            <f:setPropertyActionListener value="true" target="#{projectViewBean.modify}" />
-                            <f:setPropertyActionListener value="#{project}" target="#{projectViewBean.project}" />
-                            <h:outputText value="#{project.code}, #{project.description}"/>
-                        </p:commandLink>
-                    </p:dataList>
+                    <p:dataTable id="allProjects" class="boxInput" value="#{projectViewBean.myProyects}"
+                                 var="project" emptyMessage="No has creado tu primer proyecto todavia">
+                        <p:column style="width: 20px">
+                            <p:commandLink update=":form:projectData :form:focusCode" process="@this" >
+                                <p:resetInput target=":form:projectData" />
+                                <f:setPropertyActionListener value="true" target="#{projectViewBean.modify}" />
+                                <f:setPropertyActionListener value="true" target="#{projectViewBean.delete}" />
+                                <f:setPropertyActionListener value="#{project}" target="#{projectViewBean.project}" />
+                                <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                            </p:commandLink>                                             
+                        </p:column>
+                        <p:column style="width: 10%" headerText="Codigo" filterBy="#{project.code}" filterMatchMode="contains">                                                                                    
+                            #{project.code}                                        
+                        </p:column>
+                        <p:column style="width: 90%" headerText="Descripcion" filterBy="#{project.description}" filterMatchMode="contains">
+                            #{project.description}
+                        </p:column>  
+                    </p:dataTable>
                 </p:column>
             </p:row>
-        </p:panelGrid>        
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="colabProjects">PROYECTOS DONDE COLABORO</p:outputLabel>
+                    <p:dataTable id="colabProjects" class="boxInput" value="#{projectViewBean.collabProyects}"
+                                 var="collabProject" emptyMessage="No colaboras en ningun proyecto todavia">
+                        <p:column style="width: 20px">
+                            <p:commandLink update=":form:projectData :form:focusCode" process="@this">
+                                <p:resetInput target=":form:projectData" />
+                                <f:setPropertyActionListener value="true" target="#{projectViewBean.modify}" />
+                                <f:setPropertyActionListener value="false" target="#{projectViewBean.delete}" />
+                                <f:setPropertyActionListener value="#{collabProject}" target="#{projectViewBean.project}" />
+                                <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                            </p:commandLink>                                             
+                        </p:column>
+                        <p:column style="width: 10%" headerText="Codigo" filterBy="#{collabProject.code}" filterMatchMode="contains">                                                                                    
+                            #{collabProject.code}                                        
+                        </p:column>
+                        <p:column style="width: 10%" headerText="Autor" filterBy="#{collabProject.author.firstName} #{collabProject.author.lastName}" filterMatchMode="contains">                                                                                    
+                            #{collabProject.author.firstName} #{collabProject.author.lastName}                                        
+                        </p:column>
+                        <p:column style="width: 80%" headerText="Descripcion" filterBy="#{collabProject.description}" filterMatchMode="contains">
+                            #{collabProject.description}
+                        </p:column>    
+                    </p:dataTable>
+                </p:column>
+            </p:row>
+        </p:panelGrid>     
+
+        <!--Dialogo de Confirmacion General-->
+        <p:confirmDialog class="boxInput" global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes boxInput succesText" icon="check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no boxInput errorText" icon="cancel" />
+        </p:confirmDialog>
     </ui:define>
 </ui:composition>

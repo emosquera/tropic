@@ -6,6 +6,7 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.UserSchedule;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,7 +19,7 @@ public interface UserScheduleFacadeLocal {
 
     void create(UserSchedule userSchedule);
 
-    void edit(UserSchedule userSchedule);
+    void edit(UserSchedule userSchedule) throws OldVersionException;
 
     void remove(UserSchedule userSchedule);
 

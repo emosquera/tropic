@@ -6,6 +6,9 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.History;
+import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,7 +21,7 @@ public interface HistoryFacadeLocal {
 
     void create(History history);
 
-    void edit(History history);
+    void edit(History history) throws OldVersionException;
 
     void remove(History history);
 
@@ -30,4 +33,9 @@ public interface HistoryFacadeLocal {
 
     int count();
     
+    List<History> findAllByUser(User user);
+    
+    List<History> findAllByCollaborator(User user);
+    
+    List<History> findByProject(Project project);
 }

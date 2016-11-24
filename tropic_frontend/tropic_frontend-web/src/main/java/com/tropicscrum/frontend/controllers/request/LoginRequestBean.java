@@ -41,7 +41,7 @@ public class LoginRequestBean {
             try {
                 User user = userFacadeRemote.login(indexViewBean.getUserName(), md5Converter.StringToMD5(indexViewBean.getPassword()));  
                 session.setAttribute("user", user);                
-                return "/home/home.xhtml?faces-redirect=true";
+                return "/home/home?faces-redirect=true";
             } catch (NoSuchAlgorithmException ex) {
                 session.setAttribute("user", null);
                 return null;

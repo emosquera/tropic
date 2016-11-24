@@ -24,7 +24,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "project")
 @NamedQueries({
-    @NamedQuery(name = "findAllByUser", query = "Select p from Project p where p.author = :user")})
+    @NamedQuery(name = "findAllProjectsByUser", query = "Select p from Project p where p.author = :user"),
+    @NamedQuery(name = "findAllProjectsByCollaborator", query = "Select p from Project p where :user MEMBER OF p.collaborators")})
 public class Project extends BasicAttributes {
     private String code;
     private String description;

@@ -5,7 +5,10 @@
  */
 package com.tropicscrum.backend.client.facade;
 
+import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.History;
+import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.User;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -13,14 +16,14 @@ import javax.ejb.Remote;
  *
  * @author syslife02
  */
-
 @Remote
 public interface HistoryFacadeRemote {
+
     public final String JNDI_REMOTE_NAME = "ejb/historyFacadeRemote";
-    
+
     History create(History history);
 
-    History edit(History history);
+    History edit(History history) throws UpdateException;
 
     void remove(History history);
 
@@ -31,4 +34,23 @@ public interface HistoryFacadeRemote {
     List<History> findRange(int[] range);
 
     int count();
+
+    List<History> findAllMine(User you);
+
+    List<History> findAllMyCollabs(User you);
+
+    /**
+     * Retorna una lista de historias que pertenecen a un proyecto. 
+     * El proyecto debe ser un objeto de tipo {@link Project}
+     * <p>
+     * Este metodo retornara null si no consigue ninguna historia asociada al 
+     * proyecto.     
+     *
+     * @author Edgar Mosquera
+     * @param project Un objeto de tipo Proyecto
+     * @return La lista de Historias que pertenecen al Proyecto dado
+     * @see History
+     * @see Project
+     */
+    List<History> findProjectHistories(Project project);
 }

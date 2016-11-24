@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">    
+    <ui:define name="header">        
+        <h:outputStylesheet library="css" name="history.css" />        
+        <p:outputLabel class="nameHeader titlePage">Crea una nueva Historia</p:outputLabel>
+        <p:commandLink class="iconNew" actionListener="#{historyRequestBean.newHistory}" process="@this" update="historyData focusCode">
+            <p:graphicImage url="#{resource['images:new.png']}"/>
+            <p:resetInput target="historyData" />
+        </p:commandLink>         
+    </ui:define>
+
+    <ui:define name="content">
+        <p:focus id="focusCode"/>
+        <p:panelGrid id="historyData" style="width: 100%">
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="historyCode">CODIGO</p:outputLabel>
+                    <p:inputText id="historyCode" 
+                                 class="boxInput codeWidth" 
+                                 value="#{historyViewBean.history.code}" 
+                                 placeholder="Escribe un codigo que identifique tu historia" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UN CODIGO DE HISTORIA"/>                    
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:message class="boxInput" for="historyCode"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="historyTitle">TITULO</p:outputLabel>
+                    <p:inputText id="historyTitle" 
+                                 class="boxInput titleWidth" 
+                                 value="#{historyViewBean.history.title}" 
+                                 placeholder="Escribe un titulo que identifique tu historia" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UN TITULO DE LA HISTORIA"/>                    
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:message class="boxInput" for="historyTitle"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="historyContent">CONTENIDO</p:outputLabel>
+                    <p:inputTextarea id="historyContent" 
+                                     class="boxInput" 
+                                     rows="10" cols="100" 
+                                     value="#{historyViewBean.history.content}" 
+                                     placeholder="Escribe el contenido de la historia. El requerimiento debe ser entendible para cualquier tipo de usuario" 
+                                     required="true"
+                                     requiredMessage="DEBE INGRESAR UN CONTENIDO DE LA HISTORIA"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:message class="boxInput" for="historyContent"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="projectHistory">PROYECTO</p:outputLabel>
+                    <p:selectOneMenu id="projectHistory" 
+                                     class="boxInput" 
+                                     value="#{historyViewBean.history.project}" 
+                                     filter="true" 
+                                     filterMatchMode="startsWith"
+                                     required="true" 
+                                     requiredMessage="DEBE INDICAR EL PROYECTO AL QUE PERTENECE LA HISTORIA"
+                                     converter="#{projectHistoryConverter}">
+                        <f:selectItem itemLabel="Selecciona un Proyecto" itemValue=""  noSelectionOption="false"/>
+                        <f:selectItems value="#{historyViewBean.myProjects}" var="project" itemLabel="#{project.code}" itemValue="#{project}"/>
+                    </p:selectOneMenu>
+                </p:column>                
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:message class="boxInput" for="projectHistory"/>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+                </p:column>
+            </p:row> 
+            <p:row>
+                <p:column id="buttons">
+                    <p:commandButton class="boxInput succesText" actionListener="#{historyRequestBean.registerHistory}" value="Crear Historia" rendered="#{not historyViewBean.modify}" update="form"/>
+                    <p:commandButton class="boxInput infoText" id="modifyButton" actionListener="#{historyRequestBean.updateHistory}" value="Modificar Historia" rendered="#{historyViewBean.modify}" update="form"/>
+                    <p:commandButton class="boxInput errorText" value="Eliminar Historia" rendered="#{historyViewBean.delete}" actionListener="#{historyRequestBean.removeHistory}" update="form">
+                        <p:confirm header="Confirmacion" message="Seguro deseas eliminar la Historia?"/>
+                    </p:commandButton>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="allHistories">MIS HISTORIAS</p:outputLabel>
+                    <p:dataTable id="allHistories" class="boxInput" value="#{historyViewBean.histories}"
+                                 var="history" emptyMessage="No has creado tu primera historia todavia">
+                        <p:column style="width: 20px">
+                            <p:commandLink update=":form:historyData :form:focusCode" process="@this" >
+                                <p:resetInput target=":form:historyData" />
+                                <f:setPropertyActionListener value="true" target="#{historyViewBean.modify}" />
+                                <f:setPropertyActionListener value="true" target="#{historyViewBean.delete}" />
+                                <f:setPropertyActionListener value="#{history}" target="#{historyViewBean.history}" />
+                                <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                            </p:commandLink>
+
+                        </p:column>
+                        <p:column style="width: 10%" headerText="Codigo" filterBy="#{history.code}" filterMatchMode="contains">                                                                                    
+                            #{history.code}                                        
+                        </p:column>                                    
+                        <p:column style="width: 60%" headerText="Titulo" filterBy="#{history.title}" filterMatchMode="contains">
+                            #{history.title}
+                        </p:column>
+                        <p:column style="width: 10%" headerText="Proyecto" filterBy="#{history.project.code}" filterMatchMode="contains">
+                            #{history.project.code}
+                        </p:column>
+                        <p:column style="width: 20%" headerText="Autor del Proyecto" filterBy="#{history.project.author.firstName} #{history.project.author.lastName}" filterMatchMode="contains">
+                            #{history.project.author.firstName} #{history.project.author.lastName}
+                        </p:column>
+                    </p:dataTable>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="collabHistories">HISTORIAS DONDE COLABORO</p:outputLabel>
+                    <p:dataTable id="collabHistories" class="boxInput" value="#{historyViewBean.collabHistories}"
+                                 var="colHist" emptyMessage="No colaboras en ninguna Historia todavia">
+                        <p:column style="width: 20px">
+                            <p:commandLink update=":form:historyData :form:focusCode" process="@this" >
+                                <p:resetInput target=":form:historyData" />
+                                <f:setPropertyActionListener value="true" target="#{historyViewBean.modify}" />
+                                <f:setPropertyActionListener value="false" target="#{historyViewBean.delete}" />
+                                <f:setPropertyActionListener value="#{colHist}" target="#{historyViewBean.history}" />
+                                <p:graphicImage url="#{resource['images:edit16.png']}"/>                    
+                            </p:commandLink>
+
+                        </p:column>
+                        <p:column style="width: 10%" headerText="Codigo" filterBy="#{colHist.code}" filterMatchMode="contains">
+                            #{colHist.code}
+                        </p:column>                                                         
+                        <p:column style="width: 15%" headerText="Autor" filterBy="#{colHist.author.firstName} #{colHist.author.lastName}" filterMatchMode="contains">
+                            #{colHist.author.firstName} #{colHist.author.lastName}
+                        </p:column>
+                        <p:column style="width: 50%" headerText="Titulo" filterBy="#{colHist.title}" filterMatchMode="contains">
+                            #{colHist.title}
+                        </p:column>
+                        <p:column style="width: 10%" headerText="Proyecto" filterBy="#{colHist.project.code}" filterMatchMode="contains">
+                            #{colHist.project.code}
+                        </p:column>
+                        <p:column style="width: 15%" headerText="Autor del Proyecto" filterBy="#{colHist.project.author.firstName} #{colHist.project.author.lastName}" filterMatchMode="contains">
+                            #{colHist.project.author.firstName} #{colHist.project.author.lastName}
+                        </p:column>
+                    </p:dataTable>
+                </p:column>
+            </p:row>
+        </p:panelGrid>     
+
+        <!--Dialogo de Confirmacion General-->
+        <p:confirmDialog class="boxInput" global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes boxInput succesText" icon="check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no boxInput errorText" icon="cancel" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

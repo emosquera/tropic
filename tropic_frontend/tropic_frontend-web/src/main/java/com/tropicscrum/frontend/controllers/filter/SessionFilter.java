@@ -17,6 +17,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -100,10 +101,14 @@ public class SessionFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {        
+        response.getWriter();
+        HttpServletResponseWrapper wrapper = 
+            new HttpServletResponseWrapper((HttpServletResponse) response);
+        wrapper.setBufferSize(10000000);
+        
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;        
-        HttpSession sess = (HttpSession) req.getSession(false);
-        
+        HttpSession sess = (HttpSession) req.getSession(false);        
         if (sess == null || sess.getAttribute("user") == null) {
             res.sendRedirect(req.getContextPath() + "/");
         } else {

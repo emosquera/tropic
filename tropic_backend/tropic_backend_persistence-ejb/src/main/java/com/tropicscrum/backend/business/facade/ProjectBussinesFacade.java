@@ -5,9 +5,11 @@
  */
 package com.tropicscrum.backend.business.facade;
 
+import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.ProjectFacadeRemote;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.ProjectFacadeLocal;
 import java.util.List;
 import javax.ejb.EJB;
@@ -33,10 +35,15 @@ public class ProjectBussinesFacade implements ProjectFacadeRemote {
     }
 
     @Override
-    public Project edit(Project project) {
-        projectFacadeLocal.edit(project);
-        project.getCollaborators().size();
-        return project;
+    public Project edit(Project project) throws UpdateException {
+        try {
+            projectFacadeLocal.edit(project);
+            project.getCollaborators().size();
+            return project;
+        } catch (OldVersionException ex) {
+            throw new UpdateException("No se puede actualizar el Proyecto. Este ha sido modificado en otra sesion. Se muestra el Proyecto actualizado");
+        }
+        
     }
 
     @Override
@@ -76,5 +83,14 @@ public class ProjectBussinesFacade implements ProjectFacadeRemote {
             p.getCollaborators().size();
         }
         return myProjects;
+    }
+
+    @Override
+    public List<Project> findAllMyCollabs(User you) {
+        List<Project> collabProjects = projectFacadeLocal.findAllByCollaborator(you);
+        for (Project p : collabProjects) {
+            p.getCollaborators().size();
+        }
+        return collabProjects;
     }
 }

@@ -12,12 +12,10 @@ import javax.ejb.ApplicationException;
  * @author syslife02
  */
 @ApplicationException(rollback=true)
-public class LoginException extends Exception {
-    public LoginException(String message) {
-        super(message);
-    }    
+public class UpdateException extends Exception {
 
-    public LoginException(String message, Throwable cause) {
-        super(message, cause);
-    }        
+    public UpdateException(String message) {
+        super(message);
+    }
+    
 }

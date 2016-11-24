@@ -7,6 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -19,7 +20,7 @@ public interface ProjectFacadeLocal {
 
     void create(Project project);
 
-    void edit(Project project);
+    void edit(Project project) throws OldVersionException;
 
     void remove(Project project);
 
@@ -32,5 +33,7 @@ public interface ProjectFacadeLocal {
     int count();
     
     List<Project> findAllByUser(User user);
+    
+    List<Project> findAllByCollaborator(User user);
     
 }

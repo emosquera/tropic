@@ -9,17 +9,20 @@ import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.utils.Md5Converter;
 import com.tropicscrum.frontend.controllers.view.RegisterViewBean;
 import com.tropicscrum.frontend.utils.RequestDomain;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.util.Base64;
@@ -38,6 +41,7 @@ public class RegisterRequestBean implements Serializable {
     @Inject
     RegisterViewBean registerViewBean;
     
+    
     @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
     UsersFacadeRemote userFacadeRemote;
     
@@ -47,12 +51,22 @@ public class RegisterRequestBean implements Serializable {
     public RegisterRequestBean() {
     }
     
-    public void registerUser() {  
+    public String registerUser() {  
         try {                            
             registerViewBean.getUser().setPassword(md5Converter.StringToMD5(registerViewBean.getUser().getPassword()));
             if (registerViewBean.getUser().getAvatar() == null) {
-                registerViewBean.getUser().setAvatar("/static/images/default-user.png");
-            }                                    
+                registerViewBean.getUser().setAvatar("/images/default-user.png");
+            }                                 
+            if (!registerViewBean.getUser().getAvatar().equals("/images/default-user.png")) {
+                if (registerViewBean.getCroppedImage() != null) {
+                    final Properties settingsProps = new Properties();
+                    settingsProps.load(getClass().getResourceAsStream("/settings.properties"));
+                    String path = "/" + settingsProps.getProperty("staticPath") + registerViewBean.getUser().getAvatar();
+                    try (FileImageOutputStream imageOutput = new FileImageOutputStream(new File(path))) {
+                        imageOutput.write(registerViewBean.getCroppedImage().getBytes(), 0, registerViewBean.getCroppedImage().getBytes().length);
+                    }
+                }
+            }
             registerViewBean.setUser(userFacadeRemote.create(registerViewBean.getUser()));
             String encodedId = Base64.encodeToString(registerViewBean.getUser().getId().toString().getBytes(), true);
             RequestDomain requestDomain = new RequestDomain();
@@ -64,6 +78,8 @@ public class RegisterRequestBean implements Serializable {
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "No se pudo registrar el usuario"));
         }
+        
+        return "thanks_register?faces-redirect=true";
         
     }    
 }

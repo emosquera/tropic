@@ -16,6 +16,10 @@ input.boxInput {
     font-family: 'Heebo', sans-serif;  
 }
 
+input.boxInput.ui-state-error {
+    border: 1px solid #D87070;
+}
+
 label.boxInput {
     position: absolute;
     background: #ffffff;
@@ -36,10 +40,16 @@ textArea.boxInput {
     font-family: 'Heebo', sans-serif;  
 }
 
+textArea.boxInput.ui-state-error {
+    border: 1px solid #D87070;
+}
+
 .ui-autocomplete.boxInput {
     border: 1px solid rgb(169, 169, 169);
     margin-top: 10px;    
     padding: 20px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .ui-autocomplete.boxInput .ui-autocomplete-token {
@@ -47,6 +57,17 @@ textArea.boxInput {
     font-size: 20px;
     font-weight: 300!important;
     font-family: 'Heebo', sans-serif;
+}
+
+.ui-autocomplete.boxInput .ui-autocomplete-token:hover {
+    font-weight: 400!important;
+}
+
+.ui-autocomplete.boxInput .ui-autocomplete-token-icon {
+    background-image: url(#{resource["images:delete.png"]});  
+    width: 25px;
+    height: 20px;    
+    opacity: 0.8;
 }
 
 .ui-autocomplete.boxInput .ui-autocomplete-input-token {
@@ -60,7 +81,14 @@ textArea.boxInput {
     width: 100%!important;
 }
 
-button.boxInput {
+.ui-autocomplete-items {
+    background: #ffffff;
+    font-family: 'Dosis', sans-serif;
+    font-size: 18px!important;
+    font-weight: 300;
+}
+
+.ui-button.boxInput {
     border: 1px solid #DAD8D8;
     font-size: 20px;
     font-weight: 400!important;
@@ -69,7 +97,7 @@ button.boxInput {
     margin: 10px 10px 10px 0;
 }
 
-button.boxInput:hover {
+.ui-button.boxInput:hover {
     font-weight: 600!important;
 }
 
@@ -91,14 +119,252 @@ button.boxInput:hover {
     padding: 20px;
 }
 
+.ui-datalist.boxInput .ui-datalist-data {
+    padding: 0;
+    margin: 0;
+}
+
+.ui-datalist.boxInput .ui-datalist-item {
+    list-style-type: none;
+    background-image: url(#{resource["images:edit16.png"]});        
+    background-repeat: no-repeat;
+    padding: 0 0 0 15px;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
 .ui-datalist.boxInput .ui-datalist-item a {
     text-decoration: none;
     font-size: 18px;
     font-weight: 300!important;
     font-family: 'Heebo', sans-serif;
     color: #2D2DA9;
+    margin-left: 5px;
 }
 
 .ui-datalist.boxInput .ui-datalist-item a:hover {
     font-weight: 400!important;
+    cursor: pointer;
 }
+
+.ui-datalist.boxInput .ui-datalist-item a:focus {
+    font-weight: 400!important;
+    outline: none!important;
+}
+
+.ui-datalist.boxInput .ui-datalist-item table {
+    display: inline-table;
+    width: 100%;
+}
+
+.ui-datalist.boxInput .ui-datalist-empty-message {
+    font-size: 18px;
+    font-weight: 300!important;
+    font-family: 'Heebo', sans-serif;
+}
+
+.ui-widget-overlay {
+    background-color: rgba(0,0,0,0.5);
+}
+
+
+.ui-confirm-dialog.boxInput {
+    background-color: #ffffff;
+    font-size: 18px;
+    font-weight: 300!important;
+    font-family: 'Heebo', sans-serif;
+}
+
+.ui-confirm-dialog.boxInput .ui-dialog-buttonpane {
+    text-align: center!important;
+}
+
+.ui-confirm-dialog.boxInput .ui-dialog-titlebar {
+    background: #3D3D3D;
+}
+
+.ui-confirm-dialog.boxInput .ui-dialog-titlebar .ui-dialog-title {
+    color: #f0f1f3;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.ui-confirm-dialog.boxInput .ui-button-icon-left {
+    width: 20px;
+    height: 20px;
+}
+
+.check {
+    background-image: url(#{resource["images:check.png"]});
+}
+
+.cancel {
+    background-image: url(#{resource["images:cancel.png"]});
+}
+
+.ui-messages.boxInput {
+    font-size: 24px;    
+    font-family: 'Dosis', sans-serif;
+    text-align: center;
+}
+
+.ui-messages.boxInput .ui-messages-info {
+    color: #FFFFFF;
+    background-color: #92CE9A;
+    border-color: #8DC3A8;    
+}
+
+.ui-messages.boxInput .ui-messages-info-icon {
+    display: none;
+}
+
+.ui-messages.boxInput .ui-messages-fatal {
+    color: #FFFFFF;
+    background-color: #DA8282;
+    border-color: #D67878; 
+}
+
+.ui-messages.boxInput .ui-messages-fatal-icon {
+    display: none;
+}
+
+.ui-message.ui-message-error.boxInput {
+    color: #b94a48;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    font-weight: 400!important;
+    font-family: 'Dosis', sans-serif;
+    margin: 0 0 15px;
+    padding: 0;
+}
+
+.ui-message.ui-message-error.boxInput .ui-message-error-icon {
+    display: none;
+}
+
+.ui-message.ui-message-error.boxInput .ui-message-error-detail {
+    margin-left: 0;
+}
+
+.ui-selectonemenu.boxInput {
+    border: 1px solid rgb(169, 169, 169);
+    margin-top: 10px;    
+    padding: 20px 30px 20px 20px;
+}
+
+.ui-selectonemenu.boxInput.ui-state-error {
+    border: 1px solid #D87070;
+}
+
+.ui-selectonemenu.boxInput .ui-selectonemenu-label {
+    font-size: 20px;
+    font-weight: 300!important;
+    font-family: 'Heebo', sans-serif;
+}
+
+.ui-selectonemenu.boxInput .ui-selectonemenu-trigger {
+    border-left: 1px solid rgb(169, 169, 169);
+    background-image: url(#{resource["images:down_arrow16.png"]});
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ui-selectonemenu.boxInput .ui-icon {
+    display: none;
+}
+
+.ui-selectonemenu-items {
+    background: #ffffff;
+    font-family: 'Dosis', sans-serif;
+    font-size: 18px!important;
+}
+
+.ui-selectonemenu-items .ui-selectonemenu-item {
+    font-weight: 300!important;
+}
+
+.ui-selectonemenu-panel .ui-selectonemenu-filter-container {
+    background: #ffffff;
+}
+
+.ui-datatable.boxInput {
+    font-size: 18px;
+    font-weight: 300!important;
+    font-family: 'Heebo', sans-serif;
+    color: #2D2DA9;
+    border: 1px solid rgb(169, 169, 169);
+    margin-top: 10px;    
+    padding: 20px;
+}
+
+.ui-datatable.boxInput thead th {
+    font-size: 16px;
+    border: 0;
+    color: #565656;
+    font-weight: 400!important;
+    text-align: left;
+}
+
+.ui-datatable.boxInput a {
+    text-decoration: none;   
+    color: #2D2DA9;
+}
+
+.ui-datatable.boxInput a:hover {
+    cursor: pointer!important;
+}
+
+.ui-datatable.boxInput a:focus {
+    outline: none;
+}
+
+.ui-datatable.boxInput tr:hover {
+    font-weight: 400!important;
+}
+
+.ui-datatable.boxInput thead th .ui-column-filter {
+    margin: 0;
+    width: 75%;
+    font-family: 'Dosis', sans-serif;
+    font-size: 18px!important;
+    border: 1px solid #d4d4d4;
+    background-image: url(#{resource["images:search16.png"]});
+    background-repeat: no-repeat;
+    padding-left: 25px;
+    background-position: left center;
+    background-position-x: 5px;
+}
+
+.ui-accordion.boxInput {
+    font-size: 18px;
+    font-family: 'Dosis', sans-serif;
+    color: #565656;
+}
+
+.ui-accordion.boxInput .ui-accordion-header {
+    font-weight: 400;
+}
+
+.ui-accordion.boxInput .ui-icon {
+    width: 16px;
+    height: 16px;
+    background-position: left center;
+}
+
+.ui-accordion.boxInput .ui-icon.ui-icon-triangle-1-e {
+    background-image: url(#{resource["images:down_arrow16.png"]});    
+}
+
+.ui-accordion.boxInput .ui-icon.ui-icon-triangle-1-s {
+    background-image: url(#{resource["images:up_arrow16.png"]});    
+}
+
+.ui-accordion.boxInput .ui-accordion-header.ui-tabs-outline {
+    outline: none!important;
+}
+
+.ui-accordion.boxInput .ui-accordion-header.ui-state-active {
+    background-color: #F0F1F3;
+}
+

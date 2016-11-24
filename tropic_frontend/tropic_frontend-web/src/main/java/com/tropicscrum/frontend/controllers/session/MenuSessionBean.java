@@ -58,7 +58,7 @@ public class MenuSessionBean implements Serializable {
         firstSubmenu.addElement(item);
 
         item = new DefaultMenuItem("Historias");
-        item.setOutcome("/home/home");
+        item.setOutcome("/home/history");
         item.setIcon("history-icon");
         firstSubmenu.addElement(item);
         

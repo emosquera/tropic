@@ -6,6 +6,7 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.SprintUser;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,7 +19,7 @@ public interface SprintUserFacadeLocal {
 
     void create(SprintUser sprintUser);
 
-    void edit(SprintUser sprintUser);
+    void edit(SprintUser sprintUser) throws OldVersionException;
 
     void remove(SprintUser sprintUser);
 

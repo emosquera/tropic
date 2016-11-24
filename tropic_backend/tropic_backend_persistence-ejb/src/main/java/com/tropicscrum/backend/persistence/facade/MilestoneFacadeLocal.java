@@ -6,6 +6,7 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,7 +19,7 @@ public interface MilestoneFacadeLocal {
 
     void create(Milestone milestone);
 
-    void edit(Milestone milestone);
+    void edit(Milestone milestone) throws OldVersionException;
 
     void remove(Milestone milestone);
 

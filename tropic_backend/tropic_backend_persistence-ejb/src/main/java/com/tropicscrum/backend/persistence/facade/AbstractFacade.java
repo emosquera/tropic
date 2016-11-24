@@ -5,8 +5,10 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 
 /**
  *
@@ -26,8 +28,13 @@ public abstract class AbstractFacade<T> {
         getEntityManager().persist(entity);
     }
 
-    public void edit(T entity) {
-        getEntityManager().merge(entity);
+    public void edit(T entity) throws OldVersionException {
+        try {
+            getEntityManager().merge(entity);
+        } catch (OptimisticLockException e) {
+            throw new OldVersionException("La entidad ha sido modificada despues de la ultima lectura");
+        }
+        
     }
 
     public void remove(T entity) {

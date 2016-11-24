@@ -33,7 +33,12 @@ public class ProjectFacade extends AbstractFacade<Project> implements ProjectFac
 
     @Override
     public List<Project> findAllByUser(User user) {
-        return em.createNamedQuery("findAllByUser").setParameter("user", user).getResultList();
+        return em.createNamedQuery("findAllProjectsByUser").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public List<Project> findAllByCollaborator(User user) {
+        return em.createNamedQuery("findAllProjectsByCollaborator").setParameter("user", user).getResultList();
     }
     
 }

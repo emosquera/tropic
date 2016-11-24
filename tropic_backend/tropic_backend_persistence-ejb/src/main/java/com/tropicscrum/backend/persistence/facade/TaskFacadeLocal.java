@@ -6,6 +6,7 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Task;
+import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,7 +19,7 @@ public interface TaskFacadeLocal {
 
     void create(Task task);
 
-    void edit(Task task);
+    void edit(Task task) throws OldVersionException;
 
     void remove(Task task);
 

@@ -5,6 +5,7 @@
  */
 package com.tropicscrum.backend.client.facade;
 
+import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import java.util.List;
@@ -21,7 +22,7 @@ public interface ProjectFacadeRemote {
     
     Project create(Project project);
 
-    Project edit(Project project);
+    Project edit(Project project) throws UpdateException;
 
     void remove(Project project);
 
@@ -34,4 +35,6 @@ public interface ProjectFacadeRemote {
     int count();
     
     List<Project> findAllMine(User you);
+    
+    List<Project> findAllMyCollabs(User you);
 }
