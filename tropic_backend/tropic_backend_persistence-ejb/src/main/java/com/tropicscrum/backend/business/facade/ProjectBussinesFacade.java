@@ -11,7 +11,7 @@ import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.ProjectFacadeLocal;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.Remote;
@@ -59,12 +59,12 @@ public class ProjectBussinesFacade implements ProjectFacadeRemote {
     }
 
     @Override
-    public List<Project> findAll() {
+    public Collection<Project> findAll() {
         return projectFacadeLocal.findAll();
     }
 
     @Override
-    public List<Project> findRange(int[] range) {
+    public Collection<Project> findRange(int[] range) {
         return projectFacadeLocal.findRange(range);
     }
 
@@ -77,8 +77,8 @@ public class ProjectBussinesFacade implements ProjectFacadeRemote {
     // "Insert Code > Add Business Method")
 
     @Override
-    public List<Project> findAllMine(User you) {
-        List<Project> myProjects = projectFacadeLocal.findAllByUser(you);
+    public Collection<Project> findAllMine(User you) {
+        Collection<Project> myProjects = projectFacadeLocal.findAllByUser(you);
         for (Project p : myProjects) {
             p.getCollaborators().size();
         }
@@ -86,8 +86,8 @@ public class ProjectBussinesFacade implements ProjectFacadeRemote {
     }
 
     @Override
-    public List<Project> findAllMyCollabs(User you) {
-        List<Project> collabProjects = projectFacadeLocal.findAllByCollaborator(you);
+    public Collection<Project> findAllMyCollabs(User you) {
+        Collection<Project> collabProjects = projectFacadeLocal.findAllByCollaborator(you);
         for (Project p : collabProjects) {
             p.getCollaborators().size();
         }

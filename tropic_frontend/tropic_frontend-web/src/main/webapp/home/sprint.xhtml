@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">    
+    <ui:define name="header">        
+        <h:outputScript library="js" name="calendar_es.js" />
+        <h:outputStylesheet library="css" name="sprint.css" />        
+        <p:outputLabel class="nameHeader titlePage">Crea un nuevo Sprint</p:outputLabel>
+        <p:commandLink class="iconNew" actionListener="#{sprintRequestBean.newSprint}" process="@this" update="sprintData focusCode">
+            <p:graphicImage url="#{resource['images:new.png']}"/>
+            <p:resetInput target="sprintData" />
+        </p:commandLink>         
+    </ui:define>
+
+    <ui:define name="content">
+        <p:focus id="focusCode"/>
+        <h:panelGroup id="sprintData" style="display: block; padding: 10px;">
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="sprintCode">CODIGO</p:outputLabel>
+                <p:inputText id="sprintCode" 
+                             class="boxInput codeWidth" 
+                             value="#{sprintViewBean.sprint.code}" 
+                             placeholder="Escribe un codigo que identifique tu Sprint" 
+                             required="true"
+                             requiredMessage="DEBE INGRESAR UN CODIGO DE SPRINT"/>               
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">                
+                <p:message class="boxInput" for="sprintCode"/>               
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="sprintDescription">DESCRIPCION</p:outputLabel>
+                <p:inputTextarea id="sprintDescription" 
+                                 class="boxInput" 
+                                 rows="5" cols="100" 
+                                 value="#{sprintViewBean.sprint.name}" 
+                                 placeholder="Escribe la descripcion del Sprint" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UNA DESCRIPCION DEL SPRINT"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="sprintDescription"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="sprintStart">FECHA DE INICIO</p:outputLabel>
+                <p:calendar id="sprintStart" 
+                            class="boxInput startWidth" 
+                            locale="es"
+                            value="#{sprintViewBean.sprint.start}" 
+                            placeholder="Elije la fecha de inicio del Sprint" 
+                            required="true"
+                            requiredMessage="DEBE INGRESAR UNA FECHA DE INICIO DEL SPRINT"
+                            pattern="dd MMM, yyyy"
+                            readonlyInput="true"/>       
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="sprintStart"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+            </h:panelGroup>            
+            <h:panelGroup style="width: 100%; display: inline-block; margin-bottom: 20px;">
+                <p:commandButton class="boxInput succesText"  value="Crear Sprint" actionListener="#{sprintRequestBean.registerSprint}" rendered="#{not sprintViewBean.modify}" update="form"/>
+                <p:commandButton class="boxInput infoText" id="modifyButton" value="Modificar Sprint"  actionListener="#{sprintRequestBean.updateSprint}" rendered="#{sprintViewBean.modify}" update="form"/>
+                    <p:commandButton class="boxInput errorText" value="Eliminar Sprint" actionListener="#{sprintRequestBean.removeSprint}" rendered="#{sprintViewBean.delete}" update="form">
+                        <p:confirm header="Confirmacion" message="Seguro deseas eliminar el Sprint?"/>
+                    </p:commandButton>
+            </h:panelGroup>
+            <h:panelGroup id="rowUser" style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput " for="sprintUser">PARTICIPANTE</p:outputLabel>
+                <p:autoComplete id="sprintUser"
+                                class="boxInput autoComplete"
+                                minQueryLength="3" 
+                                value="#{sprintViewBean.userSelected}" 
+                                completeMethod="#{sprintRequestBean.getUsersByEmail}"
+                                forceSelection="true"
+                                converter="#{genericUserConverter}"
+                                var="collaborator" itemLabel="#{collaborator.completeName}"                                     
+                                itemValue="#{collaborator}"
+                                placeholder="Anade un colaborador escribiendo su email"
+                                at="top"
+                                disabled="#{sprintViewBean.editingPerson}">                    
+                    <p:ajax event="itemSelect" listener="#{sprintRequestBean.setDefaultSchedule()}" update="rowUser rowMember rowSchedule"/>
+                    <p:column>
+                        <p:graphicImage class="imageAvatar iconHeader iconHeaderSmall" url="../#{collaborator.avatar}" width="40" height="40"/>
+                    </p:column>                        
+                    <p:column>
+                        <h:outputText value="#{collaborator.completeName}" />
+                    </p:column>
+
+                    <p:column>
+                        <h:outputText value="#{collaborator.email}" />
+                    </p:column>
+                </p:autoComplete>    
+                <p:commandButton class="boxInput errorText" rendered="#{sprintViewBean.userSelected != null}" actionListener="#{sprintRequestBean.cleanPerson}" value="Limpiar" process="@this" update="form:rowUser form:rowMember form:rowSchedule"/>
+            </h:panelGroup>
+            <h:panelGroup id="rowMember" style="width: 100%; display: inline-block;">
+                <p:panelGrid id="columnMember" rendered="#{sprintViewBean.userSelected != null}">
+                    <p:row>
+                        <p:column >
+                            <p:outputLabel class="boxInput" for="userCreateTask">PUEDE CREAR TAREAS?</p:outputLabel>
+                            <p:selectBooleanButton id="userCreateTask" class="boxInput" value="#{sprintViewBean.sprintUserSelected.createTask}" onLabel="Si" offLabel="No"/>
+                        </p:column>
+                        <p:column>
+                            <p:panel id="columnColor" class="#{sprintViewBean.styleColor}">
+                                <p:panel>
+                                    <p:outputLabel class="boxInput" for="userColor">COLOR</p:outputLabel>
+                                    <p:selectOneMenu id="userColor" var="c"  class="boxInput colorItem" value="#{sprintViewBean.sprintUserSelected.color}">   
+                                        <f:selectItems value="#{sprintViewBean.colors}" var="color" itemLabelEscaped="false" itemLabel="#{color.name}" itemValue="#{color}"/>
+                                        <p:column>
+                                            <div class="colorSelection" style="background-color: #{c.hexColor}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{c.name}" />
+                                        </p:column>
+                                        <p:ajax listener="#{sprintRequestBean.changeColor}" update="columnColor"/>
+                                    </p:selectOneMenu>
+                                </p:panel>
+                            </p:panel>                            
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel class="boxInput" for="userRole">ROL DE EQUIPO</p:outputLabel>
+                            <p:selectOneMenu id="userRole" class="boxInput" value="#{sprintViewBean.sprintUserSelected.role}">   
+                                <f:selectItems value="#{sprintViewBean.scrumRoles}" var="role" itemLabel="#{role.name}" itemValue="#{role}"/>                                    
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>                                
+                            <p:commandButton class="boxInput succesText" rendered="#{not sprintViewBean.editingPerson}" actionListener="#{sprintRequestBean.addPersonTeam}" value="Agregar Integrante" process="form:rowMember form:rowSchedule" update="form:rowUser form:rowMember form:rowSchedule form:rowTeam"/>
+                            <p:commandButton class="boxInput infoText" rendered="#{sprintViewBean.editingPerson}" actionListener="#{sprintRequestBean.cleanPerson}" value="Modificar Integrante" process="form:rowMember form:rowSchedule" update="form:rowUser form:rowMember form:rowSchedule form:rowTeam"/>
+                        </p:column>
+                    </p:row>                        
+                </p:panelGrid>     
+            </h:panelGroup>
+            <h:panelGroup id="rowSchedule" style="width: 100%; display: inline-block;">
+                <p:outputLabel rendered="#{sprintViewBean.userSelected != null}" class="boxInput" for="completeSchedule">HORARIO</p:outputLabel>
+                <p:selectManyCheckbox id="completeSchedule" class="boxInput smallFont" value="#{sprintViewBean.sprintUserSelected.schedules}" layout="grid" columns="7"
+                                      rendered="#{sprintViewBean.userSelected != null}" style="margin-left: 10px; width: 95%" converter="#{sprintUserScheduleConverter}">
+                    <f:selectItems value="#{scheduleAppBean.schedule}" var="s" itemValue="#{s}" itemLabel="#{s.completeFormattedSchedule}"/>
+                </p:selectManyCheckbox>    
+            </h:panelGroup>           
+            <h:panelGroup id="rowTeam" style="width: 100%; display: inline-block; margin-bottom: 30px;">
+                <p:outputLabel class="boxInput" for="sprintTeam">EQUIPO DEL SPRINT</p:outputLabel>
+                <p:dataTable id="sprintTeam" class="boxInput" value="#{sprintViewBean.sprint.sprintUsers}"
+                             var="person" emptyMessage="No hay ningun integrante en el equipo todavia">
+                    <p:column style="width: 16px">
+                        <p:commandLink update="form:rowUser form:rowMember form:rowSchedule" process="@this">                                
+                            <f:setPropertyActionListener value="#{person}" target="#{sprintViewBean.sprintUserSelected}" />
+                            <f:setPropertyActionListener value="#{person.user}" target="#{sprintViewBean.userSelected}" />
+                            <f:setPropertyActionListener value="true" target="#{sprintViewBean.editingPerson}" />
+                            <f:setPropertyActionListener value="color#{person.color}" target="#{sprintViewBean.styleColor}" />
+                            <p:graphicImage url="#{resource['images:edit16.png']}"/>                    
+                        </p:commandLink>
+
+                    </p:column>                    
+                    <p:column style="width: 20px">
+                        <div class="smallCircle gen#{person.color}"/>                                                    
+                    </p:column>  
+                    <p:column style="width: 35%" headerText="Nombre">
+                        #{person.user.completeName}
+                    </p:column>   
+                    <p:column style="width: 20%" headerText="Rol">
+                        #{person.role.name}
+                    </p:column>   
+                    <p:column style="width: 16px">
+                        <p:commandLink update="form:rowTeam" process="@this" action="#{sprintRequestBean.removePersonTeam}" immediate="true" >     
+                            <f:setPropertyActionListener value="#{person}" target="#{sprintRequestBean.sprintUserToRemove}" />
+                            <p:graphicImage url="#{resource['images:delete.png']}"/>                 
+                            <p:confirm header="Confirmacion" message="Seguro deseas eliminar a esta persona del Equipo?"/>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+            <h:panelGroup id="rowMySprints" style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="rowMySprints">MIS SPRINTS</p:outputLabel>
+                <p:dataTable id="allSprints" class="boxInput" value="#{sprintViewBean.sprints}"
+                             var="sprint" emptyMessage="No has creado tu primer sprint todavia">
+                    <p:column style="width: 20px">
+                        <p:commandLink update=":form:sprintData :form:focusCode" process="@this" >
+                            <p:resetInput target=":form:sprintData" />
+                            <f:setPropertyActionListener value="true" target="#{sprintViewBean.modify}" />
+                            <f:setPropertyActionListener value="true" target="#{sprintViewBean.delete}" />
+                            <f:setPropertyActionListener value="#{sprint}" target="#{sprintViewBean.sprint}" />
+                            <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width: 10%" headerText="Codigo" filterBy="#{sprint.code}" filterMatchMode="contains">                                                                                    
+                        #{sprint.code}                                        
+                    </p:column>                                    
+                    <p:column style="width: 80%" headerText="Titulo" filterBy="#{sprint.name}" filterMatchMode="contains">
+                        #{sprint.name}
+                    </p:column>                        
+                </p:dataTable>
+            </h:panelGroup>
+        </h:panelGroup>        
+        <!--Dialogo de Confirmacion General-->
+        <p:confirmDialog class="boxInput" global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes boxInput succesText" icon="check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no boxInput errorText" icon="cancel" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

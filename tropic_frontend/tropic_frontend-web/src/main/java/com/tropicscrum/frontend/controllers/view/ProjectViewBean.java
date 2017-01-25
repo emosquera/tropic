@@ -12,7 +12,7 @@ import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
@@ -30,9 +30,9 @@ public class ProjectViewBean implements Serializable {
 
     private User user;
     private Project project;
-    private List<History> projectHistories;
-    private List<Project> myProyects;
-    private List<Project> collabProyects;
+    private Collection<History> projectHistories;
+    private Collection<Project> myProyects;
+    private Collection<Project> collabProyects;
     private Boolean modify = false;
     private Boolean delete = false;
     
@@ -42,14 +42,14 @@ public class ProjectViewBean implements Serializable {
     @EJB(lookup = HistoryFacadeRemote.JNDI_REMOTE_NAME)
     HistoryFacadeRemote historyFacadeRemote;
     
-    public List<Project> getMyProyects() {
+    public Collection<Project> getMyProyects() {
         if (myProyects == null) {
             myProyects = new ArrayList<>();
         }
         return myProyects;
     }
 
-    public void setMyProyects(List<Project> myProyects) {
+    public void setMyProyects(Collection<Project> myProyects) {
         this.myProyects = myProyects;
     }
 
@@ -72,7 +72,7 @@ public class ProjectViewBean implements Serializable {
         this.project = project;
     }
 
-    public List<History> getProjectHistories() {
+    public Collection<History> getProjectHistories() {
         if (project == null) {
             projectHistories = new ArrayList<>();
         } else {
@@ -84,7 +84,7 @@ public class ProjectViewBean implements Serializable {
         return projectHistories;
     }
 
-    public void setProjectHistories(List<History> projectHistories) {
+    public void setProjectHistories(Collection<History> projectHistories) {
         this.projectHistories = projectHistories;
     }
 
@@ -96,14 +96,14 @@ public class ProjectViewBean implements Serializable {
         this.modify = modify;
     }
 
-    public List<Project> getCollabProyects() {
+    public Collection<Project> getCollabProyects() {
         if (collabProyects == null) {
             collabProyects = new ArrayList<>();
         }
         return collabProyects;
     }
 
-    public void setCollabProyects(List<Project> collabProyects) {
+    public void setCollabProyects(Collection<Project> collabProyects) {
         this.collabProyects = collabProyects;
     }
 

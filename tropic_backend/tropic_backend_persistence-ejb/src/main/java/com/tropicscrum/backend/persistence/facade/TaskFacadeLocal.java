@@ -7,6 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -25,9 +26,9 @@ public interface TaskFacadeLocal {
 
     Task find(Object id);
 
-    List<Task> findAll();
+    Collection<Task> findAll();
 
-    List<Task> findRange(int[] range);
+    Collection<Task> findRange(int[] range);
 
     int count();
     

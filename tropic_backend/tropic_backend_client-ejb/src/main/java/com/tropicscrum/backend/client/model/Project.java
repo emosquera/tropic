@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.model;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -30,8 +30,8 @@ public class Project extends BasicAttributes {
     private String code;
     private String description;
     private User author;
-    private List<History> histories;
-    private List<User> collaborators;
+    private Collection<History> histories;
+    private Collection<User> collaborators;
 
     @Column(name = "code")
     public String getCode() {
@@ -65,26 +65,26 @@ public class Project extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "project")
-    public List<History> getHistories() {
+    public Collection<History> getHistories() {
         if (histories == null) {
             histories = new ArrayList<>();
         }
         return histories;
     }
 
-    public void setHistories(List<History> histories) {
+    public void setHistories(Collection<History> histories) {
         this.histories = histories;
     }
 
     @ManyToMany
-    public List<User> getCollaborators() {
+    public Collection<User> getCollaborators() {
         if (collaborators == null) {
             collaborators = new ArrayList<>();
         }
         return collaborators;
     }
 
-    public void setCollaborators(List<User> collaborators) {
+    public void setCollaborators(Collection<User> collaborators) {
         this.collaborators = collaborators;
     }
             

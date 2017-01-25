@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.model.Milestone;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -26,9 +26,9 @@ public interface MilestoneFacadeRemote {
 
     Milestone find(Object id);
 
-    List<Milestone> findAll();
+    Collection<Milestone> findAll();
 
-    List<Milestone> findRange(int[] range);
+    Collection<Milestone> findRange(int[] range);
 
     int count();
 }

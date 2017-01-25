@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.model.SprintUser;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -26,9 +26,9 @@ public interface SprintUserFacadeRemote {
 
     SprintUser find(Object id);
 
-    List<SprintUser> findAll();
+    Collection<SprintUser> findAll();
 
-    List<SprintUser> findRange(int[] range);
+    Collection<SprintUser> findRange(int[] range);
 
     int count();
 }

@@ -63,7 +63,7 @@ public class MenuSessionBean implements Serializable {
         firstSubmenu.addElement(item);
         
         item = new DefaultMenuItem("Sprints");
-        item.setOutcome("/home/home");
+        item.setOutcome("/home/sprint");
         item.setIcon("sprint-icon");
         firstSubmenu.addElement(item);
         

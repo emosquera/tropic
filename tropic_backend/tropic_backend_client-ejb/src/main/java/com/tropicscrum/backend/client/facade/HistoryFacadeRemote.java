@@ -9,7 +9,7 @@ import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -29,15 +29,15 @@ public interface HistoryFacadeRemote {
 
     History find(Object id);
 
-    List<History> findAll();
+    Collection<History> findAll();
 
-    List<History> findRange(int[] range);
+    Collection<History> findRange(int[] range);
 
     int count();
 
-    List<History> findAllMine(User you);
+    Collection<History> findAllMine(User you);
 
-    List<History> findAllMyCollabs(User you);
+    Collection<History> findAllMyCollabs(User you);
 
     /**
      * Retorna una lista de historias que pertenecen a un proyecto. 
@@ -52,5 +52,5 @@ public interface HistoryFacadeRemote {
      * @see History
      * @see Project
      */
-    List<History> findProjectHistories(Project project);
+    Collection<History> findProjectHistories(Project project);
 }

@@ -12,7 +12,7 @@ import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
@@ -31,10 +31,10 @@ public class HistoryViewBean implements Serializable {
     private User user;
     
     private History history;
-    private List<Project> myProjects;
+    private Collection<Project> myProjects;
     
-    private List<History> histories;
-    private List<History> collabHistories;
+    private Collection<History> histories;
+    private Collection<History> collabHistories;
     private Boolean modify = false;
     private Boolean delete = false;
     
@@ -60,36 +60,36 @@ public class HistoryViewBean implements Serializable {
         this.history = history;
     }
 
-    public List<Project> getMyProjects() {
+    public Collection<Project> getMyProjects() {
         if (myProjects == null) {
             myProjects = new ArrayList<>();
         }
         return myProjects;
     }
 
-    public void setMyProjects(List<Project> myProjects) {
+    public void setMyProjects(Collection<Project> myProjects) {
         this.myProjects = myProjects;
     }
 
-    public List<History> getHistories() {
+    public Collection<History> getHistories() {
         if (histories == null) {
             histories = new ArrayList<>();
         }
         return histories;
     }
 
-    public void setHistories(List<History> histories) {
+    public void setHistories(Collection<History> histories) {
         this.histories = histories;
     }
 
-    public List<History> getCollabHistories() {
+    public Collection<History> getCollabHistories() {
         if (collabHistories == null) {
             return new ArrayList<>();
         }
         return collabHistories;
     }
 
-    public void setCollabHistories(List<History> collabHistories) {
+    public void setCollabHistories(Collection<History> collabHistories) {
         this.collabHistories = collabHistories;
     }
 
@@ -126,8 +126,8 @@ public class HistoryViewBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().remove("history");
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         user = (User) session.getAttribute("user");     
-        List<Project> projects = projectFacadeRemote.findAllMine(user);
-        List<Project> collabsProjects = projectFacadeRemote.findAllMyCollabs(user);        
+        Collection<Project> projects = projectFacadeRemote.findAllMine(user);
+        Collection<Project> collabsProjects = projectFacadeRemote.findAllMyCollabs(user);        
         
         getMyProjects().addAll(projects);
         

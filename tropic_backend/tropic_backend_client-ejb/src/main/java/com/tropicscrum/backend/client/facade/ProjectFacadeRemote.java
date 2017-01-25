@@ -8,7 +8,7 @@ package com.tropicscrum.backend.client.facade;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -28,13 +28,13 @@ public interface ProjectFacadeRemote {
 
     Project find(Object id);
 
-    List<Project> findAll();
+    Collection<Project> findAll();
 
-    List<Project> findRange(int[] range);
+    Collection<Project> findRange(int[] range);
 
     int count();
     
-    List<Project> findAllMine(User you);
+    Collection<Project> findAllMine(User you);
     
-    List<Project> findAllMyCollabs(User you);
+    Collection<Project> findAllMyCollabs(User you);
 }

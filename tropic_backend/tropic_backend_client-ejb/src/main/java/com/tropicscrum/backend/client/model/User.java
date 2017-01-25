@@ -7,7 +7,7 @@ package com.tropicscrum.backend.client.model;
 
 import com.tropicscrum.backend.client.enums.Gender;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +18,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -27,7 +28,8 @@ import javax.persistence.Table;
 @Table(name = "users")
 @NamedQueries({
     @NamedQuery(name = "findByEmail", query = "Select u from User u where u.email = :email"),
-    @NamedQuery(name = "findOtherByEmail", query = "Select u from User u where u != :user and u.email like concat('%', :email, '%')")})
+    @NamedQuery(name = "findOtherByEmail", query = "Select u from User u where u != :user and u.email like concat('%', :email, '%')"),
+    @NamedQuery(name = "filterByEmail", query = "Select u from User u where u.email like concat('%', :email, '%')")})
 public class User extends BasicAttributes {
 
     private String firstName;
@@ -37,9 +39,11 @@ public class User extends BasicAttributes {
     private String avatar;
     private Gender gender;
     private Boolean confirmed = false;
-    private List<SprintUser> sprintUsers;
-    private List<Project> projectsCollaborator;
-    private List<Project> projects;
+    private Collection<SprintUser> sprintUsers;
+    private Collection<Project> projectsCollaborator;
+    private Collection<Project> projects;
+    
+    private String completeName;
 
     @Column(name = "first_name")
     public String getFirstName() {
@@ -106,38 +110,38 @@ public class User extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    public List<Project> getProjects() {
+    public Collection<Project> getProjects() {
         if (projects == null) {
             projects = new ArrayList<>();
         }
         return projects;
     }
 
-    public void setProjects(List<Project> projects) {
+    public void setProjects(Collection<Project> projects) {
         this.projects = projects;
     }
 
     @ManyToMany(mappedBy = "collaborators")
-    public List<Project> getProjectsCollaborator() {
+    public Collection<Project> getProjectsCollaborator() {
         if (projectsCollaborator == null) {
             projectsCollaborator = new ArrayList<>();
         }
         return projectsCollaborator;
     }
 
-    public void setProjectsCollaborator(List<Project> projectsCollaborator) {
+    public void setProjectsCollaborator(Collection<Project> projectsCollaborator) {
         this.projectsCollaborator = projectsCollaborator;
     }
 
     @OneToMany(mappedBy = "user")
-    public List<SprintUser> getSprintUsers() {
+    public Collection<SprintUser> getSprintUsers() {
         if (sprintUsers == null) {
             sprintUsers = new ArrayList<>();
         }
         return sprintUsers;
     }
 
-    public void setSprintUsers(List<SprintUser> sprintUsers) {
+    public void setSprintUsers(Collection<SprintUser> sprintUsers) {
         this.sprintUsers = sprintUsers;
     }
 
@@ -162,4 +166,16 @@ public class User extends BasicAttributes {
     public String toString() {
         return "com.tropicscrum.backend.model.User[ id=" + getId() + " ]";
     }
+    
+    @Transient
+    public String getCompleteName() {     
+        completeName = getFirstName() + " " + getLastName();
+        return completeName.trim();
+    }
+
+    public void setCompleteName(String completeName) {
+        this.completeName = completeName;
+    }
+    
+    
 }

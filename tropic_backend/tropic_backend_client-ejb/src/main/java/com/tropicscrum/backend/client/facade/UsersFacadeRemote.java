@@ -9,7 +9,7 @@ import com.tropicscrum.backend.client.exceptions.LoginException;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.base.locator.ServiceVerifier;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -30,9 +30,9 @@ public interface UsersFacadeRemote extends ServiceVerifier {
     
     User findWithProjects(Object id);
 
-    List<User> findAll();
+    Collection<User> findAll();
 
-    List<User> findRange(int[] range);
+    Collection<User> findRange(int[] range);
 
     int count();
     
@@ -42,5 +42,7 @@ public interface UsersFacadeRemote extends ServiceVerifier {
     
     void sendConfirmEmail(User user, String emailContent);
     
-    List<User> getAllContainsEmailExceptYou(User you, String email);
+    Collection<User> getAllContainsEmailExceptYou(User you, String email);
+    
+    Collection<User> filterByEmail(String email);
 }

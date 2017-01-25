@@ -7,7 +7,7 @@ package com.tropicscrum.backend.client.model;
 
 import com.tropicscrum.backend.client.enums.GeneralStatus;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -36,8 +36,8 @@ public class History extends BasicAttributes {
     private String title;
     private String content;
     private GeneralStatus status;
-    private List<Sprint> sprints;
-    private List<Milestone> milestones;
+    private Collection<Sprint> sprints;
+    private Collection<Milestone> milestones;
     private Project project;
     private User author;
 
@@ -127,26 +127,26 @@ public class History extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "history")
-    public List<Milestone> getMilestones() {
+    public Collection<Milestone> getMilestones() {
         if (milestones == null) {
             milestones = new ArrayList<>();
         }
         return milestones;
     }
 
-    public void setMilestones(List<Milestone> milestones) {
+    public void setMilestones(Collection<Milestone> milestones) {
         this.milestones = milestones;
     }
 
     @ManyToMany(mappedBy = "histories")
-    public List<Sprint> getSprints() {
+    public Collection<Sprint> getSprints() {
         if (sprints == null) {
             sprints = new ArrayList<>();
         }
         return sprints;
     }
 
-    public void setSprints(List<Sprint> sprints) {
+    public void setSprints(Collection<Sprint> sprints) {
         this.sprints = sprints;
     }
     

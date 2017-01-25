@@ -13,6 +13,7 @@ import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.frontend.controllers.view.ProjectViewBean;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -104,8 +105,8 @@ public class ProjectRequestBean implements Serializable {
         }        
     }
     
-    public List<User> getUsersByEmail(String query) {
-        List<User> users = usersFacadeRemote.getAllContainsEmailExceptYou(projectViewBean.getUser(), query); 
+    public Collection<User> getUsersByEmail(String query) {
+        Collection<User> users = usersFacadeRemote.getAllContainsEmailExceptYou(projectViewBean.getUser(), query); 
         users.removeAll(projectViewBean.getProject().getCollaborators());
         return users;
                 

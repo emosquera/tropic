@@ -10,7 +10,24 @@ package com.tropicscrum.backend.client.enums;
  * @author syslife02
  */
 public enum ScrumRole {
-    PRODUCT_OWNER,
-    SCRUM_MASTER,
-    TEAM,
+    PRODUCT_OWNER("Product Owner"),
+    SCRUM_MASTER("Scrum Master"),
+    TEAM_EXECUTER("Desarrollador"),
+    TEAM_TESTER("Analista de Pruebas");
+    
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private ScrumRole(String name) {
+        this.name = name;
+    }
+    
+    
 }

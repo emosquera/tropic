@@ -40,7 +40,7 @@ public class ProjectHistoryConverter implements Converter {
                     }
                 }            
             } catch (NumberFormatException exception) {
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Usuario Invalido"));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Proyecto Invalido"));
             }
             return null;
         }        

@@ -7,8 +7,9 @@ package com.tropicscrum.backend.client.model;
 
 import com.tropicscrum.backend.client.enums.GeneralStatus;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,6 +17,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,14 +29,27 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "sprint")
+@NamedQueries({
+    @NamedQuery(name = "findAllSprintsByUser", query = "Select s from Sprint s where s.author = :user"),    
+})
 public class Sprint extends BasicAttributes {
+    private String code;
     private String name;
     private Date start;
     private GeneralStatus status;
-    private List<SprintUser> sprintUsers;
-    private List<Task> tasks;
-    private List<History> histories;
+    private Collection<SprintUser> sprintUsers;
+    private Collection<Task> tasks;
+    private Collection<History> histories;
     private User author;
+
+    @Column(name = "code")
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     @Column(name = "name")
     public String getName() {
@@ -100,38 +116,38 @@ public class Sprint extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "sprint")
-    public List<Task> getTasks() {
+    public Collection<Task> getTasks() {
         if (tasks == null) {
             tasks = new ArrayList<>();
         }
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(Collection<Task> tasks) {
         this.tasks = tasks;
     }
 
     @ManyToMany
-    public List<History> getHistories() {
+    public Collection<History> getHistories() {
         if (histories == null) {
             histories = new ArrayList<>();
         }
         return histories;
     }
 
-    public void setHistories(List<History> histories) {
+    public void setHistories(Collection<History> histories) {
         this.histories = histories;
     }
 
-    @OneToMany(mappedBy = "sprint")
-    public List<SprintUser> getSprintUsers() {
+    @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Collection<SprintUser> getSprintUsers() {
         if (sprintUsers == null) {
             sprintUsers = new ArrayList<>();
         }
         return sprintUsers;
     }
 
-    public void setSprintUsers(List<SprintUser> sprintUsers) {
+    public void setSprintUsers(Collection<SprintUser> sprintUsers) {
         this.sprintUsers = sprintUsers;
     }
     

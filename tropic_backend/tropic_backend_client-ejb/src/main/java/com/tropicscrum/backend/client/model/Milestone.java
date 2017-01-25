@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.model;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -23,7 +23,7 @@ import javax.persistence.Table;
 public class Milestone extends BasicAttributes {
 
     private String milestone;
-    private List<Task> tasks;
+    private Collection<Task> tasks;
     private User author;
     private History history;
 
@@ -85,14 +85,14 @@ public class Milestone extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "milestone")
-    public List<Task> getTasks() {
+    public Collection<Task> getTasks() {
         if (tasks == null) {
             tasks = new ArrayList<>();
         }
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(Collection<Task> tasks) {
         this.tasks = tasks;
     }    
 }

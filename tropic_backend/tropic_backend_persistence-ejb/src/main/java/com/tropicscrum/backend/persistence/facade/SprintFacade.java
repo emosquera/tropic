@@ -6,6 +6,8 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Sprint;
+import com.tropicscrum.backend.client.model.User;
+import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,7 +18,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class SprintFacade extends AbstractFacade<Sprint> implements SprintFacadeLocal {
-
+    
     @PersistenceContext(unitName = "tropic_backend_PU")
     private EntityManager em;
 
@@ -28,5 +30,9 @@ public class SprintFacade extends AbstractFacade<Sprint> implements SprintFacade
     public SprintFacade() {
         super(Sprint.class);
     }
-    
+
+    @Override
+    public Collection<Sprint> findAllByUser(User user) {
+        return em.createNamedQuery("findAllSprintsByUser").setParameter("user", user).getResultList();
+    }
 }

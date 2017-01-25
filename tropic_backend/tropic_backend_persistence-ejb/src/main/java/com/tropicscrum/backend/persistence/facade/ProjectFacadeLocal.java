@@ -8,7 +8,7 @@ package com.tropicscrum.backend.persistence.facade;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Local;
 
 /**
@@ -26,14 +26,14 @@ public interface ProjectFacadeLocal {
 
     Project find(Object id);
 
-    List<Project> findAll();
+    Collection<Project> findAll();
 
-    List<Project> findRange(int[] range);
+    Collection<Project> findRange(int[] range);
 
     int count();
     
-    List<Project> findAllByUser(User user);
+    Collection<Project> findAllByUser(User user);
     
-    List<Project> findAllByCollaborator(User user);
+    Collection<Project> findAllByCollaborator(User user);
     
 }

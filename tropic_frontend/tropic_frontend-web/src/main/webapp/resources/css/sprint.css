@@ -1,0 +1,139 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28/11/2016, 02:04:10 PM
+    Author     : syslife02
+*/
+
+.iconNew {
+    display: inline-block;
+    position: absolute;
+    margin-top: 19px;
+    margin-left: 20px;
+}
+
+.codeWidth {
+    width: 600px;
+}
+
+.startWidth input {
+    width: 280px;
+}
+
+.colorItem label {
+    text-align: center!important;
+    border: 1px solid rgba(0,0,0,0.2)!important;
+    border-radius: 5px;
+}
+
+.colorSelection {
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 50%;
+}
+
+.colorRed .colorItem .ui-selectonemenu-label {
+    background-color: #fdb6b6;
+    color: #691c1c;
+}
+
+.colorBlue .colorItem .ui-selectonemenu-label {
+    background-color: #71a5e6;
+    color: #082954;
+}
+
+.colorWhite .colorItem .ui-selectonemenu-label {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.colorCyan .colorItem .ui-selectonemenu-label {
+    background-color: #d2f9f9;
+    color: #134656;
+}
+
+.colorSilver .colorItem .ui-selectonemenu-label {
+    background-color: #e8e8e8;
+    color: #2d2d2d;
+}
+
+.colorGray .colorItem .ui-selectonemenu-label {
+    background-color: #b9b9b9;
+    color: #000000;
+}
+
+.colorDarkBlue .colorItem .ui-selectonemenu-label{
+    background-color: #557c9e;   
+    color: #f2f9ff;
+}
+
+.colorBlack .colorItem .ui-selectonemenu-label {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.colorLightBlue .colorItem .ui-selectonemenu-label {
+    background-color: #add8e6;
+    color: #093a65;
+}
+
+.colorOrange .colorItem .ui-selectonemenu-label {
+    background-color: #fbd99b;
+    color: #442f0a;
+}
+
+.colorPurple .colorItem .ui-selectonemenu-label {
+    background-color: #d7bfe6;
+    color: #420742;
+}
+
+.colorBrown .colorItem .ui-selectonemenu-label {
+    background-color: #eaa893;
+    color: #541515;
+}
+
+.colorYellow .colorItem .ui-selectonemenu-label {
+    background-color: #ffffe6;
+    color: #4c5200;
+}
+
+.colorMaroon .colorItem .ui-selectonemenu-label {
+    background-color: #bb9a77;
+    color: #462506;
+}
+
+.colorLime .colorItem .ui-selectonemenu-label {
+    background-color: #bff3bf;
+    color: #044804;
+}
+
+.colorGreen .colorItem .ui-selectonemenu-label {
+    background-color: #8ab386;
+    color: #163516;
+}
+
+.colorMagenta .colorItem .ui-selectonemenu-label {
+    background-color: #f3caf3;
+    color: #6b076b;
+}
+
+.colorOlive .colorItem .ui-selectonemenu-label {
+    background-color: #b3b37f;
+    color: #2f2f02;
+}
+
+.smallCircle {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.2);    
+}
+
+.autoComplete {
+    display: inline-flex;
+    margin-right: 20px;
+}

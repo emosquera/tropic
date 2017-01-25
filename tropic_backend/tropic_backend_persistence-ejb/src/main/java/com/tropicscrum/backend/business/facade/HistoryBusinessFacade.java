@@ -12,7 +12,7 @@ import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.HistoryFacadeLocal;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -55,12 +55,12 @@ public class HistoryBusinessFacade implements HistoryFacadeRemote {
     }
 
     @Override
-    public List<History> findAll() {
+    public Collection<History> findAll() {
         return historyFacadeLocal.findAll();
     }
 
     @Override
-    public List<History> findRange(int[] range) {
+    public Collection<History> findRange(int[] range) {
         return historyFacadeLocal.findRange(range);
     }
 
@@ -70,20 +70,20 @@ public class HistoryBusinessFacade implements HistoryFacadeRemote {
     }
 
     @Override
-    public List<History> findAllMine(User you) {
-        List<History> histories = historyFacadeLocal.findAllByUser(you);
+    public Collection<History> findAllMine(User you) {
+        Collection<History> histories = historyFacadeLocal.findAllByUser(you);
         return histories;
     }
 
     @Override
-    public List<History> findAllMyCollabs(User you) {
-        List<History> histories = historyFacadeLocal.findAllByCollaborator(you);
+    public Collection<History> findAllMyCollabs(User you) {
+        Collection<History> histories = historyFacadeLocal.findAllByCollaborator(you);
         return histories;
     }    
 
     @Override
-    public List<History> findProjectHistories(Project project) {
-        List<History> histories = historyFacadeLocal.findByProject(project);
+    public Collection<History> findProjectHistories(Project project) {
+        Collection<History> histories = historyFacadeLocal.findByProject(project);
         return histories;
     }
 }

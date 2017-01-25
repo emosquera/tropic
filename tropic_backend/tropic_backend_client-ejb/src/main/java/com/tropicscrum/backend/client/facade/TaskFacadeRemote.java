@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.model.Task;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -26,9 +26,9 @@ public interface TaskFacadeRemote {
 
     Task find(Object id);
 
-    List<Task> findAll();
+    Collection<Task> findAll();
 
-    List<Task> findRange(int[] range);
+    Collection<Task> findRange(int[] range);
 
     int count();
 }

@@ -8,7 +8,7 @@ package com.tropicscrum.frontend.controllers.request;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.User;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -32,7 +32,7 @@ public class FindUsersRequestBean {
     public FindUsersRequestBean() {
     }
     
-    public List<User> getUsersByEmail(String query) {
+    public Collection<User> getUsersByEmail(String query) {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         if (session != null) {
             User user = (User) session.getAttribute("user");

@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.model.UserEstimate;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -26,9 +26,9 @@ public interface UserEstimateFacadeRemote {
 
     UserEstimate find(Object id);
 
-    List<UserEstimate> findAll();
+    Collection<UserEstimate> findAll();
 
-    List<UserEstimate> findRange(int[] range);
+    Collection<UserEstimate> findRange(int[] range);
 
     int count();
 }

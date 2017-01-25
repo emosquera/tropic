@@ -13,7 +13,7 @@ import com.tropicscrum.backend.emailsender.facade.remote.EmailSenderFacadeRemote
 import com.tropicscrum.backend.persistence.exceptions.InvalidCredentials;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.UsersFacadeLocal;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -69,12 +69,12 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
     }
 
     @Override
-    public List<User> findAll() {
+    public Collection<User> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<User> findRange(int[] range) {
+    public Collection<User> findRange(int[] range) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -116,7 +116,7 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
     }
 
     @Override
-    public List<User> getAllContainsEmailExceptYou(User you, String email) {
+    public Collection<User> getAllContainsEmailExceptYou(User you, String email) {
         return usersFacadeLocal.findOtherByEmail(you, email);
     }
 
@@ -129,5 +129,10 @@ public class UsersBusinessFacade implements UsersFacadeRemote {
         } catch (NoResultException ex) {
             return new User();
         }
+    }
+
+    @Override
+    public Collection<User> filterByEmail(String email) {
+        return usersFacadeLocal.filterByEmail(email);
     }
 }

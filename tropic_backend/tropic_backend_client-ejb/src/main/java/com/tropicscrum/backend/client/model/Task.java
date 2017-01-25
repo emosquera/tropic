@@ -8,7 +8,7 @@ package com.tropicscrum.backend.client.model;
 import com.tropicscrum.backend.client.enums.GeneralStatus;
 import com.tropicscrum.backend.client.enums.TaskType;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,8 +30,8 @@ public class Task extends BasicAttributes {
     private Double estimatedDuration;
     private TaskType type;
     private GeneralStatus status;
-    private List<TaskProgress> taskProgresss;
-    private List<UserEstimate> userEstimates;
+    private Collection<TaskProgress> taskProgresss;
+    private Collection<UserEstimate> userEstimates;
     private Milestone milestone;
     private User author;
     private Sprint sprint;
@@ -145,26 +145,26 @@ public class Task extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "task")
-    public List<UserEstimate> getUserEstimates() {
+    public Collection<UserEstimate> getUserEstimates() {
         if (userEstimates == null) {
             userEstimates = new ArrayList<>();
         }
         return userEstimates;
     }
 
-    public void setUserEstimates(List<UserEstimate> userEstimates) {
+    public void setUserEstimates(Collection<UserEstimate> userEstimates) {
         this.userEstimates = userEstimates;
     }
 
     @OneToMany(mappedBy = "task")
-    public List<TaskProgress> getTaskProgresss() {
+    public Collection<TaskProgress> getTaskProgresss() {
         if (taskProgresss == null) {
             taskProgresss = new ArrayList<>();
         }
         return taskProgresss;
     }
 
-    public void setTaskProgresss(List<TaskProgress> taskProgresss) {
+    public void setTaskProgresss(Collection<TaskProgress> taskProgresss) {
         this.taskProgresss = taskProgresss;
     }
 }

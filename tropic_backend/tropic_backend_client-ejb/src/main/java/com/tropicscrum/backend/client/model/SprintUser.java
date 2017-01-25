@@ -8,12 +8,14 @@ package com.tropicscrum.backend.client.model;
 import com.tropicscrum.backend.client.enums.Color;
 import com.tropicscrum.backend.client.enums.ScrumRole;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -28,11 +30,11 @@ public class SprintUser extends BasicAttributes {
     private Color color;
     private ScrumRole role;
     private Boolean createTask;
-    private List<TaskProgress> taskProgresss;
-    private List<UserSchedule> userSchedules;
-    private List<UserEstimate> userEstimates;
+    private Collection<TaskProgress> taskProgresss;
+    private Collection<UserEstimate> userEstimates;
     private Sprint sprint;
     private User user;    
+    private Collection<Schedule> schedules;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "color")
@@ -89,6 +91,15 @@ public class SprintUser extends BasicAttributes {
         this.user = user;
     }
 
+    @ManyToMany
+    public Collection<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(Collection<Schedule> schedules) {
+        this.schedules = schedules;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -112,39 +123,26 @@ public class SprintUser extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "sprintUser")
-    public List<UserEstimate> getUserEstimates() {
+    public Collection<UserEstimate> getUserEstimates() {
         if (userEstimates == null) {
             userEstimates = new ArrayList<>();
         }
         return userEstimates;
     }
 
-    public void setUserEstimates(List<UserEstimate> userEstimates) {
+    public void setUserEstimates(Collection<UserEstimate> userEstimates) {
         this.userEstimates = userEstimates;
     }
 
     @OneToMany(mappedBy = "sprintUser")
-    public List<UserSchedule> getUserSchedules() {
-        if (userSchedules == null) {
-            userSchedules = new ArrayList<>();
-        }
-        return userSchedules;
-    }
-
-    public void setUserSchedules(List<UserSchedule> userSchedules) {
-        this.userSchedules = userSchedules;
-    }
-
-    @OneToMany(mappedBy = "sprintUser")
-    public List<TaskProgress> getTaskProgresss() {
+    public Collection<TaskProgress> getTaskProgresss() {
         if (taskProgresss == null) {
             taskProgresss = new ArrayList<>();
         }
         return taskProgresss;
     }
 
-    public void setTaskProgresss(List<TaskProgress> taskProgresss) {
+    public void setTaskProgresss(Collection<TaskProgress> taskProgresss) {
         this.taskProgresss = taskProgresss;
     }
-    
 }

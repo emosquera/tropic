@@ -8,7 +8,7 @@ package com.tropicscrum.backend.persistence.facade;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.InvalidCredentials;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -44,9 +44,9 @@ public class UsersFacade extends AbstractFacade<User> implements UsersFacadeLoca
     }
 
     @Override
-    public List<User> findOtherByEmail(User you, String email) {
+    public Collection<User> findOtherByEmail(User you, String email) {
         try {
-            List<User> users = em.createNamedQuery("findOtherByEmail").setParameter("user", you).setParameter("email", email.trim()).getResultList();  
+            Collection<User> users = em.createNamedQuery("findOtherByEmail").setParameter("user", you).setParameter("email", email.trim()).getResultList();  
             return users;            
         } catch (NoResultException e) {
             return new ArrayList<>();
@@ -61,5 +61,11 @@ public class UsersFacade extends AbstractFacade<User> implements UsersFacadeLoca
             throw new InvalidCredentials("Email no existe");
         }
         
+    }
+
+    @Override
+    public Collection<User> filterByEmail(String email) {
+        Collection<User> users = em.createNamedQuery("filterByEmail").setParameter("email", email).getResultList();
+        return users;
     }
 }

@@ -7,7 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.TaskProgress;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Local;
 
 /**
@@ -25,9 +25,9 @@ public interface TaskProgressFacadeLocal {
 
     TaskProgress find(Object id);
 
-    List<TaskProgress> findAll();
+    Collection<TaskProgress> findAll();
 
-    List<TaskProgress> findRange(int[] range);
+    Collection<TaskProgress> findRange(int[] range);
 
     int count();
     

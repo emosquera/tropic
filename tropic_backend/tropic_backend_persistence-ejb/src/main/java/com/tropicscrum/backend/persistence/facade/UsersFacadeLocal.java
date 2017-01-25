@@ -8,7 +8,7 @@ package com.tropicscrum.backend.persistence.facade;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.InvalidCredentials;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Local;
 
 /**
@@ -26,9 +26,9 @@ public interface UsersFacadeLocal {
 
     User find(Object id);
 
-    List<User> findAll();
+    Collection<User> findAll();
 
-    List<User> findRange(int[] range);
+    Collection<User> findRange(int[] range);
 
     int count();
     
@@ -36,5 +36,7 @@ public interface UsersFacadeLocal {
     
     Boolean emailExist(String email);
     
-    List<User> findOtherByEmail(User you, String email);    
+    Collection<User> findOtherByEmail(User you, String email);    
+    
+    Collection<User> filterByEmail(String email);    
 }

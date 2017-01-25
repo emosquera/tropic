@@ -7,7 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Local;
 
 /**
@@ -25,9 +25,9 @@ public interface SprintUserFacadeLocal {
 
     SprintUser find(Object id);
 
-    List<SprintUser> findAll();
+    Collection<SprintUser> findAll();
 
-    List<SprintUser> findRange(int[] range);
+    Collection<SprintUser> findRange(int[] range);
 
     int count();
     

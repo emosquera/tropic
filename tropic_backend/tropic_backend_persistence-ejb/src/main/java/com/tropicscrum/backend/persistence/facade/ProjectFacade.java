@@ -7,7 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,12 +32,12 @@ public class ProjectFacade extends AbstractFacade<Project> implements ProjectFac
     }
 
     @Override
-    public List<Project> findAllByUser(User user) {
+    public Collection<Project> findAllByUser(User user) {
         return em.createNamedQuery("findAllProjectsByUser").setParameter("user", user).getResultList();
     }
 
     @Override
-    public List<Project> findAllByCollaborator(User user) {
+    public Collection<Project> findAllByCollaborator(User user) {
         return em.createNamedQuery("findAllProjectsByCollaborator").setParameter("user", user).getResultList();
     }
     

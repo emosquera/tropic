@@ -8,7 +8,7 @@ and open the template in the editor.
     Author     : syslife02
 */
 
-input.boxInput {
+input.boxInput, .ui-calendar.boxInput input {
     padding: 20px;
     margin-top: 10px;
     font-size: 20px;
@@ -50,6 +50,7 @@ textArea.boxInput.ui-state-error {
     padding: 20px;
     max-height: 200px;
     overflow-y: auto;
+    width: 400px;
 }
 
 .ui-autocomplete.boxInput .ui-autocomplete-token {
@@ -79,6 +80,14 @@ textArea.boxInput.ui-state-error {
     font-weight: 300!important;
     font-family: 'Heebo', sans-serif;
     width: 100%!important;
+}
+
+.ui-autocomplete.boxInput input {
+    font-size: 20px;
+    font-weight: 300!important;
+    font-family: 'Heebo', sans-serif;
+    width: 95%!important;
+    border: none;
 }
 
 .ui-autocomplete-items {
@@ -249,8 +258,8 @@ textArea.boxInput.ui-state-error {
 
 .ui-selectonemenu.boxInput {
     border: 1px solid rgb(169, 169, 169);
-    margin-top: 10px;    
-    padding: 20px 30px 20px 20px;
+    margin: 10px 0 10px 0;    
+    padding: 20px 80px 20px 20px;    
 }
 
 .ui-selectonemenu.boxInput.ui-state-error {
@@ -261,6 +270,7 @@ textArea.boxInput.ui-state-error {
     font-size: 20px;
     font-weight: 300!important;
     font-family: 'Heebo', sans-serif;
+    padding: 6px 20px;
 }
 
 .ui-selectonemenu.boxInput .ui-selectonemenu-trigger {
@@ -368,3 +378,269 @@ textArea.boxInput.ui-state-error {
     background-color: #F0F1F3;
 }
 
+.ui-selectbooleanbutton.boxInput {
+    border: 1px solid rgb(169, 169, 169);
+    margin-top: 10px;
+    padding: 20px;
+    min-width: 120px;
+    min-height: 37px;
+    font-size: 20px;
+    font-weight: 300!important;
+    font-family: 'Heebo', sans-serif;
+}
+
+.ui-selectbooleanbutton.ui-button.boxInput {
+    background: #ffffff;
+}
+
+.ui-selectbooleanbutton.ui-button.boxInput .ui-button-text {
+    border: 1px solid #e8bfbf;
+    border-radius: 5px;
+    background: #f3e0e0;
+    color: #922020;
+}
+
+.ui-selectbooleanbutton.ui-button.boxInput.ui-state-active .ui-button-text {
+    border: 1px solid #bfe8c4;
+    border-radius: 5px;
+    background: #e0f3e6;
+    color: #125218;
+}
+
+.ui-selectmanymenu.boxInput {    
+    border: 1px solid rgb(169, 169, 169);
+    margin-top: 10px;    
+    padding: 20px;
+    font-size: 18px;    
+    font-family: 'Heebo', sans-serif;
+}
+
+.ui-selectmanymenu.boxInput .ui-selectlistbox-item {
+    text-align: center;
+    border: 1px solid;
+    border-color: #ffffff;
+}
+
+.ui-selectmanymenu.boxInput .ui-selectlistbox-item .ui-outputlabel {
+    font-weight: 300;
+}
+
+.ui-selectmanymenu.boxInput .ui-selectlistbox-item.ui-state-highlight {
+    background: #58a0e0;
+    color: #ffffff;
+    
+}
+
+.ui-selectmanymenu.boxInput .ui-selectlistbox-listcontainer {
+    padding: 0 10px;
+    height: auto!important;
+}
+
+.ui-selectmanymenu.boxInput .ui-selectlistbox-item .ui-chkbox-box {
+    border: 1px solid;
+    border-radius: 0;
+    vertical-align: middle;
+}
+
+.ui-selectmanymenu.boxInput .ui-selectlistbox-item .ui-chkbox-box .ui-chkbox-icon.ui-icon-check {
+    background: #ffffff;
+    width: 50%;
+    height: 50%;
+    margin: auto;    
+    margin-top: 4px;
+    margin-left: 4px;
+}
+
+.displayInLine {
+    display: inline-block;
+    margin-right: 20px!important;
+}
+
+.ui-selectmanycheckbox.boxInput {
+    border: 1px solid rgb(169, 169, 169);
+    margin-top: 10px;    
+    padding: 20px;
+    font-size: 18px;    
+    font-family: 'Heebo', sans-serif;
+}
+    
+.ui-selectmanycheckbox.boxInput .ui-chkbox-box {
+    border: 1px solid;
+    border-radius: 0;
+    vertical-align: middle;
+}
+
+.ui-selectmanycheckbox.boxInput .ui-chkbox-box.ui-state-active {
+    border-color: #58a0e0;
+}
+
+.ui-selectmanycheckbox.boxInput .ui-chkbox-box .ui-chkbox-icon.ui-icon-check {
+    background: #58a0e0;
+    width: 50%;
+    height: 50%;
+    margin: auto;    
+    margin-top: 4px;
+    margin-left: 4px;
+}
+
+.ui-selectmanycheckbox.boxInput label {
+    font-weight: 300;
+}
+
+.ui-selectmanycheckbox.boxInput.smallFont label {
+    font-size: 16px;
+}
+
+.genRed {
+    background-color: #fdb6b6;
+    color: #691c1c;
+}
+
+.genBlue {
+    background-color: #71a5e6;
+    color: #082954;
+}
+
+.genWhite {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.genCyan {
+    background-color: #d2f9f9;
+    color: #134656;
+}
+
+.genSilver {
+    background-color: #e8e8e8;
+    color: #2d2d2d;
+}
+
+.genGray {
+    background-color: #b9b9b9;
+    color: #000000;
+}
+
+.genDarkBlue {
+    background-color: #557c9e;   
+    color: #f2f9ff;
+}
+
+.genBlack {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.genLightBlue {
+    background-color: #add8e6;
+    color: #093a65;
+}
+
+.genOrange {
+    background-color: #fbd99b;
+    color: #442f0a;
+}
+
+.genPurple {
+    background-color: #d7bfe6;
+    color: #420742;
+}
+
+.genBrown {
+    background-color: #eaa893;
+    color: #541515;
+}
+
+.genYellow {
+    background-color: #ffffe6;
+    color: #4c5200;
+}
+
+.genMaroon {
+    background-color: #bb9a77;
+    color: #462506;
+}
+
+.genLime {
+    background-color: #bff3bf;
+    color: #044804;
+}
+
+.genGreen {
+    background-color: #8ab386;
+    color: #163516;
+}
+
+.genMagenta {
+    background-color: #f3caf3;
+    color: #6b076b;
+}
+
+.genOlive {
+    background-color: #b3b37f;
+    color: #2f2f02;
+}
+
+.ui-datepicker {
+    background: #F0F1F3;
+    border: 1px solid rgb(169, 169, 169);
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.4);
+    -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.4);
+    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.4);
+    border-top: none;
+}
+
+.ui-datepicker-title {
+    font-family: 'Heebo', sans-serif;
+    color: #43528B;
+    font-size: 18px;
+}
+
+.ui-datepicker-calendar thead th {
+    font-family: 'Dosis', sans-serif;
+    font-size: 16px;
+    font-weight: 400!important;
+}
+
+.ui-datepicker-calendar tbody td {
+    font-family: 'Dosis', sans-serif;
+    font-size: 16px;
+}
+
+.ui-datepicker-calendar tbody td a {
+    text-align: center!important;
+    color: #303d82;
+}
+
+.ui-datepicker-calendar tbody .ui-datepicker-today {
+    background: #fff;
+    border-radius: 20%;
+}
+
+.ui-datepicker-calendar tbody td:hover {
+    background: #e2e2e2;
+    border-radius: 20%;
+    cursor: pointer;
+}
+
+.ui-datepicker .ui-datepicker-next {
+    background-image: url(#{resource["images:calendar-right-arrow.png"]});
+    opacity: 0.6;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+    background-image: url(#{resource["images:calendar-left-arrow.png"]});
+    opacity: 0.6;
+}
+
+.ui-datepicker .ui-datepicker-prev,.ui-datepicker-prev-hover{
+    cursor: pointer;
+    left: 2px!important;
+    top: 2px!important;
+}
+
+.ui-datepicker .ui-datepicker-next,.ui-datepicker-next-hover{
+    cursor: pointer;
+    right: 2px!important;
+    top: 2px!important;
+}

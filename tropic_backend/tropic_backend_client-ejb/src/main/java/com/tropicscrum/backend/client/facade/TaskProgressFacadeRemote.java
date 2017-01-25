@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.model.TaskProgress;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
@@ -26,9 +26,9 @@ public interface TaskProgressFacadeRemote {
 
     TaskProgress find(Object id);
 
-    List<TaskProgress> findAll();
+    Collection<TaskProgress> findAll();
 
-    List<TaskProgress> findRange(int[] range);
+    Collection<TaskProgress> findRange(int[] range);
 
     int count();
 }

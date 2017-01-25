@@ -9,7 +9,7 @@ import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Local;
 
 /**
@@ -27,15 +27,15 @@ public interface HistoryFacadeLocal {
 
     History find(Object id);
 
-    List<History> findAll();
+    Collection<History> findAll();
 
-    List<History> findRange(int[] range);
+    Collection<History> findRange(int[] range);
 
     int count();
     
-    List<History> findAllByUser(User user);
+    Collection<History> findAllByUser(User user);
     
-    List<History> findAllByCollaborator(User user);
+    Collection<History> findAllByCollaborator(User user);
     
-    List<History> findByProject(Project project);
+    Collection<History> findByProject(Project project);
 }

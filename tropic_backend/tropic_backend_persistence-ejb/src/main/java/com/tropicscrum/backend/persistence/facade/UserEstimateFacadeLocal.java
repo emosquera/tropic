@@ -7,7 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.UserEstimate;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Local;
 
 /**
@@ -25,9 +25,9 @@ public interface UserEstimateFacadeLocal {
 
     UserEstimate find(Object id);
 
-    List<UserEstimate> findAll();
+    Collection<UserEstimate> findAll();
 
-    List<UserEstimate> findRange(int[] range);
+    Collection<UserEstimate> findRange(int[] range);
 
     int count();
     

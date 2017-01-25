@@ -7,7 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
-import java.util.List;
+import java.util.Collection;
 import javax.ejb.Local;
 
 /**
@@ -25,9 +25,9 @@ public interface MilestoneFacadeLocal {
 
     Milestone find(Object id);
 
-    List<Milestone> findAll();
+    Collection<Milestone> findAll();
 
-    List<Milestone> findRange(int[] range);
+    Collection<Milestone> findRange(int[] range);
 
     int count();
     
