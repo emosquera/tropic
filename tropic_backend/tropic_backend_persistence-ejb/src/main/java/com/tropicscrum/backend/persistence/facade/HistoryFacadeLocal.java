@@ -7,6 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.Collection;
@@ -14,7 +15,7 @@ import javax.ejb.Local;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Local
 public interface HistoryFacadeLocal {
@@ -38,4 +39,6 @@ public interface HistoryFacadeLocal {
     Collection<History> findAllByCollaborator(User user);
     
     Collection<History> findByProject(Project project);
+    
+    Collection<History> findBySprint(Sprint sprint);
 }

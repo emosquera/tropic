@@ -18,7 +18,7 @@ import javax.ejb.Remote;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless(name = "projectFacadeRemote", mappedName = ProjectFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(ProjectFacadeRemote.class)

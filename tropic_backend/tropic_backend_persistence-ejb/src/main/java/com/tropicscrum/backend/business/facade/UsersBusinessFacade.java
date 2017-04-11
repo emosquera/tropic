@@ -21,7 +21,7 @@ import javax.persistence.NoResultException;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless(name = "userBussinesFacade", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(UsersFacadeRemote.class)

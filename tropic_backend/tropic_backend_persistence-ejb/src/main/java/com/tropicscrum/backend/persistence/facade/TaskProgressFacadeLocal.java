@@ -5,6 +5,8 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.client.model.SprintUser;
+import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.TaskProgress;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.Collection;
@@ -12,7 +14,7 @@ import javax.ejb.Local;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Local
 public interface TaskProgressFacadeLocal {
@@ -31,4 +33,7 @@ public interface TaskProgressFacadeLocal {
 
     int count();
     
+    Collection<TaskProgress> findAllProgressByTask(Task task);
+    
+    Collection<TaskProgress> findAllProgressInProgressBySprintUser(SprintUser sprintUser);
 }

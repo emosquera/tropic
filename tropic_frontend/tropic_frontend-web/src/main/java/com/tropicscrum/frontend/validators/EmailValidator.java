@@ -19,7 +19,7 @@ import javax.inject.Named;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 
 @Named(value = "emailValidator")

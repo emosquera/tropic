@@ -1,0 +1,360 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 07/02/2017, 11:24:00 AM
+    Author     : Edgar Mosquera
+*/
+.displayTableCell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.displayInlineBlock {
+    display: inline-block;
+}
+
+.sprintListAvatar {
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    filter: grayscale(40%);
+}
+
+.divUser {
+    width: 20%;
+    text-align: center;
+}
+
+.textAuthor {
+    width: 100%;
+    color: #676767;
+    font-family: 'Dosis', sans-serif;
+    font-size: 13px;    
+}
+
+.nameAuthor {
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 300;
+    font-size: 17px;
+    color: black;
+}
+
+.divSprint {
+    width: 80%;
+    padding-left: 15px;
+}
+
+.sprintName {
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-size: 27px;
+    font-weight: 300;
+    color: #565656;
+}
+
+.sprintDescription {
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: #000000;
+}
+
+.projectName {
+    width: 100%;
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: #864545;
+}
+
+.titleHistory {
+    display: inline-block;
+    width: 100%;
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    color: #3d739a;
+    border-radius: 5px;
+    padding-left: 15px;
+    font-weight: 300;
+    margin-top: 15px;
+}
+
+.ui-accordion-header {
+    font-family: 'Dosis', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: #652525;
+    background: #f9f9f9;
+    margin-left: 18px;
+    padding: 3px 0px 3px 35px!important;
+    border: 1px solid #ececec;
+    border-radius: 5px;
+    top: 5px;
+    margin-bottom: 5px;    
+}
+
+.ui-accordion-header.ui-tabs-outline {
+    outline: none;
+}
+
+.ui-datatable.sprintTable thead {
+    display: none;
+}
+
+.ui-datatable.sprintTable {
+    font-family: 'Heebo', sans-serif;
+    font-weight: 300;
+}
+
+.ui-datatable.sprintTable tr.ui-datatable-even {
+    background: #fbfbfb;
+}
+
+.iconVote {
+    opacity: 0.6;
+    margin: 0 10px;
+}
+
+.iconVote:hover {
+    opacity: 1;
+}
+
+.historyTitle {
+    display: inline-block;
+    width: 100%;
+    font-family: 'Dosis', sans-serif;
+    font-size: 22px;
+    color: #3d739a;    
+    font-weight: 300;
+    text-align: center
+}
+
+.milestoneTitle {
+    font-family: 'Dosis', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: #652525;
+    background: #f9f9f9;
+    margin-left: 18px;
+    padding: 3px 0px 3px 0px!important;
+    border: 1px solid #ececec;
+    border-radius: 5px;
+    top: 5px;
+    margin-bottom: 5px;   
+    display: inline-block;
+    width: 100%;
+    text-align: center
+}
+
+.taskSelected {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.pointsList {
+    font-family: 'Heebo', sans-serif;
+    font-size: 50px;
+    font-weight: 700;
+    border: 1px solid;    
+    padding: 15px;
+    color: #ce9090;
+    border-color: #cccccc;
+    display: block;
+    min-width: 75px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.pointHour {
+    font-family: 'Dosis', sans-serif;
+    background: #ffffff;
+    padding: 0 8px;
+    border: 1px solid #e8e8e8;
+    color: #545454;
+    position: relative;
+    top: -10px;
+}
+
+.pointSelectedContent {
+    text-align: center;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.pointSelected {
+    font-size: 80px;
+    color: #6f99a7;
+    min-width: 120px;
+}
+
+.hourSelected {
+    top: -19px;
+}
+
+.cursorOnOver:hover {
+    cursor: pointer;
+}
+
+.pointListContainer {
+    text-align: center;
+}
+
+.pointListAction:hover .pointsList.cursorOnOver{
+    background: #f3f3f3;
+}
+ 
+
+@keyframes backgrounTilt {
+    from {background-color: #ffffff;}
+    to {background-color: #f1f1f1;}
+}
+
+.animateBackground {
+    background-color: #ffffff;
+    animation-name: backgrounTilt;
+    animation-duration: 1s;
+    animation-iteration-count: 6;
+}
+
+.buttonTaskEstimate {
+    font-family: 'Dosis', sans-serif;
+    font-size: 20px;
+    font-weight: 400;    
+    background: #f9f9f9;    
+    border: 1px solid #ececec;
+    border-radius: 5px;
+    top: -15px;    
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.buttonTaskEstimate:hover {
+    color: #f9f9f9;
+}
+
+.buttonVote {    
+    background: #f9f9f9;        
+}
+
+.buttonRegister {
+    color: #6fa77c;
+}
+
+.buttonVote:hover {    
+    background: #6f99a7;
+}
+
+.buttonRegister:hover {
+    background: #6fa77c;
+}
+
+.taskVote {
+    text-align: center;
+    margin: auto;
+}
+
+.avatarVote {
+    display: block;
+    margin: auto;
+}
+
+.pointVote {
+    display: block;
+    margin: auto;
+    margin-top: -24px;
+    text-align: center;
+}
+
+.userVote {
+    display: block;
+    margin: auto;
+    margin-top: -7px;
+    text-align: center;
+}
+
+.ui-accordion.pokerTasks .ui-accordion-header .ui-icon {
+    width: 16px;
+    height: 16px;
+    margin-top: -4px;
+}
+
+.ui-accordion.pokerTasks .ui-accordion-header .ui-icon-triangle-1-e {
+    background-image: url(#{resource["images:down_arrow16.png"]});    
+}
+
+.ui-accordion.pokerTasks .ui-accordion-header .ui-icon-triangle-1-s {
+    background-image: url(#{resource["images:up_arrow16.png"]});    
+}
+
+.resultText {
+    top: 20px;
+}
+
+.resultPoint {
+    font-size: 80px;
+    color: #6fa77c;
+    min-width: 120px;
+}
+
+.contentTeam {
+    border: 1px solid #e8e8e8;
+    border-collapse: separate;
+    border-radius: 30px;
+    width: 100%;
+    background: #f8f8f8;
+}
+
+.contentTeam td {
+    padding: 0!important;
+}
+
+.userTeam {    
+    border: 0;    
+    background: transparent;
+    top: 0;
+}
+
+.userNameTeam {
+    font-weight: bold;
+    display: block;  
+    width: 85%;
+}
+
+.userTeamOnline {
+    color: #7ec60f;
+}
+
+.sprintTable .ui-row-toggler.ui-icon {
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;   
+    margin: auto;
+}
+
+.sprintTable .ui-row-toggler.ui-icon:hover {
+    opacity: 1;    
+}
+
+.sprintTable .ui-row-toggler:focus {
+    outline: none;
+}
+
+.sprintTable .ui-row-toggler.ui-icon-circle-triangle-e {
+    background-image: url(#{resource["images:eye32.png"]});
+}
+
+.sprintTable .ui-row-toggler.ui-icon-circle-triangle-s {
+    background-image: url(#{resource["images:eyeclose32.png"]});
+}
+

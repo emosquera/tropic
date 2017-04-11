@@ -5,13 +5,18 @@
  */
 package com.tropicscrum.backend.client.facade;
 
+import com.tropicscrum.backend.client.exceptions.UpdateException;
+import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Sprint;
+import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.Task;
+import com.tropicscrum.backend.client.model.User;
 import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 
 @Remote
@@ -20,7 +25,7 @@ public interface TaskFacadeRemote {
     
     Task create(Task task);
 
-    Task edit(Task task);
+    Task edit(Task task) throws UpdateException;
 
     void remove(Task task);
 
@@ -31,4 +36,16 @@ public interface TaskFacadeRemote {
     Collection<Task> findRange(int[] range);
 
     int count();
+    
+    Collection<Task> findMyTasks(User you);
+    
+    Collection<Task> findMyCollabs(User you);
+    
+    Collection<Task> findSprintTasks(Sprint sprint);
+    
+    Collection<Task> findSprintMilestoneTasks(Milestone milestone, Sprint sprint);
+    
+    Collection<Task> findSprintTasksWithProgress(Sprint sprint);
+    
+    void startTaskProgress(Task task, SprintUser sprintUser) throws UpdateException;    
 }

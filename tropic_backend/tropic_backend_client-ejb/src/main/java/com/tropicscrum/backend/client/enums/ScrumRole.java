@@ -7,7 +7,7 @@ package com.tropicscrum.backend.client.enums;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 public enum ScrumRole {
     PRODUCT_OWNER("Product Owner"),

@@ -9,16 +9,15 @@ import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.Project;
-import com.tropicscrum.backend.client.model.Schedule;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
+import com.tropicscrum.backend.client.model.SprintVelocity;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.backend.client.utils.Fibonacci;
 import com.tropicscrum.frontend.controllers.view.SprintViewBean;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -29,13 +28,15 @@ import javax.inject.Inject;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "sprintRequestBean")
 @RequestScoped
 public class SprintRequestBean implements Serializable {
 
     SprintUser sprintUserToRemove;
+    
+    private final Fibonacci fibonacci = new Fibonacci();
     
     @Inject
     SprintViewBean sprintViewBean;
@@ -60,16 +61,25 @@ public class SprintRequestBean implements Serializable {
     public SprintRequestBean() {
     }
     
-    public void createNewSprint () {
+    private void clean() {
+        Project project = new Project();
+        if (sprintViewBean.getLockProject()) {
+            project = sprintViewBean.getSprint().getProject();
+        }
         sprintViewBean.setSprint(new Sprint());
+        sprintViewBean.getSprint().setSprintVelocitys(fibonacci.getSprintVelocitys());
+        for (SprintVelocity sv : sprintViewBean.getSprint().getSprintVelocitys()) {
+            sv.setSprint(sprintViewBean.getSprint());
+        }
+        sprintViewBean.getSprint().setProject(project);
         sprintViewBean.setModify(Boolean.FALSE);
         sprintViewBean.setDelete(Boolean.FALSE);
         sprintViewBean.setUserSelected(null);
         sprintViewBean.setEditingPerson(Boolean.FALSE);
-    }
+    }    
     
     public void newSprint (ActionEvent actionEvent) {
-        createNewSprint();
+        clean();
     }
     
     public Collection<User> getUsersByEmail(String query) {
@@ -117,8 +127,8 @@ public class SprintRequestBean implements Serializable {
         try {
             sprintViewBean.getSprint().setAuthor(sprintViewBean.getUser());       
             Sprint s = sprintFacadeRemote.create(sprintViewBean.getSprint());  
-            sprintViewBean.getSprints().add(s);
-            createNewSprint();
+            sprintViewBean.getSprints().add(s);            
+            clean();
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Sprint creado satisfactoriamente"));
         } catch (Exception ex) {
@@ -131,7 +141,7 @@ public class SprintRequestBean implements Serializable {
         try {
             sprintViewBean.getSprints().remove(sprintViewBean.getSprint());
             sprintFacadeRemote.remove(sprintViewBean.getSprint());
-            createNewSprint();
+            clean();
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Sprint eliminado satisfactoriamente"));
         } catch (Exception ex) {

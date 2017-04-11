@@ -13,6 +13,8 @@ import com.tropicscrum.backend.client.facade.ScheduleFacadeRemote;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
 import com.tropicscrum.backend.client.model.Schedule;
 import com.tropicscrum.backend.client.model.SprintUser;
+import com.tropicscrum.backend.client.model.SprintVelocity;
+import com.tropicscrum.backend.client.utils.Fibonacci;
 import com.tropicscrum.frontend.controllers.application.ScheduleAppBean;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "sprintViewBean")
 @ViewScoped
@@ -52,6 +54,10 @@ public class SprintViewBean implements Serializable {
     private Collection<Schedule> userSchedules;
     
     private Collection<Sprint> sprints;
+    private Collection<Sprint> collabSprints;
+    private Boolean lockProject = false;
+    
+    private final Fibonacci fibonacci = new Fibonacci();
     
     @Inject
     ScheduleAppBean scheduleAppBean;
@@ -185,6 +191,25 @@ public class SprintViewBean implements Serializable {
     public void setSprints(Collection<Sprint> sprints) {
         this.sprints = sprints;
     }
+
+    public Collection<Sprint> getCollabSprints() {
+        if (collabSprints == null) {
+            collabSprints = new ArrayList<>();
+        }
+        return collabSprints;
+    }
+
+    public void setCollabSprints(Collection<Sprint> collabSprints) {
+        this.collabSprints = collabSprints;
+    }
+
+    public Boolean getLockProject() {
+        return lockProject;
+    }
+
+    public void setLockProject(Boolean lockProject) {
+        this.lockProject = lockProject;
+    }
     
     /**
      * Creates a new instance of SprintViewBean
@@ -199,11 +224,15 @@ public class SprintViewBean implements Serializable {
         user = (User) session.getAttribute("user");          
         colorSelected = Color.values()[0];
         styleColor = "color" + colorSelected.toString();                                        
-        
+        getSprint().setSprintVelocitys(fibonacci.getSprintVelocitys());
+        for (SprintVelocity sv : getSprint().getSprintVelocitys()) {
+            sv.setSprint(getSprint());
+        }
         setUserSchedules(scheduleFacadeRemote.getDefaultByWeek());
         editingPerson = false;
         
         setSprints(sprintFacadeRemote.findMySprints(user));
+        setCollabSprints(sprintFacadeRemote.findMyColabs(user));
     }
     
     public Color[] getColors() {

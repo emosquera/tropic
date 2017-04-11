@@ -14,7 +14,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless
 public class SprintFacade extends AbstractFacade<Sprint> implements SprintFacadeLocal {
@@ -34,5 +34,20 @@ public class SprintFacade extends AbstractFacade<Sprint> implements SprintFacade
     @Override
     public Collection<Sprint> findAllByUser(User user) {
         return em.createNamedQuery("findAllSprintsByUser").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public Collection<Sprint> findAllByCollaborator(User user) {
+        return em.createNamedQuery("findAllSprintsByCollaborator").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public Collection<Sprint> findAllSprintsByUserCanCreateTask(User user) {
+        return em.createNamedQuery("findAllSprintsByUserCanCreateTask").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public Collection<Sprint> findAllSprintsBySprintUser(User user) {        
+        return em.createNamedQuery("findAllSprintsBySprintUser").setParameter("user", user).getResultList();
     }
 }

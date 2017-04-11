@@ -5,13 +5,17 @@
  */
 package com.tropicscrum.backend.client.facade;
 
+import com.tropicscrum.backend.client.exceptions.UpdateException;
+import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Sprint;
+import com.tropicscrum.backend.client.model.User;
 import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 
 @Remote
@@ -20,7 +24,7 @@ public interface MilestoneFacadeRemote {
     
     Milestone create(Milestone milestone);
 
-    Milestone edit(Milestone milestone);
+    Milestone edit(Milestone milestone) throws UpdateException;
 
     void remove(Milestone milestone);
 
@@ -31,4 +35,14 @@ public interface MilestoneFacadeRemote {
     Collection<Milestone> findRange(int[] range);
 
     int count();
+    
+    Collection<Milestone> findAllMine(User you);
+    
+    Collection<Milestone> findAllMyColabs(User you);
+    
+    Collection<Milestone> findHistoryMilestones(History history);
+    
+    Collection<Milestone> findSprintMilestones(Sprint sprint);
+    
+    Collection<Milestone> findSprintHistoryMilestones(History history, Sprint sprint);
 }

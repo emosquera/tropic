@@ -7,6 +7,7 @@ package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.User;
 import java.util.Collection;
 import javax.ejb.Stateless;
@@ -15,7 +16,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless
 public class HistoryFacade extends AbstractFacade<History> implements HistoryFacadeLocal {
@@ -45,6 +46,11 @@ public class HistoryFacade extends AbstractFacade<History> implements HistoryFac
     @Override
     public Collection<History> findByProject(Project project) {
         return em.createNamedQuery("findByProject").setParameter("project", project).getResultList();
-    }
+    }    
+
+    @Override
+    public Collection<History> findBySprint(Sprint sprint) {
+        return em.createNamedQuery("findBySprint").setParameter("sprint", sprint).getResultList();
+}
     
 }

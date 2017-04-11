@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless
 public class UserEstimateFacade extends AbstractFacade<UserEstimate> implements UserEstimateFacadeLocal {

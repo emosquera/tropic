@@ -11,7 +11,7 @@ import java.util.Collection;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 public class FilterList {
 

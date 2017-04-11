@@ -19,7 +19,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Entity
 @Table(name = "project")
@@ -27,6 +27,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "findAllProjectsByUser", query = "Select p from Project p where p.author = :user"),
     @NamedQuery(name = "findAllProjectsByCollaborator", query = "Select p from Project p where :user MEMBER OF p.collaborators")})
 public class Project extends BasicAttributes {
+
+    private Collection<Sprint> sprints;
     private String code;
     private String description;
     private User author;
@@ -109,4 +111,16 @@ public class Project extends BasicAttributes {
     public String toString() {
         return "com.tropicscrum.backend.model.Project[ id=" + getId() + " ]";
     }    
+
+    @OneToMany(mappedBy = "project")
+    public Collection<Sprint> getSprints() {
+        if (sprints == null) {
+            sprints = new ArrayList<>();
+        }
+        return sprints;
+    }
+
+    public void setSprints(Collection<Sprint> sprints) {
+        this.sprints = sprints;
+    }
 }

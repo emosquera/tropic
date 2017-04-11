@@ -9,7 +9,6 @@ import com.tropicscrum.backend.client.enums.Color;
 import com.tropicscrum.backend.client.enums.ScrumRole;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,15 +16,21 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Entity
 @Table(name = "sprint_user")
+@NamedQueries({
+    @NamedQuery(name = "findAllSprintUserBySprint", query = "Select s from SprintUser s where s.sprint = :sprint"),    
+    @NamedQuery(name = "findAllSprintUserBySprintAndUserAndRole", query = "Select s from SprintUser s where s.sprint = :sprint and s.user = :user and s.role = :role"),    
+})
 public class SprintUser extends BasicAttributes {
     private Color color;
     private ScrumRole role;

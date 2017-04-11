@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 public class Md5Converter {   
 

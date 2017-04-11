@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">    
+    <ui:define name="header">               
+        <h:outputStylesheet library="css" name="poker.css" />        
+        <p:outputLabel class="nameHeader titlePage">Estimacion de Sprint</p:outputLabel>        
+    </ui:define>
+
+    <ui:define name="content">
+        <p:remoteCommand name="updateTask" action="#{pokerRequestBean.receiveTaskSprintMessage}" update="estimateTask pokerRules sprintTasks"/>
+        <p:focus id="focusCode"/>
+        <h:panelGroup id="pokerData" style="display: block; padding: 10px;">
+            <h:panelGroup class="displayTableCell divUser">
+                <p:outputLabel value="CREADO POR" class="displayInlineBlock textAuthor"/>
+                <p:graphicImage url="../#{pokerViewBean.sprint.author.avatar}" width="60" height="60" class="displayInlineBlock sprintListAvatar"/>
+                <p:outputLabel value="#{pokerViewBean.sprint.author.completeName}" class="displayInlineBlock nameAuthor"/>
+            </h:panelGroup>
+            <h:panelGroup class="displayTableCell divSprint">
+                <p:outputLabel value="#{pokerViewBean.sprint.code}" class="displayInlineBlock sprintName"/>
+                <p:outputLabel value="#{pokerViewBean.sprint.name}" class="displayInlineBlock sprintDescription"/>
+                <p:outputLabel value="#{pokerViewBean.sprint.project.code}" class="displayInlineBlock projectName"/>
+                <p:panel style="display: inline-block; width: 93%" class="boxInput" header="EQUIPO">
+                    <p:dataGrid id="sprintTeam" var="sprintTeam" value="#{pokerViewBean.sprint.sprintUsers}" layout="grid" columns="3">      
+                        <p:panelGrid columns="2" class="contentTeam">
+                            <p:column style="width: 20%">
+                                <p:graphicImage url="../#{sprintTeam.user.avatar}" width="45" height="45" style="display: block;" class="sprintListAvatar"/>
+                            </p:column>
+                            <p:column>
+                                <p:outputLabel value="#{sprintTeam.user.completeName}" class="pointHour userTeam userNameTeam"/>
+                                <p:outputLabel value="#{sprintTeam.role.name}" class="pointHour userTeam"/>
+                            </p:column>                                                     
+                        </p:panelGrid>                        
+                    </p:dataGrid>
+                </p:panel>
+            </h:panelGroup>
+
+            <p:panel id="estimateTask" style="display: inline-block; width: 95%" class="boxInput #{not pokerViewBean.pokerMessage.showEstimate ? 'animateBackground' : ''}" header="TAREA A ESTIMAR">            
+                <h:panelGroup id="taskSelected" style="display: inline-block; width: 100%">
+                    <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+                    <p:outputLabel value="#{pokerViewBean.taskSelected.milestone.history.title}" class="historyTitle"/>
+                    <p:outputLabel value="#{not empty pokerViewBean.taskSelected ? pokerViewBean.taskSelected.milestone.milestone : 'Esperando que el Scrum Master inicie la discusion de una tarea...'}" class="milestoneTitle"/>
+                    <p:outputLabel value="#{pokerViewBean.taskSelected.content}" class="taskSelected"/>                    
+                </h:panelGroup>  
+                <h:panelGroup id="taskVote" style="display: inline-block; width: 100%">
+                    <p:panelGrid columns="1" class="pointSelectedContent" rendered="#{not empty pokerViewBean.userEstimate.points and not pokerViewBean.isVoted}">
+                        <p:outputLabel value="#{pokerViewBean.userEstimate.formattedPoints}"  escape="false" class="pointsList pointSelected"/>                            
+                        <p:outputLabel id="pointHour" value="#{pokerViewBean.userEstimate.formattedHours} #{pokerViewBean.userEstimate.hours > 1 ? 'HORAS' : 'HORA'}" escape="false" class="pointHour hourSelected"/>
+                        <p:commandButton value="VOTAR" action="#{pokerRequestBean.sendVote}" class="buttonTaskEstimate buttonVote" immediate="true" rendered="#{not pokerViewBean.isVoted}">
+                            <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="false"/>
+                            <f:setPropertyActionListener target="#{pokerViewBean.isVoted}" value="true"/>
+                        </p:commandButton>
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" class="pointSelectedContent" style="margin-top: -10px;" rendered="#{pokerViewBean.pokerMessage.isVote and pokerViewBean.isVoted}">
+                        <p:outputLabel value="RESULTADO" class="pointHour resultText"/>
+                        <p:outputLabel value="#{pokerViewBean.taskSelected.formattedPoints}" escape="false" class="pointsList resultPoint"/>                            
+                        <p:outputLabel value="#{pokerViewBean.taskSelected.formattedHours} #{pokerViewBean.taskSelected.estimatedDuration > 1 ? 'HORAS' : 'HORA'}" escape="false" class="pointHour hourSelected"/>                        
+                        <p:commandButton value="REGISTRAR" action="#{pokerRequestBean.registerVote}" class="buttonTaskEstimate buttonRegister" immediate="true" rendered="#{pokerViewBean.isScrumMaster}">
+                            <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="false"/>
+                            <f:setPropertyActionListener target="#{pokerViewBean.isVoted}" value="false"/>
+                        </p:commandButton>
+                    </p:panelGrid>
+                </h:panelGroup>
+                <p:panel style="display: inline-block; width: 95%" class="boxInput" header="ESTIMACION" rendered="#{pokerViewBean.pokerMessage.isVote and pokerViewBean.isVoted}">
+                    <p:dataGrid var="userEstimate" value="#{pokerViewBean.taskSelected.userEstimates}" layout="grid" columns="6">    
+                        <p:graphicImage url="../#{userEstimate.sprintUser.user.avatar}" width="45" height="45" class="sprintListAvatar avatarVote"/>
+                        <p:outputLabel value="#{userEstimate.formattedPoints}" escape="false" class="pointsList pointVote"/>                            
+                        <p:outputLabel value="#{userEstimate.sprintUser.user.completeName}" class="pointHour userVote"/>                    
+                    </p:dataGrid>
+                </p:panel>                
+            </p:panel>
+
+            <p:panel id="pokerRules" style="display: inline-block; width: 95%" class="boxInput #{pokerViewBean.pokerMessage.showEstimate ? 'animateBackground' : ''}" header="ESCALA DE VOTACION" >
+                <p:dataGrid var="pokerRule" value="#{pokerViewBean.sprint.sprintVelocitys}" columns="8" rendered="#{pokerViewBean.pokerMessage.showEstimate}">
+                    <p:commandLink update="form:taskVote" class="pointListAction">
+                        <f:setPropertyActionListener target="#{pokerViewBean.userEstimate.points}" value="#{pokerRule.point}"/>
+                        <f:setPropertyActionListener target="#{pokerViewBean.userEstimate.hours}" value="#{pokerRule.hours}"/>
+                        <f:setPropertyActionListener target="#{pokerViewBean.isVoted}" value="false"/>
+                        <p:panel class="pointListContainer cursorOnOver">
+                            <p:outputLabel value="#{pokerRule.formattedPoint}" escape="false" class="pointsList cursorOnOver"/>                            
+                            <p:outputLabel value="#{pokerRule.formattedHours} #{pokerRule.hours > 1 ? 'HORAS' : 'HORA'}" escape="false" class="pointHour cursorOnOver"/>
+                        </p:panel>
+                    </p:commandLink>                    
+                </p:dataGrid>
+                <p:outputLabel value="Esperando que el Scrum Master inicie votacion de una tarea..." rendered="#{not pokerViewBean.pokerMessage.showEstimate}" class="milestoneTitle"/>
+            </p:panel>
+
+            <p:panel id="sprintTasks" style="display: inline-block; width: 95%" class="boxInput" header="TAREAS DEL SPRINT">
+
+                <c:forEach var="history" items="#{pokerViewBean.sprintHistories}">
+                    <h:panelGroup class="titleHistory">
+                        #{history.title}
+                    </h:panelGroup>
+                    <p:accordionPanel class="pokerTasks" multiple="true">
+                        <c:forEach var="milestone" items="#{history.milestones}">      
+                            <p:tab>
+                                <f:facet name="title">
+                                    <p:panelGrid style="width: 90%">
+                                        <p:row>
+                                            <p:column style="width: 80%">#{milestone.milestone}</p:column>
+                                            <p:column style="width: 20%" rendered="#{milestone.taskEstimates > 0}">#{milestone.taskEstimates} HORAS</p:column>                                           
+                                        </p:row>
+                                    </p:panelGrid>                                    
+                                </f:facet>
+                                <p:dataTable var="task" value="#{milestone.tasks}" class="sprintTable">    
+                                    <p:column style="width: 5%">
+                                        #{task.code}                                        
+                                    </p:column>
+                                    <p:column style="width: 60%">
+                                        #{task.content}                                        
+                                    </p:column>
+                                    <p:column style="width: 5%; text-align: center">
+                                        <p:outputLabel value="#{task.formattedPoints}" escape="false" rendered="#{task.formattedPoints != '0'}" />
+                                    </p:column>
+                                    <p:column style="width: 10%; text-align: center">
+                                        <p:outputLabel value="#{task.formattedHours} #{task.estimatedDuration > 1 ? 'HORAS' : 'HORA'}" escape="false" rendered="#{task.formattedPoints != '0'}" />
+                                    </p:column>
+                                    <p:column style="width: 20%; text-align: center" rendered="#{not empty task.userEstimates}">
+                                        <p:rowToggler class="buttonExpand"/>
+                                    </p:column>
+                                    <p:column rendered="#{pokerViewBean.isScrumMaster and empty task.userEstimates}" style="width: 20%; text-align: center;">
+                                        <p:commandLink action="#{pokerRequestBean.sendTaskSelected}" immediate="true" update="form:estimateTask form:pokerRules">
+                                            <f:setPropertyActionListener target="#{pokerViewBean.taskSelected}" value="#{task}"/>     
+                                            <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="false"/>                                             
+                                            <p:graphicImage url="#{resource['images:discussion.png']}" class="iconVote"/>
+                                        </p:commandLink>
+                                        <p:commandLink action="#{pokerRequestBean.sendTaskSelected}" immediate="true" update="form:estimateTask form:pokerRules">                                            
+                                            <f:setPropertyActionListener target="#{pokerViewBean.taskSelected}" value="#{task}"/>                                            
+                                            <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="true"/>  
+                                            <f:setPropertyActionListener target="#{pokerViewBean.isVoted}" value="false"/>
+                                            <p:graphicImage url="#{resource['images:vote2.png']}" class="iconVote"/>
+                                        </p:commandLink>                                        
+                                    </p:column>       
+                                    <p:rowExpansion>
+                                        <p:dataGrid id="task#{task.id}" var="votes" value="#{task.userEstimates}" layout="grid" columns="6">
+                                            <p:graphicImage url="../#{votes.sprintUser.user.avatar}" width="45" height="45" class="sprintListAvatar avatarVote"/>
+                                            <p:outputLabel value="#{votes.formattedPoints}" escape="false" class="pointsList pointVote"/>                            
+                                            <p:outputLabel value="#{votes.sprintUser.user.completeName}" class="pointHour userVote"/>   
+                                        </p:dataGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </p:tab>
+                        </c:forEach>
+                    </p:accordionPanel>
+
+                </c:forEach>
+            </p:panel>
+
+        </h:panelGroup>
+        <p:socket onMessage="handleMessage" channel="/poker/#{pokerViewBean.sprint.id}/#{pokerViewBean.user.id}" autoConnect="true" widgetVar='subscriber'/>
+        <script type="text/javascript">
+            function handleMessage(message) {
+                updateTask([{name: 'pokerMessage', value: JSON.stringify(message)}]);
+            }
+        </script>
+    </ui:define>
+</ui:composition>

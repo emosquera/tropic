@@ -7,7 +7,7 @@ package com.tropicscrum.frontend.utils.facade;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  * @param <T>
  */
 public interface Predicate<T> {

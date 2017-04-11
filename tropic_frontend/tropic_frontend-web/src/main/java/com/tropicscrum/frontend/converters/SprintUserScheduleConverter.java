@@ -18,7 +18,7 @@ import javax.inject.Inject;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "sprintUserScheduleConverter")
 @Dependent

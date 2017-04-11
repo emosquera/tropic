@@ -5,14 +5,17 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.client.enums.ScrumRole;
+import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
+import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.Collection;
 import javax.ejb.Local;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Local
 public interface SprintUserFacadeLocal {
@@ -31,4 +34,7 @@ public interface SprintUserFacadeLocal {
 
     int count();
     
+    Collection<SprintUser> findBySprint(Sprint sprint);
+    
+    SprintUser findBySprintAndUserAndRole(Sprint sprint, User user, ScrumRole role);
 }

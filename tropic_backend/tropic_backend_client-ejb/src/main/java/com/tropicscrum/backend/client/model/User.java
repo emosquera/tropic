@@ -22,7 +22,7 @@ import javax.persistence.Transient;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Entity
 @Table(name = "users")
@@ -31,6 +31,8 @@ import javax.persistence.Transient;
     @NamedQuery(name = "findOtherByEmail", query = "Select u from User u where u != :user and u.email like concat('%', :email, '%')"),
     @NamedQuery(name = "filterByEmail", query = "Select u from User u where u.email like concat('%', :email, '%')")})
 public class User extends BasicAttributes {
+
+    private Collection<Artifact> artifacts;
 
     private String firstName;
     private String lastName;
@@ -175,6 +177,18 @@ public class User extends BasicAttributes {
 
     public void setCompleteName(String completeName) {
         this.completeName = completeName;
+    }
+
+    @OneToMany(mappedBy = "author")
+    public Collection<Artifact> getArtifacts() {
+        if (artifacts == null) {
+            artifacts = new ArrayList<>();
+        }
+        return artifacts;
+    }
+
+    public void setArtifacts(Collection<Artifact> artifacts) {
+        this.artifacts = artifacts;
     }
     
     

@@ -16,7 +16,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "scheduleAppBean")
 @ApplicationScoped

@@ -12,7 +12,8 @@ import javax.persistence.OptimisticLockException;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
+ * @param <T> Clase Entidad
  */
 public abstract class AbstractFacade<T> {
 
@@ -25,12 +26,12 @@ public abstract class AbstractFacade<T> {
     protected abstract EntityManager getEntityManager();
 
     public void create(T entity) {
-        getEntityManager().persist(entity);
+        getEntityManager().persist(entity);            
     }
 
     public void edit(T entity) throws OldVersionException {
         try {
-            getEntityManager().merge(entity);
+            getEntityManager().merge(entity);                 
         } catch (OptimisticLockException e) {
             throw new OldVersionException("La entidad ha sido modificada despues de la ultima lectura");
         }

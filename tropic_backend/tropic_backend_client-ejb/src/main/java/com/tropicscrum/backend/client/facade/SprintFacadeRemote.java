@@ -13,7 +13,7 @@ import javax.ejb.Remote;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 
 @Remote
@@ -49,7 +49,7 @@ public interface SprintFacadeRemote {
     Collection<Sprint> findMySprints(User you);
     
     /**
-     * Retorna una lista de Sprints que contienen Tareas asociadas a Historias de Projectos donde colabora un usuario. 
+     * Retorna una lista de Sprints asociados a Projectos donde colabora un usuario. 
      * El Usuario debe ser un objeto de tipo {@link User}
      * <p>
      * Este metodo retornara una lista vacia en caso de no encontrar Sprints asociados a Pyoyectos donde colabora el usuario           
@@ -63,4 +63,39 @@ public interface SprintFacadeRemote {
      * @see User
      */
     Collection<Sprint> findMyColabs(User you);
+    
+    
+    /**
+     * Retorna una lista de Sprints donde el Usuario puede crear Tareas. 
+     * Cada Sprint en la lista retornada contiene el proyecto al cual pertence 
+     * y este contiene la lista de sus Historias y a su vez cada historia tendra una lista de sus hitos.
+     * El Usuario debe ser un objeto de tipo {@link User}
+     * <p>
+     * Un usuario puede crear Tareas en un Sprint si es Autor del Proyecto del Sprint, si colabora en 
+     * el Proyecto del Sprint o si pertenece al equipo del Sprint y tiene marcada la opcion de Crear Tareas.
+     * Este metodo retornara una lista vacia en caso de no encontrar Sprints con las condiciones anteriormente descritas.           
+     *
+     * @author Edgar Mosquera
+     * @param you Un objeto de tipo {@link User}
+     * @return Lista de {@link Sprint}
+     * @see Sprint
+     * @see Project
+     * @see History
+     * @see User
+     */
+    Collection<Sprint> findSprintsCreateTask(User you);
+    
+    /**
+     * Retorna una lista de Sprints donde el Usuario participa como parte del Equipo.      
+     * El Usuario debe ser un objeto de tipo {@link User}
+     * <p>
+     * Este metodo retornara una lista vacia en caso de no encontrar Sprints con las condiciones anteriormente descritas.           
+     *
+     * @author Edgar Mosquera
+     * @param you Un objeto de tipo {@link User}
+     * @return Lista de {@link Sprint}
+     * @see Sprint
+     * @see User
+     */
+    Collection<Sprint> findSprintsTeam(User you);
 }

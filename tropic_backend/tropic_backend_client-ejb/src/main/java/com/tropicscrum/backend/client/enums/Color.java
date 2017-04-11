@@ -7,7 +7,7 @@ package com.tropicscrum.backend.client.enums;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 public enum Color {    
     White("Blanco", "#ffffff", "#000000"),

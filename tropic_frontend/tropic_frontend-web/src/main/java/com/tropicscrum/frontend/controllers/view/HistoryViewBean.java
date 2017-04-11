@@ -6,9 +6,10 @@
 package com.tropicscrum.frontend.controllers.view;
 
 import com.tropicscrum.backend.client.facade.HistoryFacadeRemote;
+import com.tropicscrum.backend.client.facade.MilestoneFacadeRemote;
 import com.tropicscrum.backend.client.facade.ProjectFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.User;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "historyViewBean")
 @ViewScoped
@@ -31,18 +32,22 @@ public class HistoryViewBean implements Serializable {
     private User user;
     
     private History history;
-    private Collection<Project> myProjects;
     
     private Collection<History> histories;
     private Collection<History> collabHistories;
     private Boolean modify = false;
     private Boolean delete = false;
+    private Boolean lockProject = false;
+    private Collection<Milestone> historyMilestones;
     
     @EJB(lookup = ProjectFacadeRemote.JNDI_REMOTE_NAME)
     ProjectFacadeRemote projectFacadeRemote;
     
     @EJB(lookup = HistoryFacadeRemote.JNDI_REMOTE_NAME)
     HistoryFacadeRemote historyFacadeRemote;
+    
+    @EJB(lookup = MilestoneFacadeRemote.JNDI_REMOTE_NAME)
+    MilestoneFacadeRemote milestoneFacadeRemote;
 
     public User getUser() {
         return user;
@@ -58,17 +63,6 @@ public class HistoryViewBean implements Serializable {
 
     public void setHistory(History history) {
         this.history = history;
-    }
-
-    public Collection<Project> getMyProjects() {
-        if (myProjects == null) {
-            myProjects = new ArrayList<>();
-        }
-        return myProjects;
-    }
-
-    public void setMyProjects(Collection<Project> myProjects) {
-        this.myProjects = myProjects;
     }
 
     public Collection<History> getHistories() {
@@ -108,6 +102,30 @@ public class HistoryViewBean implements Serializable {
     public void setDelete(Boolean delete) {
         this.delete = delete;
     }
+
+    public Boolean getLockProject() {
+        return lockProject;
+    }
+
+    public void setLockProject(Boolean lockProject) {
+        this.lockProject = lockProject;
+    }
+
+    public Collection<Milestone> getHistoryMilestones() {
+        if (history == null) {
+            historyMilestones = new ArrayList<>();
+        } else {
+            historyMilestones = milestoneFacadeRemote.findHistoryMilestones(history);
+            if (historyMilestones == null) {
+                historyMilestones = new ArrayList<>();
+            }
+        }
+        return historyMilestones;
+    }
+
+    public void setHistoryMilestones(Collection<Milestone> historyMilestones) {
+        this.historyMilestones = historyMilestones;
+    }
     
     /**
      * Creates a new instance of HistoryViewBean
@@ -117,27 +135,24 @@ public class HistoryViewBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        user = (User) session.getAttribute("user");
+        
         final History redirectHistory = (History) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("history");
         if (redirectHistory != null) {
             setHistory(redirectHistory);
+            setModify(Boolean.TRUE);
+            if (redirectHistory.getAuthor().equals(user)) {
+                setDelete(Boolean.TRUE);
+            } else {
+                setDelete(Boolean.FALSE);
+            }
         } else {
             setHistory(new History());
         }        
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().remove("history");
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-        user = (User) session.getAttribute("user");     
-        Collection<Project> projects = projectFacadeRemote.findAllMine(user);
-        Collection<Project> collabsProjects = projectFacadeRemote.findAllMyCollabs(user);        
-        
-        getMyProjects().addAll(projects);
-        
-        for (Project p : collabsProjects) {
-            if (!p.getAuthor().equals(user)) {
-                getMyProjects().add(p);
-            }
-        }
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().remove("history");                     
         
         setHistories(historyFacadeRemote.findAllMine(user));
-        setCollabHistories(historyFacadeRemote.findAllMyCollabs(user));
+        setCollabHistories(historyFacadeRemote.findAllMyCollabs(user));        
     }
 }

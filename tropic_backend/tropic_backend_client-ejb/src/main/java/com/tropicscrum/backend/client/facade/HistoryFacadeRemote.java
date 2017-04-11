@@ -8,13 +8,14 @@ package com.tropicscrum.backend.client.facade;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.User;
 import java.util.Collection;
 import javax.ejb.Remote;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Remote
 public interface HistoryFacadeRemote {
@@ -53,4 +54,19 @@ public interface HistoryFacadeRemote {
      * @see Project
      */
     Collection<History> findProjectHistories(Project project);
+    
+    /**
+     * Retorna una lista de historias que poseen Tareas del Sprint dado.  
+     * Cada Historia tendra sus Hitos y estos tendran las tareas
+     * <p>
+     * Este metodo retornara null si no consigue ninguna historia asociada al 
+     * proyecto.     
+     *
+     * @author Edgar Mosquera
+     * @param sprint Un objeto de tipo Sprint
+     * @return La lista de Historias que poseen Tareas del Sprint dado
+     * @see History
+     * @see Sprint
+     */
+    Collection<History> findSprintHistories(Sprint sprint);
 }

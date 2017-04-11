@@ -1,0 +1,134 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 07/02/2017, 08:44:00 AM
+    Author     : Edgar Mosquera
+*/
+
+.displayTableCell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.displayInlineBlock {
+    display: inline-block;
+}
+
+.sprintList thead {
+    display: none;
+}
+
+.sprintList td {
+    padding: 0!important;
+}
+
+.sprintListAvatar {
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    filter: grayscale(60%);
+}
+
+.divUser {
+    width: 20%;
+    text-align: center;
+}
+
+.sprintList tr.ui-datatable-even .divUser {    
+    background-color: #ececec;
+}
+
+.textAuthor {
+    width: 100%;
+    color: #676767;
+    font-family: 'Dosis', sans-serif;
+    font-size: 14px;    
+}
+
+.textAuthor:hover {
+    cursor: pointer;
+}
+
+.nameAuthor {
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: black;
+}
+
+.nameAuthor:hover {
+    cursor: pointer;
+}
+
+.sprintList tr.ui-datatable-odd .divUser {
+    background-color: #dadada;
+}
+
+.divSprint {
+    width: 80%;
+    padding-left: 15px;
+}
+
+.sprintList tr.ui-datatable-even .divSprint {
+    background: #f9f9f9;    
+}
+
+.sprintName {
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    color: #565656;
+}
+.sprintName:hover {
+    cursor: pointer;
+}
+
+.sprintDescription {
+    width: 100%;
+    font-family: 'Heebo', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: #000000;
+}
+
+.sprintDescription:hover {
+    cursor: pointer;
+}
+
+.projectName {
+    width: 100%;
+    font-family: 'Dosis', sans-serif;
+    font-size: 25px;
+    font-weight: 300;
+    color: #864545;
+}
+
+.projectName:hover {
+    cursor: pointer;
+}
+
+.sprintList tr.ui-datatable-odd .divSprint {
+    background: #f1f1f1;
+}
+
+.sprintConent {
+    display: inline-table; 
+    width: 100%; 
+    height: 200px;
+}
+
+.sprintConent:hover .sprintName {
+    font-weight: 400;
+}
+
+.sprintConent:hover .sprintListAvatar {
+    filter: grayscale(0%);
+}
+
+
+
+    

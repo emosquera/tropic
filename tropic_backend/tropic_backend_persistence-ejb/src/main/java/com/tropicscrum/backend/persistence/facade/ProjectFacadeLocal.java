@@ -13,7 +13,7 @@ import javax.ejb.Local;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Local
 public interface ProjectFacadeLocal {

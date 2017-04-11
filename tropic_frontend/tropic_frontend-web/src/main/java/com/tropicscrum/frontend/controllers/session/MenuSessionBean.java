@@ -16,7 +16,7 @@ import org.primefaces.model.menu.MenuModel;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "menuSessionBean")
 @SessionScoped
@@ -73,12 +73,12 @@ public class MenuSessionBean implements Serializable {
         firstSubmenu.addElement(item);
         
         item = new DefaultMenuItem("Hitos");
-        item.setOutcome("/home/home");
+        item.setOutcome("/home/milestone");
         item.setIcon("milestone-icon");
         firstSubmenu.addElement(item);
         
         item = new DefaultMenuItem("Tareas");
-        item.setOutcome("/home/home");
+        item.setOutcome("/home/task");
         item.setIcon("task-icon");
         firstSubmenu.addElement(item);
         
@@ -89,8 +89,9 @@ public class MenuSessionBean implements Serializable {
         secondSubmenu.setStyleClass("blueMenuItem");
  
         item = new DefaultMenuItem("Estimaciones");
-        item.setOutcome("/home/home"); 
+        item.setOutcome("/home/sprints"); 
         item.setIcon("poker-icon");
+        item.setParam("page", "poker");
         secondSubmenu.addElement(item);
          
         item = new DefaultMenuItem("Dailys");
@@ -99,8 +100,9 @@ public class MenuSessionBean implements Serializable {
         secondSubmenu.addElement(item);
         
         item = new DefaultMenuItem("Actividad");
-        item.setOutcome("/home/home"); 
+        item.setOutcome("/home/sprints"); 
         item.setIcon("process-icon");
+        item.setParam("page", "board");
         secondSubmenu.addElement(item);
  
         model.addElement(secondSubmenu);

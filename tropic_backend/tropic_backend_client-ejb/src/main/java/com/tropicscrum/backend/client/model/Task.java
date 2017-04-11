@@ -5,26 +5,40 @@
  */
 package com.tropicscrum.backend.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tropicscrum.backend.client.enums.GeneralStatus;
 import com.tropicscrum.backend.client.enums.TaskType;
+import com.tropicscrum.backend.client.utils.NumberToFormattedString;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Entity
 @Table(name = "task")
-public class Task extends BasicAttributes {
+@NamedQueries({
+    @NamedQuery(name = "findAllTasksByUser", query = "Select t from Task t where t.author = :user"),    
+    @NamedQuery(name = "findAllTasksByCollaborator", query = "Select DISTINCT t from Task t where :user != t.author and (:user MEMBER OF t.sprint.project.collaborators or :user = t.sprint.project.author)"),
+    @NamedQuery(name = "findAllTasksBySprint", query = "Select t from Task t where t.sprint = :sprint"),
+    @NamedQuery(name = "findAllTasksByMilestonAndSprint", query = "Select t from Task t where t.sprint = :sprint and t.milestone = :milestone"),    
+})
+public class Task extends BasicAttributes implements Comparable<Task>{
+    private String code;
     private String content;
     private Double points;
     private Double estimatedDuration;
@@ -35,6 +49,17 @@ public class Task extends BasicAttributes {
     private Milestone milestone;
     private User author;
     private Sprint sprint;
+    
+    private transient NumberToFormattedString numberToFormattedString = new NumberToFormattedString();
+
+    @Column(name = "code")
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     @Column(name = "content")
     public String getContent() {
@@ -156,7 +181,8 @@ public class Task extends BasicAttributes {
         this.userEstimates = userEstimates;
     }
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("dateExecution DESC")
     public Collection<TaskProgress> getTaskProgresss() {
         if (taskProgresss == null) {
             taskProgresss = new ArrayList<>();
@@ -167,4 +193,32 @@ public class Task extends BasicAttributes {
     public void setTaskProgresss(Collection<TaskProgress> taskProgresss) {
         this.taskProgresss = taskProgresss;
     }
+
+    @Transient
+    @JsonIgnore
+    public NumberToFormattedString getNumberToFormattedString() {
+        if (numberToFormattedString == null) {
+            numberToFormattedString = new NumberToFormattedString();
+        }
+        return numberToFormattedString;
+    }
+    
+    @Transient
+    @JsonIgnore
+    public String getFormattedPoints() {
+        return getNumberToFormattedString().DoubleToString(points);
+    }
+    
+    @Transient
+    @JsonIgnore
+    public String getFormattedHours() {
+        return getNumberToFormattedString().DoubleToString(estimatedDuration);
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return getCode().compareTo(o.getCode());
+    }
+    
+    
 }

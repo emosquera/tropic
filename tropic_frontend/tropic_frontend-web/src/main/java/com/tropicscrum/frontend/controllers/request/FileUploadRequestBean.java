@@ -25,7 +25,7 @@ import org.primefaces.event.FileUploadEvent;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "fileUploadRequestBean")
 @RequestScoped

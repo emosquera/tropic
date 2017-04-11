@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 public class SessionFilter implements Filter {
     

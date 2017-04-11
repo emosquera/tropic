@@ -5,14 +5,18 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.Task;
+import com.tropicscrum.backend.client.model.User;
+import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless
 public class TaskFacade extends AbstractFacade<Task> implements TaskFacadeLocal {
@@ -27,6 +31,26 @@ public class TaskFacade extends AbstractFacade<Task> implements TaskFacadeLocal 
 
     public TaskFacade() {
         super(Task.class);
+    }
+
+    @Override
+    public Collection<Task> findAllTasksByUser(User user) {
+        return em.createNamedQuery("findAllTasksByUser").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public Collection<Task> findAllTasksByCollaborator(User user) {
+        return em.createNamedQuery("findAllTasksByCollaborator").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public Collection<Task> findAllTasksBySprint(Sprint sprint) {
+        return em.createNamedQuery("findAllTasksBySprint").setParameter("sprint", sprint).getResultList();
+    }
+
+    @Override
+    public Collection<Task> findAllTasksByMilestonAndSprint(Milestone milestone, Sprint sprint) {
+        return em.createNamedQuery("findAllTasksByMilestonAndSprint").setParameter("milestone", milestone).setParameter("sprint", sprint).getResultList();
     }
     
 }

@@ -20,7 +20,7 @@ import org.primefaces.util.Base64;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "confirmEmail")
 @ViewScoped

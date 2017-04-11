@@ -9,6 +9,7 @@ import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.HistoryFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
+import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.HistoryFacadeLocal;
@@ -19,7 +20,7 @@ import javax.ejb.Stateless;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless(name = "historyFacadeRemote", mappedName = HistoryFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(HistoryFacadeRemote.class)
@@ -84,6 +85,12 @@ public class HistoryBusinessFacade implements HistoryFacadeRemote {
     @Override
     public Collection<History> findProjectHistories(Project project) {
         Collection<History> histories = historyFacadeLocal.findByProject(project);
+        return histories;
+    }
+
+    @Override
+    public Collection<History> findSprintHistories(Sprint sprint) {
+        Collection<History> histories = historyFacadeLocal.findBySprint(sprint);
         return histories;
     }
 }

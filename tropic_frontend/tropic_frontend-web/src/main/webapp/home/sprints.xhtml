@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">    
+    <ui:define name="header">                
+        <h:outputStylesheet library="css" name="estimate.css" />        
+        <p:outputLabel class="nameHeader titlePage">#{listSprintsViewBean.title}</p:outputLabel>        
+    </ui:define>
+
+    <ui:define name="content">
+        <p:focus id="focusCode"/>
+        <h:panelGroup id="estimateData" style="display: block;">
+            <p:dataTable id="sprints" value="#{listSprintsViewBean.sprints}" var="sprint" class="sprintList">
+                <p:column>
+                    <p:commandLink action="#{listSprintsRequestBean.initSprint}" class="sprintConent">
+                        <f:setPropertyActionListener value="#{sprint}" target="#{listSprintsRequestBean.sprintRedirect}"/>
+                        <h:panelGroup class="displayTableCell divUser">
+                            <p:outputLabel value="CREADO POR" class="displayInlineBlock textAuthor"/>
+                            <p:graphicImage url="../#{sprint.author.avatar}" width="80" height="80" class="displayInlineBlock sprintListAvatar"/>
+                            <p:outputLabel value="#{sprint.author.completeName}" class="displayInlineBlock nameAuthor"/>
+                        </h:panelGroup>
+                        <h:panelGroup class="displayTableCell divSprint">
+                            <p:outputLabel value="#{sprint.code}" class="displayInlineBlock sprintName"/>
+                            <p:outputLabel value="#{sprint.name}" class="displayInlineBlock sprintDescription"/>
+                            <p:outputLabel value="#{sprint.project.code}" class="displayInlineBlock projectName"/>
+                        </h:panelGroup>                    
+                    </p:commandLink>       
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>                       
+    </ui:define>
+</ui:composition>

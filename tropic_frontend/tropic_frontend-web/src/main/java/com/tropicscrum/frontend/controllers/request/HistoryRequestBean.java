@@ -8,6 +8,8 @@ package com.tropicscrum.frontend.controllers.request;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.HistoryFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
+import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.frontend.controllers.view.HistoryViewBean;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -20,17 +22,27 @@ import javax.inject.Inject;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "historyRequestBean")
 @RequestScoped
 public class HistoryRequestBean implements Serializable {
 
+    private Milestone milestoneRedirect;
+    
     @Inject
     HistoryViewBean historyViewBean;
     
     @EJB(lookup = HistoryFacadeRemote.JNDI_REMOTE_NAME)
     HistoryFacadeRemote historyFacadeRemote;
+
+    public Milestone getMilestoneRedirect() {
+        return milestoneRedirect;
+    }
+
+    public void setMilestoneRedirect(Milestone milestoneRedirect) {
+        this.milestoneRedirect = milestoneRedirect;
+    }
     
     /**
      * Creates a new instance of HistoryRequestBean
@@ -42,7 +54,8 @@ public class HistoryRequestBean implements Serializable {
         try {
             historyViewBean.getHistory().setAuthor(historyViewBean.getUser());
             History h = historyFacadeRemote.create(historyViewBean.getHistory());
-            historyViewBean.getHistories().add(h);
+            historyViewBean.getHistories().add(h);           
+            clean();
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Historia creada satisfactoriamente"));
         } catch (Exception ex) {
@@ -66,25 +79,39 @@ public class HistoryRequestBean implements Serializable {
         }
     }
     
-    public void newHistory(ActionEvent actionEvent) {
+    private void clean() {
+        Project project = new Project();
+        if (historyViewBean.getLockProject()) {
+            project = historyViewBean.getHistory().getProject();            
+        } 
         historyViewBean.setHistory(new History());
+        historyViewBean.getHistory().setProject(project);
         historyViewBean.setModify(Boolean.FALSE);
         historyViewBean.setDelete(Boolean.FALSE);
+    }
+    
+    public void newHistory(ActionEvent actionEvent) {
+        clean();
     }
     
     public void removeHistory(ActionEvent actionEvent) {
         try {
             historyViewBean.getHistories().remove(historyViewBean.getHistory());
             historyFacadeRemote.remove(historyViewBean.getHistory());            
-            historyViewBean.setModify(Boolean.FALSE);
-            historyViewBean.setDelete(Boolean.FALSE);
-            historyViewBean.setHistory(new History());
+            clean();
             FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Proyecto eliminado satisfactoriamente"));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Historia eliminada satisfactoriamente"));
         } catch (Exception ex) {
             historyViewBean.getHistories().add(historyViewBean.getHistory());
             FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo eliminar el Proyecto"));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo eliminar la Historia"));
         }
+    }
+    
+    public String goToMilestone() {
+        if ( milestoneRedirect != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("milestone", milestoneRedirect);
+        }
+        return "/home/milestone?faces-redirect=true";
     }
 }

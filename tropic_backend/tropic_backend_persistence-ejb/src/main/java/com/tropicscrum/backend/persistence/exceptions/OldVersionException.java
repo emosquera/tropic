@@ -9,7 +9,7 @@ import javax.ejb.ApplicationException;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @ApplicationException(rollback=true)
 public class OldVersionException extends Exception {

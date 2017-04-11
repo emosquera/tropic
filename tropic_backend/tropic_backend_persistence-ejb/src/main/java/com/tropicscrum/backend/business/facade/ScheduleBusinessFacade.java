@@ -21,7 +21,7 @@ import javax.ejb.Stateless;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 
 @Stateless(name = "scheduleBusinessFacade", mappedName = ScheduleFacadeRemote.JNDI_REMOTE_NAME)

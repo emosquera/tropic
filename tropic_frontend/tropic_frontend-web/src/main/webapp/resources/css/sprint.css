@@ -5,7 +5,7 @@ and open the template in the editor.
 */
 /* 
     Created on : 28/11/2016, 02:04:10 PM
-    Author     : syslife02
+    Author     : Edgar Mosquera
 */
 
 .iconNew {
@@ -136,4 +136,18 @@ and open the template in the editor.
 .autoComplete {
     display: inline-flex;
     margin-right: 20px;
+}
+
+.pointVelocity {
+    display: block;
+    text-align: center;
+    font-family: 'Heebo';
+    font-size: 50px;
+    font-weight: bold;
+    color: #7f9bb5;
+}
+
+.hourVelocity {
+    width: 50px;
+    padding: 5px;
 }

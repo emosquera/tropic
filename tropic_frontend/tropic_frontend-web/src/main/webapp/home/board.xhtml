@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">    
+    <ui:define name="header">               
+        <h:outputStylesheet library="css" name="board.css" />        
+        <p:outputLabel class="nameHeader titlePage">Pizarra Scrum</p:outputLabel>        
+    </ui:define>
+
+    <ui:define name="content">        
+        <p:remoteCommand name="updateTask" action="#{boardRequestBean.receiveBoardMessage}" update="toDoArea doingArea doneArea"/>
+        <p:focus id="focusCode"/>
+        <h:panelGroup id="boardData" style="display: block; padding: 10px;">
+            <h:panelGroup class="displayTableCell divUser">
+                <p:outputLabel value="CREADO POR" class="displayInlineBlock textAuthor"/>
+                <p:graphicImage url="../#{boardViewBean.sprint.author.avatar}" width="60" height="60" class="displayInlineBlock sprintListAvatar"/>
+                <p:outputLabel value="#{boardViewBean.sprint.author.completeName}" class="displayInlineBlock nameAuthor"/>
+            </h:panelGroup>
+            <h:panelGroup class="displayTableCell divSprint">
+                <p:outputLabel value="#{boardViewBean.sprint.code}" class="displayInlineBlock sprintName"/>
+                <p:outputLabel value="#{boardViewBean.sprint.name}" class="displayInlineBlock sprintDescription"/>
+                <p:outputLabel value="#{boardViewBean.sprint.project.code}" class="displayInlineBlock projectName"/>                
+            </h:panelGroup>     
+            <p:panelGrid id="sprintTasks" class="boardScrum" columns="3">       
+                <p:row>
+                    <p:column width="33%">
+                        <p:fieldset id="toDoArea" legend="TAREAS POR HACER ( #{boardViewBean.toDoTasks.size()} )" class="boxInput">
+                            <p:dataGrid id="taskToDo" value="#{boardViewBean.toDoTasks}" var="task" columns="3" layout="grid" emptyMessage="No hay Tareas por hacer">
+                                <p:panel id="toDoTask" class="taskToDo">
+                                    <p:outputLabel value="#{task.code} - #{task.formattedHours}h" escape="false" class="codeTaskToDo"/>
+                                    <p:outputLabel value="#{task.milestone.history.title}" class="historyLabel"/>
+                                    <p:outputLabel value="#{task.milestone.milestone}" class="milestoneLabel"/>
+                                    <span class="contentContent">
+                                        #{task.content}
+                                    </span>                                    
+                                </p:panel>
+                                <p:draggable for="toDoTask" revert="true" handle=".ui-panel-content" stack=".ui-panel" scope="doingArea"/>
+                            </p:dataGrid>
+                            <p:droppable for="toDoArea" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="taskDone" scope="toDoArea" onDrop="handleDrop">
+                                <p:ajax listener="#{boardRequestBean.stopTask}" update="toDoArea doingArea doneArea" />
+                            </p:droppable>
+                        </p:fieldset>                        
+                    </p:column>
+                    <p:column width="33%">
+                        <p:fieldset id="doingArea" legend="TAREAS EN PROGRESO ( #{boardViewBean.taskProgresss.size()} )" class="boxInput">                            
+                            <p:dataGrid id="taskDoing" value="#{boardViewBean.taskProgresss}" var="taskProgress" columns="3" layout="grid" emptyMessage="No hay Tareas en progreso">
+                                <p:panel id="doingTask" class="taskToDo" style="background-color: #{taskProgress.sprintUser.color.hexColor}; color: #{taskProgress.sprintUser.color.hexBorderColor}">
+                                    <p:graphicImage url="../#{taskProgress.sprintUser.user.avatar}" width="30" height="30" class="sprintListAvatar"/>
+                                    <p:outputLabel value="#{taskProgress.task.code} - #{taskProgress.task.formattedHours}h" escape="false" class="codeTaskToDo codeTaskDoing" style="color: #{taskProgress.sprintUser.color.hexBorderColor}"/>                                                                          
+                                    <p:outputLabel value="#{taskProgress.task.milestone.history.title}" class="historyLabel" style="color: #{taskProgress.sprintUser.color.hexColor}; background-color: #{taskProgress.sprintUser.color.hexBorderColor}"/>
+                                    <p:outputLabel value="#{taskProgress.task.milestone.milestone}" class="milestoneLabel" style="color: #{taskProgress.sprintUser.color.hexBorderColor}" />
+                                    <span class="contentContent contentContentDoing">
+                                        #{taskProgress.task.content}
+                                    </span>   
+                                </p:panel>
+                                <p:draggable for="doingTask" revert="true" handle=".ui-panel-content" stack=".ui-panel" scope="doneArea" rendered="#{boardViewBean.sprintUser == taskProgress.sprintUser}"/>
+                            </p:dataGrid>
+                            <p:droppable for="doingArea" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="taskToDo" scope="doingArea" onDrop="handleDrop">
+                                <p:ajax listener="#{boardRequestBean.startTaskActivity}" update="toDoArea doingArea" />
+                            </p:droppable>
+                        </p:fieldset>
+                    </p:column>
+                    <p:column width="33%">                        
+                        <p:fieldset id="doneArea" legend="TAREAS FINALIZADAS ( #{boardViewBean.finishedProgresss.size()} )" class="boxInput">
+                            <p:dataGrid id="taskDone" value="#{boardViewBean.finishedProgresss}" var="finishedProgress" columns="3" layout="grid" emptyMessage="No hay Tareas finalizadas">
+                                <p:panel id="doneTask" class="taskToDo">
+                                    <p:outputLabel value="#{finishedProgress.task.code} - #{finishedProgress.task.formattedHours}h" escape="false" class="codeTaskToDo"/>
+                                    <p:outputLabel value="#{finishedProgress.task.content}"/>
+                                </p:panel>
+                                <p:draggable for="doneTask" revert="true" handle=".ui-panel-content" stack=".ui-panel" scope="toDoArea" rendered="#{boardViewBean.isScrumMaster}"/>
+                            </p:dataGrid>
+                            <p:droppable for="doneArea" tolerance="touch" activeStyleClass="ui-state-highlight" datasource="taskDoing" scope="doneArea" onDrop="handleDrop">
+                                <p:ajax listener="#{boardRequestBean.closeTask}" update="doingArea doneArea" />
+                            </p:droppable>
+                        </p:fieldset>                        
+                    </p:column>
+                </p:row>                                                
+            </p:panelGrid>
+        </h:panelGroup>  
+        <p:socket onMessage="handleMessage" channel="/board/#{boardViewBean.sprint.id}/#{boardViewBean.user.id}" autoConnect="true" widgetVar='subscriber'/>
+        <script type="text/javascript">
+            function handleMessage(message) {
+                updateTask([{name: 'boardMessage', value: JSON.stringify(message)}]);
+            }
+        </script>
+        <script type="text/javascript">
+            function handleDrop(event, ui) {
+                var droppedCar = ui.draggable;
+
+                droppedCar.fadeOut('fast');
+            }
+        </script>
+    </ui:define>
+</ui:composition>

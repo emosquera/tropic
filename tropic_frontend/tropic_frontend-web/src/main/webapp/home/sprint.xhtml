@@ -11,7 +11,7 @@
         <h:outputScript library="js" name="calendar_es.js" />
         <h:outputStylesheet library="css" name="sprint.css" />        
         <p:outputLabel class="nameHeader titlePage">Crea un nuevo Sprint</p:outputLabel>
-        <p:commandLink class="iconNew" actionListener="#{sprintRequestBean.newSprint}" process="@this" update="sprintData focusCode">
+        <p:commandLink class="iconNew" actionListener="#{sprintRequestBean.newSprint}" process="@this lockProject" update="sprintData focusCode">
             <p:graphicImage url="#{resource['images:new.png']}"/>
             <p:resetInput target="sprintData" />
         </p:commandLink>         
@@ -20,6 +20,39 @@
     <ui:define name="content">
         <p:focus id="focusCode"/>
         <h:panelGroup id="sprintData" style="display: block; padding: 10px;">
+            <h:panelGroup>
+                <p:outputLabel class="boxInput" for="projectSprint" rendered="#{not sprintViewBean.modify}">PROYECTO</p:outputLabel>
+                <p:selectOneMenu id="projectSprint" 
+                                 class="boxInput" 
+                                 value="#{sprintViewBean.sprint.project}" 
+                                 filter="true" 
+                                 filterMatchMode="startsWith"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UN PROYECTO"
+                                 converter="#{myProjectConverter}"
+                                 rendered="#{not sprintViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona un Proyecto" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{myDataViewBean.myProjects}" var="project" itemLabel="#{project.code}" itemValue="#{project}"/>                        
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="projectCode" rendered="#{sprintViewBean.modify}">PROYECTO</p:outputLabel>
+                <p:inputText id="projectCode" 
+                             class="boxInput codeWidth" 
+                             value="#{sprintViewBean.sprint.project.code}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{sprintViewBean.modify}"
+                             style="margin-bottom: 20px;"/>    
+                <p:selectBooleanButton id="lockProject" 
+                                       class="lockElement" 
+                                       value="#{sprintViewBean.lockProject}" 
+                                       onLabel="Se mantiene el Proyecto seleccionado" 
+                                       offLabel="Deberas elegir un nuevo Proyecto al crear un nuevo Sprint" 
+                                       offIcon="lockelement-open" 
+                                       onIcon="lockelement-close"/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="projectSprint"/>
+            </h:panelGroup>
             <h:panelGroup style="width: 100%; display: inline-block;">
                 <p:outputLabel class="boxInput" for="sprintCode">CODIGO</p:outputLabel>
                 <p:inputText id="sprintCode" 
@@ -59,16 +92,31 @@
             </h:panelGroup>
             <h:panelGroup style="width: 100%; display: inline-block;">
                 <p:message class="boxInput" for="sprintStart"/>
-            </h:panelGroup>
+            </h:panelGroup>               
+            <p:panel style="width: 95%; display: inline-block; text-align: center;" class="boxInput" header="VELOCIDAD DEL SPRINT">
+                <p:dataGrid value="#{sprintViewBean.sprint.sprintVelocitys}" var="sprintVelocity" columns="8">
+                    <p:panel class="boxInput" header="PUNTOS">
+                        <p:outputLabel value="#{sprintVelocity.formattedPoint}" class="pointVelocity" escape="false"/>
+                        <p:outputLabel value="HORAS" class="boxInput"/>
+                        <p:inputText id="velocity#{sprintVelocity.point}" 
+                                     class="boxInput hourVelocity" 
+                                     value="#{sprintVelocity.hours}" 
+                                     placeholder="Horas estimadas del puntaje" 
+                                     required="true"
+                                     requiredMessage="DEBE INGRESAR UN TIEMPO ESTIMADO"/>
+
+                    </p:panel>
+                </p:dataGrid>
+            </p:panel>
             <h:panelGroup style="width: 100%; display: inline-block;">
                 <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
-            </h:panelGroup>            
+            </h:panelGroup>
             <h:panelGroup style="width: 100%; display: inline-block; margin-bottom: 20px;">
                 <p:commandButton class="boxInput succesText"  value="Crear Sprint" actionListener="#{sprintRequestBean.registerSprint}" rendered="#{not sprintViewBean.modify}" update="form"/>
                 <p:commandButton class="boxInput infoText" id="modifyButton" value="Modificar Sprint"  actionListener="#{sprintRequestBean.updateSprint}" rendered="#{sprintViewBean.modify}" update="form"/>
-                    <p:commandButton class="boxInput errorText" value="Eliminar Sprint" actionListener="#{sprintRequestBean.removeSprint}" rendered="#{sprintViewBean.delete}" update="form">
-                        <p:confirm header="Confirmacion" message="Seguro deseas eliminar el Sprint?"/>
-                    </p:commandButton>
+                <p:commandButton class="boxInput errorText" value="Eliminar Sprint" actionListener="#{sprintRequestBean.removeSprint}" rendered="#{sprintViewBean.delete}" update="form">
+                    <p:confirm header="Confirmacion" message="Seguro deseas eliminar el Sprint?"/>
+                </p:commandButton>
             </h:panelGroup>
             <h:panelGroup id="rowUser" style="width: 100%; display: inline-block;">
                 <p:outputLabel class="boxInput " for="sprintUser">PARTICIPANTE</p:outputLabel>
@@ -174,13 +222,12 @@
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>
-            <h:panelGroup id="rowMySprints" style="width: 100%; display: inline-block;">
+            <h:panelGroup id="rowMySprints" style="width: 100%; display: inline-block; margin-bottom: 20px;">
                 <p:outputLabel class="boxInput" for="rowMySprints">MIS SPRINTS</p:outputLabel>
                 <p:dataTable id="allSprints" class="boxInput" value="#{sprintViewBean.sprints}"
                              var="sprint" emptyMessage="No has creado tu primer sprint todavia">
                     <p:column style="width: 20px">
-                        <p:commandLink update=":form:sprintData :form:focusCode" process="@this" >
-                            <p:resetInput target=":form:sprintData" />
+                        <p:commandLink update=":form:sprintData :form:focusCode" process="@this form:lockProject" >
                             <f:setPropertyActionListener value="true" target="#{sprintViewBean.modify}" />
                             <f:setPropertyActionListener value="true" target="#{sprintViewBean.delete}" />
                             <f:setPropertyActionListener value="#{sprint}" target="#{sprintViewBean.sprint}" />
@@ -190,9 +237,38 @@
                     <p:column style="width: 10%" headerText="Codigo" filterBy="#{sprint.code}" filterMatchMode="contains">                                                                                    
                         #{sprint.code}                                        
                     </p:column>                                    
-                    <p:column style="width: 80%" headerText="Titulo" filterBy="#{sprint.name}" filterMatchMode="contains">
+                    <p:column style="width: 60%" headerText="Titulo" filterBy="#{sprint.name}" filterMatchMode="contains">
                         #{sprint.name}
-                    </p:column>                        
+                    </p:column>              
+                    <p:column style="width: 20%" headerText="Proyecto" filterBy="#{sprint.project.code}" filterMatchMode="contains">
+                        #{sprint.project.code}
+                    </p:column>                    
+                </p:dataTable>
+            </h:panelGroup>
+            <h:panelGroup id="rowMyCollabSprints" style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="rowMySprints">SPRINTS DONDE COLABORO</p:outputLabel>
+                <p:dataTable id="allColSprints" class="boxInput" value="#{sprintViewBean.collabSprints}"
+                             var="collabSprint" emptyMessage="No colaboras en ningun sprint todavia">
+                    <p:column style="width: 20px">
+                        <p:commandLink update=":form:sprintData :form:focusCode" process="@this form:lockProject" >
+                            <f:setPropertyActionListener value="true" target="#{sprintViewBean.modify}" />
+                            <f:setPropertyActionListener value="false" target="#{sprintViewBean.delete}" />
+                            <f:setPropertyActionListener value="#{collabSprint}" target="#{sprintViewBean.sprint}" />
+                            <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width: 10%" headerText="Codigo" filterBy="#{collabSprint.code}" filterMatchMode="contains">                                                                                    
+                        #{collabSprint.code}                                        
+                    </p:column>                                    
+                    <p:column style="width: 40%" headerText="Titulo" filterBy="#{collabSprint.name}" filterMatchMode="contains">
+                        #{collabSprint.name}
+                    </p:column>  
+                    <p:column style="width: 20%" headerText="Autor" filterBy="#{collabSprint.author.firstName} #{collabSprint.author.lastName}" filterMatchMode="contains">
+                        #{collabSprint.author.firstName} #{collabSprint.author.lastName}
+                    </p:column>
+                    <p:column style="width: 20%" headerText="Proyecto" filterBy="#{collabSprint.project.code}" filterMatchMode="contains">
+                        #{collabSprint.project.code}
+                    </p:column>
                 </p:dataTable>
             </h:panelGroup>
         </h:panelGroup>        

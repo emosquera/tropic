@@ -14,7 +14,7 @@ import javax.ejb.Remote;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Remote
 public interface UsersFacadeRemote extends ServiceVerifier {

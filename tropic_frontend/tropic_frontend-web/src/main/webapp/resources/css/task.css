@@ -1,0 +1,32 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 26/01/2017, 05:35:24 PM
+    Author     : Edgar Mosquera
+*/
+
+.iconNew {
+    display: inline-block;
+    position: absolute;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.codeWidth {
+    width: 600px;
+}
+
+.titleWidth {
+    width: 800px;
+}
+
+.smallSelectWidth {
+    width: 300px;
+}
+
+.largeSelectWidth {
+    width: 600px;
+}

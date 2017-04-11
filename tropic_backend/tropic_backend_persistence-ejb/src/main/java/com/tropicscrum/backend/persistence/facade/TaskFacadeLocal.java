@@ -5,15 +5,17 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.Task;
+import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.Collection;
-import java.util.List;
 import javax.ejb.Local;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Local
 public interface TaskFacadeLocal {
@@ -32,4 +34,11 @@ public interface TaskFacadeLocal {
 
     int count();
     
+    Collection<Task> findAllTasksByUser(User user);
+    
+    Collection<Task> findAllTasksByCollaborator(User user);
+    
+    Collection<Task> findAllTasksBySprint(Sprint sprint);
+    
+    Collection<Task> findAllTasksByMilestonAndSprint(Milestone milestone, Sprint sprint);
 }

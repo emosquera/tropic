@@ -7,11 +7,21 @@ package com.tropicscrum.backend.client.enums;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 public enum TaskType {
-    DESING,
-    DEVELOPMENT,
-    TESTING,
-    QA,
+    DESING("Diseno"),
+    DEVELOPMENT("Desarrollo"),
+    TESTING("Pruebas"),
+    QA("Control de Calidad"),;
+    
+    private final String name;
+
+    public String getName() {
+        return name;
+    }
+
+    private TaskType(String name) {
+        this.name = name;
+    }        
 }

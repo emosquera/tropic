@@ -15,7 +15,7 @@ import org.primefaces.model.CroppedImage;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "registerViewBean")
 @ViewScoped

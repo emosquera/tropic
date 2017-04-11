@@ -8,14 +8,13 @@ package com.tropicscrum.backend.business.facade;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
+import com.tropicscrum.backend.persistence.facade.HistoryFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.ProjectFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.SprintFacadeLocal;
-import java.util.ArrayList;
 import java.util.Collection;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
@@ -23,7 +22,7 @@ import javax.ejb.Stateless;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless(name = "sprintFacadeRemote", mappedName = SprintFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(SprintFacadeRemote.class)
@@ -34,6 +33,9 @@ public class SprintBusinessFacade implements SprintFacadeRemote{
     
     @EJB
     ProjectFacadeLocal projectFacadeLocal;
+    
+    @EJB
+    HistoryFacadeLocal historyFacadeLocal;
     
     @Override
     public Sprint create(Sprint sprint) {
@@ -83,23 +85,50 @@ public class SprintBusinessFacade implements SprintFacadeRemote{
     public Collection<Sprint> findMySprints(User you) {
         Collection<Sprint> mySprints = sprintFacadeLocal.findAllByUser(you);
         for (Sprint sprint : mySprints) {
+            sprint.getSprintVelocitys().size();
             for (SprintUser sprintUser : sprint.getSprintUsers()) {
                 sprintUser.getSchedules().size();
             }
         }
-        return sprintFacadeLocal.findAllByUser(you);
+        return mySprints;
     }
 
     @Override
     public Collection<Sprint> findMyColabs(User you) {
-        Collection<Sprint> mySprints = new ArrayList<>();
-        Collection<Project> collabProject = projectFacadeLocal.findAllByCollaborator(you);
-        for (Project project : collabProject) {
-            Collection<History> histories = project.getHistories();
-            for (History history : histories) {
-                mySprints.retainAll(history.getSprints());
+        Collection<Sprint> mySprints = sprintFacadeLocal.findAllByCollaborator(you);
+        for (Sprint sprint : mySprints) {
+            sprint.getSprintVelocitys().size();
+            for (SprintUser sprintUser : sprint.getSprintUsers()) {
+                sprintUser.getSchedules().size();
             }
         }
         return mySprints;
     }    
+
+    @Override
+    public Collection<Sprint> findSprintsCreateTask(User you) {
+        Collection<Sprint> mySprints = sprintFacadeLocal.findAllByUser(you);
+        Collection<Sprint> myCollabSprints = sprintFacadeLocal.findAllByCollaborator(you);
+        Collection<Sprint> mySprintsCanCreate = sprintFacadeLocal.findAllSprintsByUserCanCreateTask(you);
+        
+        mySprints.addAll(myCollabSprints);
+        for (Sprint sprint : mySprintsCanCreate) {
+            if (!mySprints.contains(sprint)) {
+                mySprints.add(sprint);
+            }
+        }
+        
+        for (Sprint s : mySprints) {
+            s.getProject().setHistories(historyFacadeLocal.findByProject(s.getProject()));
+            for (History h : s.getProject().getHistories()) {
+                h.getMilestones().size();
+            }
+        }
+        return mySprints;
+    }
+
+    @Override
+    public Collection<Sprint> findSprintsTeam(User you) {
+        return sprintFacadeLocal.findAllSprintsBySprintUser(you);
+    }
 }

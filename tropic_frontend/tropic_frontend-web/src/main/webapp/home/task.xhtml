@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">    
+    <ui:define name="header">                
+        <h:outputStylesheet library="css" name="task.css" />        
+        <p:outputLabel class="nameHeader titlePage">Crea una nueva Tarea</p:outputLabel>
+        <p:commandLink class="iconNew" actionListener="#{taskRequetsBean.newTask}" process="@this lockSprint" update="taskData focusCode">
+            <p:graphicImage url="#{resource['images:new.png']}"/>
+        </p:commandLink>         
+    </ui:define>
+
+    <ui:define name="content">
+        <p:focus id="focusCode"/>
+        <h:panelGroup id="taskData" style="display: block; padding: 10px;">
+            <h:panelGroup>
+                <p:outputLabel class="boxInput" for="taskSprint" rendered="#{not taskViewBean.modify}">SPRINT</p:outputLabel>
+                <p:selectOneMenu id="taskSprint" 
+                                 class="boxInput smallSelectWidth" 
+                                 value="#{taskViewBean.task.sprint}" 
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UN SPRINT"
+                                 converter="#{sprintCreateTaskConverter}"
+                                 rendered="#{not taskViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona un Sprint" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{taskViewBean.mySprints}" var="sprint" itemLabel="#{sprint.code}" itemValue="#{sprint}"/> 
+                    <p:ajax event="change" update="contentHistory contentMilestone"/>
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="sprintCode" rendered="#{taskViewBean.modify}">SPRINT</p:outputLabel>
+                <p:inputText id="sprintCode" 
+                             class="boxInput codeWidth" 
+                             value="#{taskViewBean.task.sprint.code}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{taskViewBean.modify}"
+                             style="margin-bottom: 20px;"/>    
+                <p:selectBooleanButton id="lockSprint" 
+                                       class="lockElement" 
+                                       value="#{taskViewBean.lockSprint}" 
+                                       onLabel="Se mantiene el Sprint, Historia e Hito seleccionado" 
+                                       offLabel="Deberas elegir un nuevo Sprint, Historia e Hito al crear una nueva Tarea" 
+                                       offIcon="lockelement-open" 
+                                       onIcon="lockelement-close"/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="taskSprint"/>
+            </h:panelGroup>            
+            <h:panelGroup id="contentHistory">
+                <p:outputLabel class="boxInput" for="taskHistory" rendered="#{not taskViewBean.modify}">HISTORIA</p:outputLabel>
+                <p:selectOneMenu id="taskHistory" 
+                                 class="boxInput smallSelectWidth" 
+                                 value="#{taskViewBean.historySelected}" 
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UNA HISTORIA"
+                                 converter="#{historyCreateTaskConverter}"
+                                 rendered="#{not taskViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona una Historia" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{taskViewBean.task.sprint.project.histories}" var="history" itemLabel="#{history.code}" itemValue="#{history}"/>  
+                    <p:ajax event="change" update="contentMilestone"/>
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="historyCode" rendered="#{taskViewBean.modify}">HISTORIA</p:outputLabel>
+                <p:inputText id="historyCode" 
+                             class="boxInput codeWidth" 
+                             value="#{taskViewBean.task.milestone.history.code}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{taskViewBean.modify}"
+                             style="margin-bottom: 20px;"/>                        
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="taskHistory"/>
+            </h:panelGroup>            
+            <h:panelGroup id="contentMilestone">
+                <p:outputLabel class="boxInput" for="taskMilestone" rendered="#{not taskViewBean.modify}">HITO</p:outputLabel>
+                <p:selectOneMenu id="taskMilestone" 
+                                 class="boxInput largeSelectWidth" 
+                                 value="#{taskViewBean.task.milestone}" 
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UN HITO"
+                                 converter="#{milestoneTaskConverter}"
+                                 rendered="#{not taskViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona un Hito" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{taskViewBean.historySelected.milestones}" var="milestone" itemLabel="#{milestone.milestone}" itemValue="#{milestone}"/>                        
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="milestoneCode" rendered="#{taskViewBean.modify}">HITO</p:outputLabel>
+                <p:inputText id="milestoneCode"
+                             class="boxInput codeWidth" 
+                             value="#{taskViewBean.task.milestone.milestone}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{taskViewBean.modify}"
+                             style="margin-bottom: 20px;"/>                        
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="taskMilestone"/>
+            </h:panelGroup>   
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="taskCode">CODIGO</p:outputLabel>
+                <p:inputText id="taskCode" 
+                                 class="boxInput"                                  
+                                 value="#{taskViewBean.task.code}" 
+                                 placeholder="Escribe el codigo de la Tarea" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UN CODIGO DE LA TAREA"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="taskCode"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="taskDescription">DESCRIPCION</p:outputLabel>
+                <p:inputTextarea id="taskDescription" 
+                                 class="boxInput" 
+                                 rows="5" cols="100" 
+                                 value="#{taskViewBean.task.content}" 
+                                 placeholder="Escribe la descripcion de la Tarea" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UNA DESCRIPCION DE LA TAREA"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="taskDescription"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="taskType">TIPO DE TAREA</p:outputLabel>
+                <p:selectOneMenu id="taskType" var="t"  class="boxInput" value="#{taskViewBean.task.type}" required="true">   
+                    <f:selectItems value="#{taskViewBean.taskType}" var="type" itemLabel="#{type.name}" itemValue="#{type}"/>                    
+                    <p:column>
+                        <h:outputText value="#{t.name}" />
+                    </p:column>                    
+                </p:selectOneMenu>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="taskType"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+            </h:panelGroup>            
+            <h:panelGroup style="width: 100%; display: inline-block; margin-bottom: 20px;">
+                <p:commandButton class="boxInput succesText"  value="Crear Tarea" actionListener="#{taskRequetsBean.createTask}" rendered="#{not taskViewBean.modify}" update="form"/>
+                <p:commandButton class="boxInput infoText" id="modifyButton" value="Modificar Tarea"  actionListener="#{taskRequetsBean.updateTask}" rendered="#{taskViewBean.modify}" update="form"/>
+                <p:commandButton class="boxInput errorText" value="Eliminar Tarea" actionListener="#{taskRequetsBean.removeTask}" rendered="#{taskViewBean.delete}" update="form">
+                    <p:confirm header="Confirmacion" message="Seguro deseas eliminar la Tarea?"/>
+                </p:commandButton>
+            </h:panelGroup>   
+            <h:panelGroup id="rowMyTasks" style="width: 100%; display: inline-block; margin-bottom: 20px;">
+                <p:outputLabel class="boxInput" for="rowMyTasks">MIS TAREAS</p:outputLabel>
+                <p:dataTable id="allTasks" class="boxInput" value="#{taskViewBean.myTasks}"
+                             var="myTask" emptyMessage="No has creado tu primera Tarea todavia">
+                    <p:column style="width: 20px">
+                        <p:commandLink update=":form:taskData :form:focusCode" process="@this form:lockSprint" >
+                            <f:setPropertyActionListener value="true" target="#{taskViewBean.modify}" />
+                            <f:setPropertyActionListener value="true" target="#{taskViewBean.delete}" />
+                            <f:setPropertyActionListener value="#{myTask}" target="#{taskViewBean.task}" />
+                            <f:setPropertyActionListener value="#{myTask.milestone.history}" target="#{taskViewBean.historySelected}" />
+                            <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width: 8%" headerText="Codigo" filterBy="#{myTask.code}" filterMatchMode="contains">                                                                                    
+                        #{myTask.code}                                        
+                    </p:column>
+                    <p:column style="width: 40%" headerText="Tarea" filterBy="#{myTask.content}" filterMatchMode="contains">                                                                                    
+                        #{myTask.content}                                        
+                    </p:column>
+                    <p:column style="width: 8%" headerText="Tipo" filterBy="#{myTask.type.name}" filterMatchMode="contains">                                                                                    
+                        #{myTask.type.name}                                        
+                    </p:column>
+                    <p:column style="width: 17%" headerText="Sprint" filterBy="#{myTask.sprint.code}" filterMatchMode="contains">
+                        #{myTask.sprint.code}
+                    </p:column>              
+                    <p:column style="width: 17%" headerText="Proyecto" filterBy="#{myTask.sprint.project.code}" filterMatchMode="contains">
+                        #{myTask.sprint.project.code}
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+            <h:panelGroup id="rowMyCollabTasks" style="width: 100%; display: inline-block; margin-bottom: 20px;">
+                <p:outputLabel class="boxInput" for="rowMyCollabTasks">TAREAS DONDE COLABORO</p:outputLabel>
+                <p:dataTable id="allCollabTasks" class="boxInput" value="#{taskViewBean.myCollabTasks}"
+                             var="myCollabTask" emptyMessage="No colaboras en ninguna Tarea todavia">
+                    <p:column style="width: 20px">
+                        <p:commandLink update=":form:taskData :form:focusCode" process="@this form:lockSprint" >
+                            <f:setPropertyActionListener value="true" target="#{taskViewBean.modify}" />
+                            <f:setPropertyActionListener value="false" target="#{taskViewBean.delete}" />
+                            <f:setPropertyActionListener value="#{myCollabTask}" target="#{taskViewBean.task}" />
+                            <f:setPropertyActionListener value="#{myCollabTask.milestone.history}" target="#{taskViewBean.historySelected}" />
+                            <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width: 50%" headerText="Tarea" filterBy="#{myCollabTask.content}" filterMatchMode="contains">                                                                                    
+                        #{myCollabTask.content}                                        
+                    </p:column> 
+                    <p:column style="width: 15%" headerText="Autor" filterBy="#{myCollabTask.author.firstName} #{myCollabTask.author.lastName}" filterMatchMode="contains">                                                                                    
+                        #{myCollabTask.author.firstName} #{myCollabTask.author.lastName}                                        
+                    </p:column> 
+                    <p:column style="width: 15%" headerText="Sprint" filterBy="#{myCollabTask.sprint.code}" filterMatchMode="contains">
+                        #{myCollabTask.sprint.code}
+                    </p:column>              
+                    <p:column style="width: 15%" headerText="Proyecto" filterBy="#{myCollabTask.sprint.project.code}" filterMatchMode="contains">
+                        #{myCollabTask.sprint.project.code}
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:panelGroup>               
+        <!--Dialogo de Confirmacion General-->
+        <p:confirmDialog class="boxInput" global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes boxInput succesText" icon="check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no boxInput errorText" icon="cancel" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

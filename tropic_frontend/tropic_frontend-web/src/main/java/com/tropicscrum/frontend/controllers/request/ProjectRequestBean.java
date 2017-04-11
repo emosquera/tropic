@@ -14,7 +14,6 @@ import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.frontend.controllers.view.ProjectViewBean;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -25,7 +24,7 @@ import javax.inject.Inject;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Named(value = "projectRequestBean")
 @RequestScoped

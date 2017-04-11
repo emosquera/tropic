@@ -9,15 +9,49 @@
     <ui:define name="header">        
         <h:outputStylesheet library="css" name="history.css" />        
         <p:outputLabel class="nameHeader titlePage">Crea una nueva Historia</p:outputLabel>
-        <p:commandLink class="iconNew" actionListener="#{historyRequestBean.newHistory}" process="@this" update="historyData focusCode">
+        <p:commandLink class="iconNew" actionListener="#{historyRequestBean.newHistory}" process="@this lockProject" update="historyData focusCode">
             <p:graphicImage url="#{resource['images:new.png']}"/>
-            <p:resetInput target="historyData" />
         </p:commandLink>         
     </ui:define>
 
     <ui:define name="content">
         <p:focus id="focusCode"/>
         <p:panelGrid id="historyData" style="width: 100%">
+            <p:row>
+                <p:column>
+                    <p:outputLabel class="boxInput" for="projectHistory" rendered="#{not historyViewBean.modify}">PROYECTO</p:outputLabel>
+                    <p:selectOneMenu id="projectHistory" 
+                                     class="boxInput" 
+                                     value="#{historyViewBean.history.project}" 
+                                     filter="true" 
+                                     filterMatchMode="startsWith"
+                                     required="true" 
+                                     requiredMessage="DEBE INDICAR EL PROYECTO AL QUE PERTENECE LA HISTORIA"
+                                     converter="#{myProjectConverter}"
+                                     rendered="#{ not historyViewBean.modify}">
+                        <f:selectItem itemLabel="Selecciona un Proyecto" itemValue=""  noSelectionOption="false"/>
+                        <f:selectItems value="#{myDataViewBean.myProjects}" var="project" itemLabel="#{project.code}" itemValue="#{project}"/>
+                    </p:selectOneMenu>                    
+                    <p:outputLabel class="boxInput" for="projectCode" rendered="#{historyViewBean.modify}">PROYECTO</p:outputLabel>
+                    <p:inputText id="projectCode" 
+                                 class="boxInput codeWidth" 
+                                 value="#{historyViewBean.history.project.code}" 
+                                 disabled="true"
+                                 rendered="#{historyViewBean.modify}"/>       
+                    <p:selectBooleanButton id="lockProject" 
+                                           class="lockElement" 
+                                           value="#{historyViewBean.lockProject}" 
+                                           onLabel="Se mantiene el ultimo Proyecto Seleccionado" 
+                                           offLabel="Deberas elegir un nuevo proyecto al crear una nueva Historia" 
+                                           offIcon="lockelement-open" 
+                                           onIcon="lockelement-close"/>
+                </p:column>                
+            </p:row>
+            <p:row>
+                <p:column>
+                    <p:message class="boxInput" for="projectHistory"/>
+                </p:column>
+            </p:row>
             <p:row>
                 <p:column>
                     <p:outputLabel class="boxInput" for="historyCode">CODIGO</p:outputLabel>
@@ -66,33 +100,36 @@
                 <p:column>
                     <p:message class="boxInput" for="historyContent"/>
                 </p:column>
-            </p:row>
-            <p:row>
-                <p:column>
-                    <p:outputLabel class="boxInput" for="projectHistory">PROYECTO</p:outputLabel>
-                    <p:selectOneMenu id="projectHistory" 
-                                     class="boxInput" 
-                                     value="#{historyViewBean.history.project}" 
-                                     filter="true" 
-                                     filterMatchMode="startsWith"
-                                     required="true" 
-                                     requiredMessage="DEBE INDICAR EL PROYECTO AL QUE PERTENECE LA HISTORIA"
-                                     converter="#{projectHistoryConverter}">
-                        <f:selectItem itemLabel="Selecciona un Proyecto" itemValue=""  noSelectionOption="false"/>
-                        <f:selectItems value="#{historyViewBean.myProjects}" var="project" itemLabel="#{project.code}" itemValue="#{project}"/>
-                    </p:selectOneMenu>
-                </p:column>                
-            </p:row>
-            <p:row>
-                <p:column>
-                    <p:message class="boxInput" for="projectHistory"/>
-                </p:column>
-            </p:row>
+            </p:row>            
             <p:row>
                 <p:column>
                     <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
                 </p:column>
             </p:row> 
+            <p:row>
+                <p:column>
+                    <p:accordionPanel class="boxInput" rendered="#{historyViewBean.modify}" activeIndex="-1">
+                        <p:tab title="HITOS DE LA HISTORIA">
+                            <p:dataList id="historyMilestones" class="boxInput" value="#{historyViewBean.historyMilestones}"
+                                        var="historyMilestone" emptyMessage="La Historia no tiene Hitos creados">
+                                <p:commandLink action="#{historyRequestBean.goToMilestone}" process="@this">
+                                    <f:setPropertyActionListener value="#{historyMilestone}" target="#{historyRequestBean.milestoneRedirect}" />
+                                    <p:panelGrid>
+                                        <p:row>
+                                            <p:column style="width: 60%">                                                                                    
+                                                #{historyMilestone.milestone}                                        
+                                            </p:column>                                            
+                                            <p:column style="width: 30%">
+                                                #{historyMilestone.author.firstName} #{historyMilestone.author.lastName}
+                                            </p:column>  
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:commandLink>                                             
+                            </p:dataList>
+                        </p:tab>
+                    </p:accordionPanel>
+                </p:column>
+            </p:row>
             <p:row>
                 <p:column id="buttons">
                     <p:commandButton class="boxInput succesText" actionListener="#{historyRequestBean.registerHistory}" value="Crear Historia" rendered="#{not historyViewBean.modify}" update="form"/>
@@ -108,8 +145,7 @@
                     <p:dataTable id="allHistories" class="boxInput" value="#{historyViewBean.histories}"
                                  var="history" emptyMessage="No has creado tu primera historia todavia">
                         <p:column style="width: 20px">
-                            <p:commandLink update=":form:historyData :form:focusCode" process="@this" >
-                                <p:resetInput target=":form:historyData" />
+                            <p:commandLink update=":form:historyData :form:focusCode" process="@this :form:lockProject" >
                                 <f:setPropertyActionListener value="true" target="#{historyViewBean.modify}" />
                                 <f:setPropertyActionListener value="true" target="#{historyViewBean.delete}" />
                                 <f:setPropertyActionListener value="#{history}" target="#{historyViewBean.history}" />
@@ -138,8 +174,7 @@
                     <p:dataTable id="collabHistories" class="boxInput" value="#{historyViewBean.collabHistories}"
                                  var="colHist" emptyMessage="No colaboras en ninguna Historia todavia">
                         <p:column style="width: 20px">
-                            <p:commandLink update=":form:historyData :form:focusCode" process="@this" >
-                                <p:resetInput target=":form:historyData" />
+                            <p:commandLink update=":form:historyData :form:focusCode" process="@this :form:lockProject" >
                                 <f:setPropertyActionListener value="true" target="#{historyViewBean.modify}" />
                                 <f:setPropertyActionListener value="false" target="#{historyViewBean.delete}" />
                                 <f:setPropertyActionListener value="#{colHist}" target="#{historyViewBean.history}" />

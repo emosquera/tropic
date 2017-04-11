@@ -13,7 +13,7 @@ import javax.ejb.Local;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Local
 public interface SprintFacadeLocal {
@@ -33,4 +33,10 @@ public interface SprintFacadeLocal {
     int count();
     
     Collection<Sprint> findAllByUser(User user);
+    
+    Collection<Sprint> findAllByCollaborator(User user);
+    
+    Collection<Sprint> findAllSprintsByUserCanCreateTask(User user);
+    
+    Collection<Sprint> findAllSprintsBySprintUser(User user);
 }

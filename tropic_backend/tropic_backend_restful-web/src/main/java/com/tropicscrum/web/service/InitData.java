@@ -22,7 +22,7 @@ import javax.ws.rs.Produces;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless
 @Path("init")

@@ -5,14 +5,17 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.client.model.SprintUser;
+import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.TaskProgress;
+import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Stateless
 public class TaskProgressFacade extends AbstractFacade<TaskProgress> implements TaskProgressFacadeLocal {
@@ -27,6 +30,16 @@ public class TaskProgressFacade extends AbstractFacade<TaskProgress> implements 
 
     public TaskProgressFacade() {
         super(TaskProgress.class);
+    }
+
+    @Override
+    public Collection<TaskProgress> findAllProgressByTask(Task task) {
+        return em.createNamedQuery("findAllProgressByTask").setParameter("task", task).getResultList();
+    }
+
+    @Override
+    public Collection<TaskProgress> findAllProgressInProgressBySprintUser(SprintUser sprintUser) {
+        return em.createNamedQuery("findAllProgressInProgressBySprintUser").setParameter("sprintUser", sprintUser).getResultList();
     }
     
 }

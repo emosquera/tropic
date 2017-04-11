@@ -5,14 +5,17 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Sprint;
+import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import java.util.Collection;
 import javax.ejb.Local;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Local
 public interface MilestoneFacadeLocal {
@@ -30,5 +33,15 @@ public interface MilestoneFacadeLocal {
     Collection<Milestone> findRange(int[] range);
 
     int count();
+    
+    Collection<Milestone> findAllByUser(User user);
+    
+    Collection<Milestone> findAllByCollaborator(User user);
+    
+    Collection<Milestone> findByHistory(History history);
+    
+    Collection<Milestone> findBySprint(Sprint sprint);
+    
+    Collection<Milestone> findByHistoryAndSprint(History history, Sprint sprint);
     
 }

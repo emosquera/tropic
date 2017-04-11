@@ -13,17 +13,25 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Entity
 @Table(name = "task_progress")
+@NamedQueries({
+    @NamedQuery(name = "findAllProgressByTask", query = "Select t from TaskProgress t where t.task = :task ORDER BY t.dateExecution DESC"),
+    @NamedQuery(name = "findAllProgressInProgressBySprintUser", query = "Select t from TaskProgress t where t.sprintUser = :sprintUser AND t.startEstatus = com.tropicscrum.backend.client.enums.GeneralStatus.IN_PROGRESS AND t.finalStatus IS NULL AND t.task.status = com.tropicscrum.backend.client.enums.GeneralStatus.IN_PROGRESS"),
+})
 public class TaskProgress extends BasicAttributes {
     private Calendar dateExecution;
+    private Calendar finalDate;
+    private Double timeInProgress;
     private GeneralStatus startEstatus;
     private GeneralStatus finalStatus;
     private SprintUser sprintUser;
@@ -37,6 +45,25 @@ public class TaskProgress extends BasicAttributes {
 
     public void setDateExecution(Calendar dateExecution) {
         this.dateExecution = dateExecution;
+    }
+
+    @Column(name = "final_date")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    public Calendar getFinalDate() {
+        return finalDate;
+    }
+
+    public void setFinalDate(Calendar finalDate) {
+        this.finalDate = finalDate;
+    }
+
+    @Column(name = "time_progress")    
+    public Double getTimeInProgress() {
+        return timeInProgress;
+    }
+
+    public void setTimeInProgress(Double timeInProgress) {
+        this.timeInProgress = timeInProgress;
     }
 
     @Enumerated(EnumType.STRING)

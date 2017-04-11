@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 public class RequestDomain {
     

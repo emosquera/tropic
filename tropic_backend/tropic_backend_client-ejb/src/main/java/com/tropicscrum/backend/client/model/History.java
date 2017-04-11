@@ -13,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -22,7 +22,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author syslife02
+ * @author Edgar Mosquera
  */
 @Entity
 @Table(name = "history")
@@ -30,13 +30,13 @@ import javax.persistence.Table;
     @NamedQuery(name = "findAllHistoriesByUser", query = "Select h from History h where h.author = :user"),
     @NamedQuery(name = "findAllHistoriesByCollaborator", query = "Select DISTINCT h from History h where :user != h.author and (:user MEMBER OF h.project.collaborators or :user = h.project.author)"),
     @NamedQuery(name = "findByProject", query = "Select h from History h where h.project = :project"),
+    @NamedQuery(name = "findBySprint", query = "Select DISTINCT h from History h INNER JOIN h.milestones m INNER JOIN m.tasks t where t.sprint = :sprint"),
 })
 public class History extends BasicAttributes {
     private String code;
     private String title;
     private String content;
     private GeneralStatus status;
-    private Collection<Sprint> sprints;
     private Collection<Milestone> milestones;
     private Project project;
     private User author;
@@ -59,6 +59,7 @@ public class History extends BasicAttributes {
         this.title = title;
     }
 
+    @Lob
     @Column(name = "content")
     public String getContent() {
         return content;
@@ -136,18 +137,5 @@ public class History extends BasicAttributes {
 
     public void setMilestones(Collection<Milestone> milestones) {
         this.milestones = milestones;
-    }
-
-    @ManyToMany(mappedBy = "histories")
-    public Collection<Sprint> getSprints() {
-        if (sprints == null) {
-            sprints = new ArrayList<>();
-        }
-        return sprints;
-    }
-
-    public void setSprints(Collection<Sprint> sprints) {
-        this.sprints = sprints;
-    }
-    
+    } 
 }
