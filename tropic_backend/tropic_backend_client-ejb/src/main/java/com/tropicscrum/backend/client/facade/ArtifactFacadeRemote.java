@@ -7,6 +7,8 @@ package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.model.Artifact;
+import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.User;
 import java.util.Collection;
 import javax.ejb.Remote;
 
@@ -31,4 +33,10 @@ public interface ArtifactFacadeRemote {
     Collection<Artifact> findRange(int[] range);
 
     int count();    
+    
+    Collection<Artifact> findMyArtifacts(User you);
+    
+    Collection<Artifact> findMyCollabs(User you);
+    
+    Collection<Artifact> findMilestoneArtifacts(Milestone milestone);
 }

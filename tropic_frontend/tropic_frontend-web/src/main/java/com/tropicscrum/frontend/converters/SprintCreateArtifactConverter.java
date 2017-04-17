@@ -5,8 +5,8 @@
  */
 package com.tropicscrum.frontend.converters;
 
-import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.frontend.controllers.view.TaskViewBean;
+import com.tropicscrum.backend.client.model.Sprint;
+import com.tropicscrum.frontend.controllers.view.ArtifactViewBean;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
 import javax.faces.application.FacesMessage;
@@ -20,17 +20,16 @@ import javax.inject.Inject;
  *
  * @author Edgar Mosquera
  */
-@Named(value = "historyCreateTaskConverter")
+@Named(value = "sprintCreateArtifactConverter")
 @Dependent
-public class HistoryCreateTaskConverter implements Converter {
+public class SprintCreateArtifactConverter implements Converter{
 
     @Inject
-    TaskViewBean taskViewBean;
-    
+    ArtifactViewBean artifactViewBean;
     /**
-     * Creates a new instance of HistoryCreateTaskConverter
+     * Creates a new instance of sprintCreateTaskConverter
      */
-    public HistoryCreateTaskConverter() {
+    public SprintCreateArtifactConverter() {
     }
 
     @Override
@@ -40,13 +39,13 @@ public class HistoryCreateTaskConverter implements Converter {
         } else {
             try {
                 int numero = Integer.parseInt(value);
-                for (History p : taskViewBean.getSprintSelected().getProject().getHistories()) {
-                    if (p.getId() == numero) {
-                        return p;
+                for (Sprint s : artifactViewBean.getMySprints()) {
+                    if (s.getId() == numero) {
+                        return s;
                     }
                 }            
             } catch (NumberFormatException exception) {
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Historia Invalida"));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Sprint Invalido"));
             }
             return null;
         }        
@@ -57,7 +56,7 @@ public class HistoryCreateTaskConverter implements Converter {
         if (value == null || value.equals("")) {
             return "";
         } else {
-            return String.valueOf(((History) value).getId());
+            return String.valueOf(((Sprint) value).getId());
         }
     }
     

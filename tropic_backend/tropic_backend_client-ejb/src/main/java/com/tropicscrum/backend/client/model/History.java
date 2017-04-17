@@ -30,7 +30,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "findAllHistoriesByUser", query = "Select h from History h where h.author = :user"),
     @NamedQuery(name = "findAllHistoriesByCollaborator", query = "Select DISTINCT h from History h where :user != h.author and (:user MEMBER OF h.project.collaborators or :user = h.project.author)"),
     @NamedQuery(name = "findByProject", query = "Select h from History h where h.project = :project"),
-    @NamedQuery(name = "findBySprint", query = "Select DISTINCT h from History h INNER JOIN h.milestones m INNER JOIN m.tasks t where t.sprint = :sprint"),
+    @NamedQuery(name = "findBySprint", query = "Select DISTINCT h from History h INNER JOIN h.milestones m where m.sprint = :sprint"),
 })
 public class History extends BasicAttributes {
     private String code;

@@ -8,6 +8,9 @@ package com.tropicscrum.backend.business.facade;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.ArtifactFacadeRemote;
 import com.tropicscrum.backend.client.model.Artifact;
+import com.tropicscrum.backend.client.model.History;
+import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.ArtifactFacadeLocal;
 import java.util.Collection;
@@ -65,6 +68,31 @@ public class ArtifactBusinessFacade implements ArtifactFacadeRemote {
     @Override
     public int count() {
         return artifactFacadeLocal.count();
+    }
+
+    @Override
+    public Collection<Artifact> findMyArtifacts(User you) {
+        return deepArtifact(artifactFacadeLocal.findAllArtifactsByUser(you));
+    }
+
+    @Override
+    public Collection<Artifact> findMyCollabs(User you) {
+        return deepArtifact(artifactFacadeLocal.findAllArtifactsByCollaborator(you));
+    }
+    
+    private Collection<Artifact> deepArtifact(Collection<Artifact> artifacts) {
+        Collection<Artifact> myArtifacts = artifacts;
+        for (Artifact artifact : myArtifacts) {
+            for (History history : artifact.getMilestone().getSprint().getProject().getHistories()) {
+                history.getMilestones().size();
+            }
+        }
+        return myArtifacts;
+    }
+
+    @Override
+    public Collection<Artifact> findMilestoneArtifacts(Milestone milestone) {
+        return artifactFacadeLocal.findAllArtifactsByMilestone(milestone);
     }
     
 }

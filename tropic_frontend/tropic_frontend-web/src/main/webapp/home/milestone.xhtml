@@ -33,7 +33,7 @@
                         <f:selectItems value="#{milestoneViewBean.mySprints}" var="sprint" itemLabel="#{sprint.code}" itemValue="#{sprint}"/> 
                         <p:ajax event="change" update="historyMilestone"/>
                     </p:selectOneMenu>
-                    <p:outputLabel class="boxInput" for="sprintCode" rendered="#{taskViewBean.modify}">SPRINT</p:outputLabel>
+                    <p:outputLabel class="boxInput" for="sprintCode" rendered="#{milestoneViewBean.modify}">SPRINT</p:outputLabel>
                     <p:inputText id="sprintCode" 
                                  class="boxInput codeWidth" 
                                  value="#{milestoneViewBean.milestone.sprint.code}"                                   
@@ -65,7 +65,7 @@
                                      filterMatchMode="startsWith"
                                      required="true" 
                                      requiredMessage="DEBE INDICAR UNA HISTORIA"
-                                     converter="#{historiesProjectConverter}"
+                                     converter="#{milestoneHistoryConverter}"
                                      rendered="#{not milestoneViewBean.modify}">
                         <f:selectItem itemLabel="Selecciona una Historia" itemValue=""  noSelectionOption="false"/>
                         <f:selectItems value="#{milestoneViewBean.milestone.sprint.project.histories}" var="history" itemLabel="#{history.title}" itemValue="#{history}"/>
@@ -73,7 +73,7 @@
                     <p:outputLabel class="boxInput" for="historyCode" rendered="#{milestoneViewBean.modify}">HISTORIA</p:outputLabel>
                     <p:inputText id="historyCode" 
                                  class="boxInput codeWidth" 
-                                 value="#{milestoneViewBean.milestone.history.code}"                                   
+                                 value="#{milestoneViewBean.milestone.history.title}"                                   
                                  required="false"
                                  disabled="true"
                                  rendered="#{milestoneViewBean.modify}"/>                          

@@ -47,15 +47,15 @@ public class MenuSessionBean implements Serializable {
         DefaultSubMenu firstSubmenu = new DefaultSubMenu("Definiciones");
         firstSubmenu.setStyleClass("yellowMenuItem");
          
-        item = new DefaultMenuItem("Proyectos");
-        item.setOutcome("/home/projects");     
-        item.setIcon("product-icon");
-        firstSubmenu.addElement(item);
-        
-        item = new DefaultMenuItem("Colaboradores");
+        item = new DefaultMenuItem("Tecnologias");
         item.setOutcome("/home/home");
         item.setIcon("collaborator-icon");
         firstSubmenu.addElement(item);
+        
+        item = new DefaultMenuItem("Proyectos");
+        item.setOutcome("/home/projects");     
+        item.setIcon("product-icon");
+        firstSubmenu.addElement(item);                
 
         item = new DefaultMenuItem("Historias");
         item.setOutcome("/home/history");
@@ -65,16 +65,16 @@ public class MenuSessionBean implements Serializable {
         item = new DefaultMenuItem("Sprints");
         item.setOutcome("/home/sprint");
         item.setIcon("sprint-icon");
-        firstSubmenu.addElement(item);
-        
-        item = new DefaultMenuItem("Equipos");
-        item.setOutcome("/home/home");
-        item.setIcon("team-icon");
-        firstSubmenu.addElement(item);
+        firstSubmenu.addElement(item);                
         
         item = new DefaultMenuItem("Hitos");
         item.setOutcome("/home/milestone");
         item.setIcon("milestone-icon");
+        firstSubmenu.addElement(item);
+        
+        item = new DefaultMenuItem("Componentes");
+        item.setOutcome("/home/artifact");
+        item.setIcon("team-icon");
         firstSubmenu.addElement(item);
         
         item = new DefaultMenuItem("Tareas");

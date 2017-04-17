@@ -21,7 +21,7 @@
                 <p:outputLabel class="boxInput" for="taskSprint" rendered="#{not taskViewBean.modify}">SPRINT</p:outputLabel>
                 <p:selectOneMenu id="taskSprint" 
                                  class="boxInput smallSelectWidth" 
-                                 value="#{taskViewBean.task.sprint}" 
+                                 value="#{taskViewBean.sprintSelected}" 
                                  filter="true" 
                                  filterMatchMode="contains"
                                  required="true" 
@@ -30,12 +30,12 @@
                                  rendered="#{not taskViewBean.modify}">
                     <f:selectItem itemLabel="Selecciona un Sprint" itemValue=""  noSelectionOption="false"/>
                     <f:selectItems value="#{taskViewBean.mySprints}" var="sprint" itemLabel="#{sprint.code}" itemValue="#{sprint}"/> 
-                    <p:ajax event="change" update="contentHistory contentMilestone"/>
+                    <p:ajax event="change" update="contentHistory contentMilestone contentArtifact"/>
                 </p:selectOneMenu>
                 <p:outputLabel class="boxInput" for="sprintCode" rendered="#{taskViewBean.modify}">SPRINT</p:outputLabel>
                 <p:inputText id="sprintCode" 
                              class="boxInput codeWidth" 
-                             value="#{taskViewBean.task.sprint.code}"                                   
+                             value="#{taskViewBean.task.artifact.milestone.sprint.code}"                                   
                              required="false"
                              disabled="true"
                              rendered="#{taskViewBean.modify}"
@@ -63,13 +63,13 @@
                                  converter="#{historyCreateTaskConverter}"
                                  rendered="#{not taskViewBean.modify}">
                     <f:selectItem itemLabel="Selecciona una Historia" itemValue=""  noSelectionOption="false"/>
-                    <f:selectItems value="#{taskViewBean.task.sprint.project.histories}" var="history" itemLabel="#{history.code}" itemValue="#{history}"/>  
-                    <p:ajax event="change" update="contentMilestone"/>
+                    <f:selectItems value="#{taskViewBean.sprintSelected.project.histories}" var="history" itemLabel="#{history.title}" itemValue="#{history}"/>  
+                    <p:ajax event="change" update="contentMilestone contentArtifact"/>
                 </p:selectOneMenu>
                 <p:outputLabel class="boxInput" for="historyCode" rendered="#{taskViewBean.modify}">HISTORIA</p:outputLabel>
                 <p:inputText id="historyCode" 
                              class="boxInput codeWidth" 
-                             value="#{taskViewBean.task.milestone.history.code}"                                   
+                             value="#{taskViewBean.task.artifact.milestone.history.title}"                                   
                              required="false"
                              disabled="true"
                              rendered="#{taskViewBean.modify}"
@@ -82,7 +82,7 @@
                 <p:outputLabel class="boxInput" for="taskMilestone" rendered="#{not taskViewBean.modify}">HITO</p:outputLabel>
                 <p:selectOneMenu id="taskMilestone" 
                                  class="boxInput largeSelectWidth" 
-                                 value="#{taskViewBean.task.milestone}" 
+                                 value="#{taskViewBean.milestoneSelected}" 
                                  filter="true" 
                                  filterMatchMode="contains"
                                  required="true" 
@@ -91,11 +91,12 @@
                                  rendered="#{not taskViewBean.modify}">
                     <f:selectItem itemLabel="Selecciona un Hito" itemValue=""  noSelectionOption="false"/>
                     <f:selectItems value="#{taskViewBean.historySelected.milestones}" var="milestone" itemLabel="#{milestone.milestone}" itemValue="#{milestone}"/>                        
+                    <p:ajax event="change" update="contentArtifact"/>
                 </p:selectOneMenu>
                 <p:outputLabel class="boxInput" for="milestoneCode" rendered="#{taskViewBean.modify}">HITO</p:outputLabel>
                 <p:inputText id="milestoneCode"
                              class="boxInput codeWidth" 
-                             value="#{taskViewBean.task.milestone.milestone}"                                   
+                             value="#{taskViewBean.task.artifact.milestone.milestone}"                                   
                              required="false"
                              disabled="true"
                              rendered="#{taskViewBean.modify}"
@@ -104,6 +105,32 @@
             <h:panelGroup>
                 <p:message class="boxInput" for="taskMilestone"/>
             </h:panelGroup>   
+            <h:panelGroup id="contentArtifact">
+                <p:outputLabel class="boxInput" for="taskArtifact" rendered="#{not taskViewBean.modify}">COMPONENTE</p:outputLabel>
+                <p:selectOneMenu id="taskArtifact" 
+                                 class="boxInput largeSelectWidth" 
+                                 value="#{taskViewBean.task.artifact}" 
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UN COMPONENTE"
+                                 converter="#{artifactTaskConverter}"
+                                 rendered="#{not taskViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona un Componente" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{taskViewBean.milestoneSelected.artifacts}" var="artifact" itemLabel="#{artifact.code}" itemValue="#{artifact}"/>                        
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="artifactCode" rendered="#{taskViewBean.modify}">COMPONENTE</p:outputLabel>
+                <p:inputText id="artifactCode"
+                             class="boxInput codeWidth" 
+                             value="#{taskViewBean.task.artifact.code}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{taskViewBean.modify}"
+                             style="margin-bottom: 20px;"/>                        
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="taskArtifact"/>
+            </h:panelGroup>
             <h:panelGroup style="width: 100%; display: inline-block;">
                 <p:outputLabel class="boxInput" for="taskCode">CODIGO</p:outputLabel>
                 <p:inputText id="taskCode" 
@@ -160,7 +187,9 @@
                             <f:setPropertyActionListener value="true" target="#{taskViewBean.modify}" />
                             <f:setPropertyActionListener value="true" target="#{taskViewBean.delete}" />
                             <f:setPropertyActionListener value="#{myTask}" target="#{taskViewBean.task}" />
-                            <f:setPropertyActionListener value="#{myTask.milestone.history}" target="#{taskViewBean.historySelected}" />
+                            <f:setPropertyActionListener value="#{myTask.artifact.milestone.sprint}" target="#{taskViewBean.sprintSelected}" />
+                            <f:setPropertyActionListener value="#{myTask.artifact.milestone.history}" target="#{taskViewBean.historySelected}" />
+                            <f:setPropertyActionListener value="#{myTask.artifact.milestone}" target="#{taskViewBean.milestoneSelected}" />
                             <p:graphicImage url="#{resource['images:edit16.png']}"/>
                         </p:commandLink>
                     </p:column>
@@ -173,11 +202,11 @@
                     <p:column style="width: 8%" headerText="Tipo" filterBy="#{myTask.type.name}" filterMatchMode="contains">                                                                                    
                         #{myTask.type.name}                                        
                     </p:column>
-                    <p:column style="width: 17%" headerText="Sprint" filterBy="#{myTask.sprint.code}" filterMatchMode="contains">
-                        #{myTask.sprint.code}
+                    <p:column style="width: 17%" headerText="Sprint" filterBy="#{myTask.artifact.milestone.sprint.code}" filterMatchMode="contains">
+                        #{myTask.artifact.milestone.sprint.code}
                     </p:column>              
-                    <p:column style="width: 17%" headerText="Proyecto" filterBy="#{myTask.sprint.project.code}" filterMatchMode="contains">
-                        #{myTask.sprint.project.code}
+                    <p:column style="width: 17%" headerText="Proyecto" filterBy="#{myTask.artifact.milestone.sprint.project.code}" filterMatchMode="contains">
+                        #{myTask.artifact.milestone.sprint.project.code}
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>
@@ -190,7 +219,9 @@
                             <f:setPropertyActionListener value="true" target="#{taskViewBean.modify}" />
                             <f:setPropertyActionListener value="false" target="#{taskViewBean.delete}" />
                             <f:setPropertyActionListener value="#{myCollabTask}" target="#{taskViewBean.task}" />
-                            <f:setPropertyActionListener value="#{myCollabTask.milestone.history}" target="#{taskViewBean.historySelected}" />
+                            <f:setPropertyActionListener value="#{myCollabTask.artifact.milestone.sprint}" target="#{taskViewBean.sprintSelected}" />
+                            <f:setPropertyActionListener value="#{myCollabTask.artifact.milestone.history}" target="#{taskViewBean.historySelected}" />
+                            <f:setPropertyActionListener value="#{myCollabTask.artifact.milestone}" target="#{taskViewBean.milestoneSelected}" />
                             <p:graphicImage url="#{resource['images:edit16.png']}"/>
                         </p:commandLink>
                     </p:column>
@@ -200,11 +231,11 @@
                     <p:column style="width: 15%" headerText="Autor" filterBy="#{myCollabTask.author.firstName} #{myCollabTask.author.lastName}" filterMatchMode="contains">                                                                                    
                         #{myCollabTask.author.firstName} #{myCollabTask.author.lastName}                                        
                     </p:column> 
-                    <p:column style="width: 15%" headerText="Sprint" filterBy="#{myCollabTask.sprint.code}" filterMatchMode="contains">
-                        #{myCollabTask.sprint.code}
+                    <p:column style="width: 15%" headerText="Sprint" filterBy="#{myCollabTask.artifact.milestone.sprint.code}" filterMatchMode="contains">
+                        #{myCollabTask.artifact.milestone.sprint.code}
                     </p:column>              
-                    <p:column style="width: 15%" headerText="Proyecto" filterBy="#{myCollabTask.sprint.project.code}" filterMatchMode="contains">
-                        #{myCollabTask.sprint.project.code}
+                    <p:column style="width: 15%" headerText="Proyecto" filterBy="#{myCollabTask.artifact.milestone.sprint.project.code}" filterMatchMode="contains">
+                        #{myCollabTask.artifact.milestone.sprint.project.code}
                     </p:column>
                 </p:dataTable>
             </h:panelGroup>

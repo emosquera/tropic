@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/template/generalTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">    
+    <ui:define name="header">                
+        <h:outputStylesheet library="css" name="task.css" />        
+        <p:outputLabel class="nameHeader titlePage">Crea un nuevo Componente</p:outputLabel>
+        <p:commandLink class="iconNew" actionListener="#{artifactRequetsBean.newArtifact}" process="@this lockSprint" update="artifactData focusCode">
+            <p:graphicImage url="#{resource['images:new.png']}"/>
+        </p:commandLink>         
+    </ui:define>
+
+    <ui:define name="content">
+        <p:focus id="focusCode"/>
+        <h:panelGroup id="artifactData" style="display: block; padding: 10px;">
+            <h:panelGroup>
+                <p:outputLabel class="boxInput" for="artifactSprint" rendered="#{not artifactViewBean.modify}">SPRINT</p:outputLabel>
+                <p:selectOneMenu id="artifactSprint" 
+                                 class="boxInput smallSelectWidth" 
+                                 value="#{artifactViewBean.sprintSelected}" 
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UN SPRINT"
+                                 converter="#{sprintCreateArtifactConverter}"
+                                 rendered="#{not artifactViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona un Sprint" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{artifactViewBean.mySprints}" var="sprint" itemLabel="#{sprint.code}" itemValue="#{sprint}"/> 
+                    <p:ajax event="change" update="contentHistory contentMilestone"/>
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="sprintCode" rendered="#{artifactViewBean.modify}">SPRINT</p:outputLabel>
+                <p:inputText id="sprintCode" 
+                             class="boxInput codeWidth" 
+                             value="#{artifactViewBean.sprintSelected.code}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{artifactViewBean.modify}"
+                             style="margin-bottom: 20px;"/>    
+                <p:selectBooleanButton id="lockSprint" 
+                                       class="lockElement" 
+                                       value="#{artifactViewBean.lockSprint}" 
+                                       onLabel="Se mantiene el Sprint, Historia e Hito seleccionado" 
+                                       offLabel="Deberas elegir un nuevo Sprint, Historia e Hito al crear una nueva Tarea" 
+                                       offIcon="lockelement-open" 
+                                       onIcon="lockelement-close"/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="artifactSprint"/>
+            </h:panelGroup>            
+            <h:panelGroup id="contentHistory">
+                <p:outputLabel class="boxInput" for="artifactHistory" rendered="#{not artifactViewBean.modify}">HISTORIA</p:outputLabel>
+                <p:selectOneMenu id="artifactHistory" 
+                                 class="boxInput smallSelectWidth" 
+                                 value="#{artifactViewBean.historySelected}" 
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UNA HISTORIA"
+                                 converter="#{historyCreateArtifactConverter}"
+                                 rendered="#{not artifactViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona una Historia" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{artifactViewBean.sprintSelected.project.histories}" var="history" itemLabel="#{history.title}" itemValue="#{history}"/>  
+                    <p:ajax event="change" update="contentMilestone"/>
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="historyCode" rendered="#{artifactViewBean.modify}">HISTORIA</p:outputLabel>
+                <p:inputText id="historyCode" 
+                             class="boxInput codeWidth" 
+                             value="#{artifactViewBean.artifact.milestone.history.title}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{artifactViewBean.modify}"
+                             style="margin-bottom: 20px;"/>                        
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="artifactHistory"/>
+            </h:panelGroup>            
+            <h:panelGroup id="contentMilestone">
+                <p:outputLabel class="boxInput" for="artifactMilestone" rendered="#{not artifactViewBean.modify}">HITO</p:outputLabel>
+                <p:selectOneMenu id="artifactMilestone" 
+                                 class="boxInput largeSelectWidth" 
+                                 value="#{artifactViewBean.artifact.milestone}" 
+                                 filter="true" 
+                                 filterMatchMode="contains"
+                                 required="true" 
+                                 requiredMessage="DEBE INDICAR UN HITO"
+                                 converter="#{milestoneArtifactConverter}"
+                                 rendered="#{not artifactViewBean.modify}">
+                    <f:selectItem itemLabel="Selecciona un Hito" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{artifactViewBean.sprintSelected.milestones}" var="milestone" itemLabel="#{milestone.milestone}" itemValue="#{milestone}"/>                        
+                </p:selectOneMenu>
+                <p:outputLabel class="boxInput" for="milestoneCode" rendered="#{artifactViewBean.modify}">HITO</p:outputLabel>
+                <p:inputText id="milestoneCode"
+                             class="boxInput codeWidth" 
+                             value="#{artifactViewBean.artifact.milestone.milestone}"                                   
+                             required="false"
+                             disabled="true"
+                             rendered="#{artifactViewBean.modify}"
+                             style="margin-bottom: 20px;"/>                        
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:message class="boxInput" for="artifactMilestone"/>
+            </h:panelGroup>   
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="artifactCode">CODIGO</p:outputLabel>
+                <p:inputText id="artifactCode" 
+                                 class="boxInput"                                  
+                                 value="#{artifactViewBean.artifact.code}" 
+                                 placeholder="Escribe el codigo del Componente" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UN CODIGO DEL COMPONENTE"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="artifactCode"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="artifactDescription">DESCRIPCION</p:outputLabel>
+                <p:inputTextarea id="artifactDescription" 
+                                 class="boxInput" 
+                                 rows="5" cols="100" 
+                                 value="#{artifactViewBean.artifact.description}" 
+                                 placeholder="Escribe la descripcion del Componente" 
+                                 required="true"
+                                 requiredMessage="DEBE INGRESAR UNA DESCRIPCION DEL COMPONENTE"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="artifactDescription"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="artifactTechnology">TIPO DE COMPONENTE</p:outputLabel>
+                <p:selectOneMenu id="artifactTechnology" class="boxInput" value="#{artifactViewBean.artifact.technology}" required="true" converter="#{artifactTechnologyConverter}">   
+                    <f:selectItem itemLabel="Selecciona una Tecnologia del Componente" itemValue=""  noSelectionOption="false"/>
+                    <f:selectItems value="#{artifactViewBean.technologies}" var="technology" itemLabel="#{technology.technology}" itemValue="#{technology}"/>                                                            
+                </p:selectOneMenu>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="artifactTechnology"/>
+            </h:panelGroup>            
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:outputLabel class="boxInput" for="artifactMeasureUnit">UNIDAD DE MEDIDA</p:outputLabel>
+                <p:selectOneMenu id="artifactMeasureUnit" var="t"  class="boxInput" value="#{artifactViewBean.artifact.measureUnit}" required="true">   
+                    <f:selectItems value="#{artifactViewBean.measureUnit}" var="unit" itemLabel="#{unit.name}" itemValue="#{unit}"/>                    
+                    <p:column>
+                        <h:outputText value="#{t.name}" />
+                    </p:column>                    
+                </p:selectOneMenu>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:message class="boxInput" for="artifactMeasureUnit"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block;">
+                <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+            </h:panelGroup>
+            <h:panelGroup style="width: 100%; display: inline-block; margin-bottom: 20px;">
+                <p:commandButton class="boxInput succesText"  value="Crear Componente" actionListener="#{artifactRequetsBean.createArtifact}" rendered="#{not artifactViewBean.modify}" update="form"/>
+                <p:commandButton class="boxInput infoText" id="modifyButton" value="Modificar Componente"  actionListener="#{artifactRequetsBean.updateArtifact}" rendered="#{artifactViewBean.modify}" update="form"/>
+                <p:commandButton class="boxInput errorText" value="Eliminar Componente" actionListener="#{artifactRequetsBean.removeArtifact}" rendered="#{artifactViewBean.delete}" update="form">
+                    <p:confirm header="Confirmacion" message="Seguro deseas eliminar el Componente?"/>
+                </p:commandButton>
+            </h:panelGroup>   
+            <h:panelGroup id="rowMyArtifacts" style="width: 100%; display: inline-block; margin-bottom: 20px;">
+                <p:outputLabel class="boxInput" for="rowMyArtifacts">MIS ARTEFACTOS</p:outputLabel>
+                <p:dataTable id="allArtifacts" class="boxInput" value="#{artifactViewBean.myArtifacts}"
+                             var="myArtifact" emptyMessage="No has creado tu primer Componente todavia">
+                    <p:column style="width: 20px">
+                        <p:commandLink update=":form:artifactData :form:focusCode" process="@this form:lockSprint" >
+                            <f:setPropertyActionListener value="true" target="#{artifactViewBean.modify}" />
+                            <f:setPropertyActionListener value="true" target="#{artifactViewBean.delete}" />
+                            <f:setPropertyActionListener value="#{myArtifact}" target="#{artifactViewBean.artifact}" />
+                            <f:setPropertyActionListener value="#{myArtifact.milestone.sprint}" target="#{artifactViewBean.sprintSelected}" />
+                            <f:setPropertyActionListener value="#{myArtifact.milestone.history}" target="#{artifactViewBean.historySelected}" />
+                            <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width: 8%" headerText="Codigo" filterBy="#{myArtifact.code}" filterMatchMode="contains">                                                                                    
+                        #{myArtifact.code}                                        
+                    </p:column>
+                    <p:column style="width: 40%" headerText="Componente" filterBy="#{myArtifact.description}" filterMatchMode="contains">                                                                                    
+                        #{myArtifact.description}                                        
+                    </p:column>
+                    <p:column style="width: 8%" headerText="Tecnologia" filterBy="#{myArtifact.technology.technology}" filterMatchMode="contains">                                                                                    
+                        #{myArtifact.technology.technology}                                        
+                    </p:column>
+                    <p:column style="width: 17%" headerText="Hito" filterBy="#{myArtifact.milestone.milestone}" filterMatchMode="contains">
+                        #{myArtifact.milestone.milestone}
+                    </p:column>              
+                    <p:column style="width: 17%" headerText="Sprint" filterBy="#{myArtifact.milestone.sprint.code}" filterMatchMode="contains">
+                        #{myArtifact.milestone.sprint.code}
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+            <h:panelGroup id="rowMyCollabArtifacts" style="width: 100%; display: inline-block; margin-bottom: 20px;">
+                <p:outputLabel class="boxInput" for="rowMyCollabArtifacts">COMPONENTES DONDE COLABORO</p:outputLabel>
+                <p:dataTable id="allCollabArtifacts" class="boxInput" value="#{artifactViewBean.myCollabArtifacts}"
+                             var="myCollabArtifact" emptyMessage="No colaboras en ningun Componente todavia">
+                    <p:column style="width: 20px">
+                        <p:commandLink update=":form:artifactData :form:focusCode" process="@this form:lockSprint" >
+                            <f:setPropertyActionListener value="true" target="#{artifactViewBean.modify}" />
+                            <f:setPropertyActionListener value="false" target="#{artifactViewBean.delete}" />
+                            <f:setPropertyActionListener value="#{myCollabArtifact}" target="#{artifactViewBean.artifact}" />
+                            <f:setPropertyActionListener value="#{myCollabArtifact.milestone.sprint}" target="#{artifactViewBean.sprintSelected}" />
+                            <f:setPropertyActionListener value="#{myCollabArtifact.milestone.history}" target="#{artifactViewBean.historySelected}" />
+                            <p:graphicImage url="#{resource['images:edit16.png']}"/>
+                        </p:commandLink>
+                    </p:column>
+                    <p:column style="width: 50%" headerText="Componente" filterBy="#{myCollabArtifact.description}" filterMatchMode="contains">                                                                                    
+                        #{myCollabArtifact.description}                                        
+                    </p:column> 
+                    <p:column style="width: 15%" headerText="Autor" filterBy="#{myCollabArtifact.author.firstName} #{myCollabArtifact.author.lastName}" filterMatchMode="contains">                                                                                    
+                        #{myCollabArtifact.author.firstName} #{myCollabArtifact.author.lastName}                                        
+                    </p:column> 
+                    <p:column style="width: 15%" headerText="Hito" filterBy="#{myCollabArtifact.milestone.milestone}" filterMatchMode="contains">
+                        #{myCollabArtifact.milestone.milestone}
+                    </p:column>              
+                    <p:column style="width: 15%" headerText="Sprint" filterBy="#{myCollabArtifact.milestone.sprint.code}" filterMatchMode="contains">
+                        #{myCollabArtifact.milestone.sprint.code}
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:panelGroup>               
+        <!--Dialogo de Confirmacion General-->
+        <p:confirmDialog class="boxInput" global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes boxInput succesText" icon="check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no boxInput errorText" icon="cancel" />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>

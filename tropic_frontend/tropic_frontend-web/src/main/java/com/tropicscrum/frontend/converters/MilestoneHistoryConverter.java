@@ -20,7 +20,7 @@ import javax.inject.Inject;
  *
  * @author Edgar Mosquera
  */
-@Named(value = "historiesProjectConverter")
+@Named(value = "milestoneHistoryConverter")
 @Dependent
 public class MilestoneHistoryConverter implements Converter {
 
@@ -39,7 +39,7 @@ public class MilestoneHistoryConverter implements Converter {
         } else {
             try {
                 int numero = Integer.parseInt(value);
-                for (History p : milestoneViewBean.getProjectHistories()) {
+                for (History p : milestoneViewBean.getMilestone().getSprint().getProject().getHistories()) {
                     if (p.getId() == numero) {
                         return p;
                     }

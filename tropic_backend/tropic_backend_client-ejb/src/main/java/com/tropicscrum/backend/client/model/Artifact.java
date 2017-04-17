@@ -5,14 +5,22 @@
  */
 package com.tropicscrum.backend.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tropicscrum.backend.client.enums.MeasureUnit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -20,10 +28,17 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "artifact")
+@NamedQueries({
+    @NamedQuery(name = "findAllArtifactsByUser", query = "Select a from Artifact a where a.author = :user"),
+    @NamedQuery(name = "findAllArtifactsByCollaborator", query = "Select DISTINCT a from Artifact a where :user != a.author and (:user MEMBER OF a.milestone.sprint.project.collaborators or :user = a.milestone.sprint.project.author)"),
+    @NamedQuery(name = "findAllArtifactsBySprint", query = "Select a from Artifact a where a.milestone.sprint = :sprint"),
+    @NamedQuery(name = "findAllArtifactsByMileston", query = "Select a from Artifact a where a.milestone = :milestone"),})
 public class Artifact extends BasicAttributes {
 
+    private Collection<Task> tasks;
+
     private String code;
-    private String description; 
+    private String description;
     private MeasureUnit measureUnit;
     private Double finalSize;
     private Technology technology;
@@ -97,7 +112,6 @@ public class Artifact extends BasicAttributes {
         this.author = author;
     }
 
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -119,5 +133,29 @@ public class Artifact extends BasicAttributes {
     public String toString() {
         return "com.tropicscrum.backend.client.model.Artifact[ id=" + this.getId() + " ]";
     }
-    
+
+    @OneToMany(mappedBy = "artifact")
+    public Collection<Task> getTasks() {
+        if (tasks == null) {
+            tasks = new ArrayList<>();
+        }
+        return tasks;
+    }
+
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getTaskEstimates() {
+        Double total = 0.0;
+        for (Task task : getTasks()) {
+            if (task.getEstimatedDuration() != null) {
+                total += task.getEstimatedDuration();
+            }
+        }
+        return total;
+    }
+
 }

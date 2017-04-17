@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.frontend.converters;
 
-import com.tropicscrum.backend.client.model.History;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.frontend.controllers.view.TaskViewBean;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
@@ -18,19 +18,19 @@ import javax.inject.Inject;
 
 /**
  *
- * @author Edgar Mosquera
+ * @author syslife02
  */
-@Named(value = "historyCreateTaskConverter")
+@Named(value = "artifactTaskConverter")
 @Dependent
-public class HistoryCreateTaskConverter implements Converter {
+public class ArtifactTaskConverter implements Converter{
 
     @Inject
     TaskViewBean taskViewBean;
     
     /**
-     * Creates a new instance of HistoryCreateTaskConverter
+     * Creates a new instance of ArtifactTaskConverter
      */
-    public HistoryCreateTaskConverter() {
+    public ArtifactTaskConverter() {
     }
 
     @Override
@@ -40,16 +40,16 @@ public class HistoryCreateTaskConverter implements Converter {
         } else {
             try {
                 int numero = Integer.parseInt(value);
-                for (History p : taskViewBean.getSprintSelected().getProject().getHistories()) {
-                    if (p.getId() == numero) {
-                        return p;
+                for (Artifact a : taskViewBean.getMilestoneSelected().getArtifacts()) {
+                    if (a.getId() == numero) {
+                        return a;
                     }
                 }            
             } catch (NumberFormatException exception) {
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Historia Invalida"));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Componente Invalido"));
             }
             return null;
-        }        
+        }
     }
 
     @Override
@@ -57,7 +57,7 @@ public class HistoryCreateTaskConverter implements Converter {
         if (value == null || value.equals("")) {
             return "";
         } else {
-            return String.valueOf(((History) value).getId());
+            return String.valueOf(((Artifact) value).getId());
         }
     }
     

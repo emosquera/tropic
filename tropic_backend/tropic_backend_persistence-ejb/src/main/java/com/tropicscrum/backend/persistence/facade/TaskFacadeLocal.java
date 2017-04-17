@@ -5,7 +5,7 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
-import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.User;
@@ -40,5 +40,5 @@ public interface TaskFacadeLocal {
     
     Collection<Task> findAllTasksBySprint(Sprint sprint);
     
-    Collection<Task> findAllTasksByMilestonAndSprint(Milestone milestone, Sprint sprint);
+    Collection<Task> findAllTasksByArtifact(Artifact artifact);
 }

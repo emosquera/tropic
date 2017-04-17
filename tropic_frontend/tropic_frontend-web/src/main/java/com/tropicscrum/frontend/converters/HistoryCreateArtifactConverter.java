@@ -6,7 +6,7 @@
 package com.tropicscrum.frontend.converters;
 
 import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.frontend.controllers.view.TaskViewBean;
+import com.tropicscrum.frontend.controllers.view.ArtifactViewBean;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
 import javax.faces.application.FacesMessage;
@@ -20,17 +20,17 @@ import javax.inject.Inject;
  *
  * @author Edgar Mosquera
  */
-@Named(value = "historyCreateTaskConverter")
+@Named(value = "historyCreateArtifactConverter")
 @Dependent
-public class HistoryCreateTaskConverter implements Converter {
+public class HistoryCreateArtifactConverter implements Converter {
 
     @Inject
-    TaskViewBean taskViewBean;
+    ArtifactViewBean artifactViewBean;
     
     /**
      * Creates a new instance of HistoryCreateTaskConverter
      */
-    public HistoryCreateTaskConverter() {
+    public HistoryCreateArtifactConverter() {
     }
 
     @Override
@@ -40,9 +40,9 @@ public class HistoryCreateTaskConverter implements Converter {
         } else {
             try {
                 int numero = Integer.parseInt(value);
-                for (History p : taskViewBean.getSprintSelected().getProject().getHistories()) {
-                    if (p.getId() == numero) {
-                        return p;
+                for (History h : artifactViewBean.getSprintSelected().getProject().getHistories()) {
+                    if (h.getId() == numero) {
+                        return h;
                     }
                 }            
             } catch (NumberFormatException exception) {

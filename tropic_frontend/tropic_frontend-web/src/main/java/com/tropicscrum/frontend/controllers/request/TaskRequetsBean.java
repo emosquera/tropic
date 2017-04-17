@@ -8,6 +8,7 @@ package com.tropicscrum.frontend.controllers.request;
 import com.tropicscrum.backend.client.enums.GeneralStatus;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
@@ -43,17 +44,16 @@ public class TaskRequetsBean implements Serializable {
     }
     
     private void clean() {
-        Sprint sprint = new Sprint();
-        Milestone milestone = new Milestone();
+        Artifact artifact = new Artifact();
         if (taskViewBean.getLockSprint()) {
-            sprint = taskViewBean.getTask().getSprint();
-            milestone = taskViewBean.getTask().getMilestone();
+            artifact = taskViewBean.getTask().getArtifact();            
         } else {
+            taskViewBean.setSprintSelected(new Sprint());
             taskViewBean.setHistorySelected(new History());
+            taskViewBean.setMilestoneSelected(new Milestone());
         }
         taskViewBean.setTask(new Task());
-        taskViewBean.getTask().setSprint(sprint);   
-        taskViewBean.getTask().setMilestone(milestone);
+        taskViewBean.getTask().setArtifact(artifact);        
         taskViewBean.setModify(Boolean.FALSE);
         taskViewBean.setDelete(Boolean.FALSE);
     }

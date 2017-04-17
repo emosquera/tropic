@@ -6,6 +6,9 @@
 package com.tropicscrum.backend.persistence.facade;
 
 import com.tropicscrum.backend.client.model.Artifact;
+import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.User;
+import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +30,21 @@ public class ArtifactFacade extends AbstractFacade<Artifact> implements Artifact
 
     public ArtifactFacade() {
         super(Artifact.class);
+    }
+
+    @Override
+    public Collection<Artifact> findAllArtifactsByUser(User user) {
+        return em.createNamedQuery("findAllArtifactsByUser").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public Collection<Artifact> findAllArtifactsByCollaborator(User user) {
+        return em.createNamedQuery("findAllArtifactsByCollaborator").setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public Collection<Artifact> findAllArtifactsByMilestone(Milestone milestone) {        
+        return em.createNamedQuery("findAllArtifactsByMileston").setParameter("milestone", milestone).getResultList();
     }
     
 }

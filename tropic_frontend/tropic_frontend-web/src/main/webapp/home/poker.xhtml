@@ -43,8 +43,8 @@
             <p:panel id="estimateTask" style="display: inline-block; width: 95%" class="boxInput #{not pokerViewBean.pokerMessage.showEstimate ? 'animateBackground' : ''}" header="TAREA A ESTIMAR">            
                 <h:panelGroup id="taskSelected" style="display: inline-block; width: 100%">
                     <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
-                    <p:outputLabel value="#{pokerViewBean.taskSelected.milestone.history.title}" class="historyTitle"/>
-                    <p:outputLabel value="#{not empty pokerViewBean.taskSelected ? pokerViewBean.taskSelected.milestone.milestone : 'Esperando que el Scrum Master inicie la discusion de una tarea...'}" class="milestoneTitle"/>
+                    <p:outputLabel value="#{pokerViewBean.taskSelected.artifact.milestone.history.title}" class="historyTitle"/>
+                    <p:outputLabel value="#{not empty pokerViewBean.taskSelected ? pokerViewBean.taskSelected.artifact.milestone.milestone : 'Esperando que el Scrum Master inicie la discusion de una tarea...'}" class="milestoneTitle"/>
                     <p:outputLabel value="#{pokerViewBean.taskSelected.content}" class="taskSelected"/>                    
                 </h:panelGroup>  
                 <h:panelGroup id="taskVote" style="display: inline-block; width: 100%">
@@ -91,64 +91,69 @@
             </p:panel>
 
             <p:panel id="sprintTasks" style="display: inline-block; width: 95%" class="boxInput" header="TAREAS DEL SPRINT">
-
                 <c:forEach var="history" items="#{pokerViewBean.sprintHistories}">
                     <h:panelGroup class="titleHistory">
                         #{history.title}
                     </h:panelGroup>
-                    <p:accordionPanel class="pokerTasks" multiple="true">
-                        <c:forEach var="milestone" items="#{history.milestones}">      
-                            <p:tab>
-                                <f:facet name="title">
-                                    <p:panelGrid style="width: 90%">
-                                        <p:row>
-                                            <p:column style="width: 80%">#{milestone.milestone}</p:column>
-                                            <p:column style="width: 20%" rendered="#{milestone.taskEstimates > 0}">#{milestone.taskEstimates} HORAS</p:column>                                           
-                                        </p:row>
-                                    </p:panelGrid>                                    
-                                </f:facet>
-                                <p:dataTable var="task" value="#{milestone.tasks}" class="sprintTable">    
-                                    <p:column style="width: 5%">
-                                        #{task.code}                                        
-                                    </p:column>
-                                    <p:column style="width: 60%">
-                                        #{task.content}                                        
-                                    </p:column>
-                                    <p:column style="width: 5%; text-align: center">
-                                        <p:outputLabel value="#{task.formattedPoints}" escape="false" rendered="#{task.formattedPoints != '0'}" />
-                                    </p:column>
-                                    <p:column style="width: 10%; text-align: center">
-                                        <p:outputLabel value="#{task.formattedHours} #{task.estimatedDuration > 1 ? 'HORAS' : 'HORA'}" escape="false" rendered="#{task.formattedPoints != '0'}" />
-                                    </p:column>
-                                    <p:column style="width: 20%; text-align: center" rendered="#{not empty task.userEstimates}">
-                                        <p:rowToggler class="buttonExpand"/>
-                                    </p:column>
-                                    <p:column rendered="#{pokerViewBean.isScrumMaster and empty task.userEstimates}" style="width: 20%; text-align: center;">
-                                        <p:commandLink action="#{pokerRequestBean.sendTaskSelected}" immediate="true" update="form:estimateTask form:pokerRules">
-                                            <f:setPropertyActionListener target="#{pokerViewBean.taskSelected}" value="#{task}"/>     
-                                            <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="false"/>                                             
-                                            <p:graphicImage url="#{resource['images:discussion.png']}" class="iconVote"/>
-                                        </p:commandLink>
-                                        <p:commandLink action="#{pokerRequestBean.sendTaskSelected}" immediate="true" update="form:estimateTask form:pokerRules">                                            
-                                            <f:setPropertyActionListener target="#{pokerViewBean.taskSelected}" value="#{task}"/>                                            
-                                            <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="true"/>  
-                                            <f:setPropertyActionListener target="#{pokerViewBean.isVoted}" value="false"/>
-                                            <p:graphicImage url="#{resource['images:vote2.png']}" class="iconVote"/>
-                                        </p:commandLink>                                        
-                                    </p:column>       
-                                    <p:rowExpansion>
-                                        <p:dataGrid id="task#{task.id}" var="votes" value="#{task.userEstimates}" layout="grid" columns="6">
-                                            <p:graphicImage url="../#{votes.sprintUser.user.avatar}" width="45" height="45" class="sprintListAvatar avatarVote"/>
-                                            <p:outputLabel value="#{votes.formattedPoints}" escape="false" class="pointsList pointVote"/>                            
-                                            <p:outputLabel value="#{votes.sprintUser.user.completeName}" class="pointHour userVote"/>   
-                                        </p:dataGrid>
-                                    </p:rowExpansion>
-                                </p:dataTable>
-                            </p:tab>
-                        </c:forEach>
-                    </p:accordionPanel>
+                    <c:forEach var="milestone" items="#{history.milestones}">
+                        <h:panelGroup class="titleHistory">
+                            #{milestone.milestone}
+                        </h:panelGroup>
+                        <p:accordionPanel class="pokerTasks" multiple="true">
+                            <c:forEach var="artifact" items="#{milestone.artifacts}">      
+                                <p:tab>
+                                    <f:facet name="title">
+                                        <p:panelGrid style="width: 90%">
+                                            <p:row>
+                                                <p:column style="width: 80%">#{artifact.description}</p:column>
+                                                <p:column style="width: 20%" rendered="#{artifact.taskEstimates > 0}">#{artifact.taskEstimates} HORAS</p:column>                                           
+                                            </p:row>
+                                        </p:panelGrid>                                    
+                                    </f:facet>
+                                    <p:dataTable var="task" value="#{artifact.tasks}" class="sprintTable">    
+                                        <p:column style="width: 5%">
+                                            #{task.code}                                        
+                                        </p:column>
+                                        <p:column style="width: 60%">
+                                            #{task.content}                                        
+                                        </p:column>
+                                        <p:column style="width: 5%; text-align: center">
+                                            <p:outputLabel value="#{task.formattedPoints}" escape="false" rendered="#{task.formattedPoints != '0'}" />
+                                        </p:column>
+                                        <p:column style="width: 10%; text-align: center">
+                                            <p:outputLabel value="#{task.formattedHours} #{task.estimatedDuration > 1 ? 'HORAS' : 'HORA'}" escape="false" rendered="#{task.formattedPoints != '0'}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center" rendered="#{not empty task.userEstimates}">
+                                            <p:rowToggler class="buttonExpand"/>
+                                        </p:column>
+                                        <p:column rendered="#{pokerViewBean.isScrumMaster and empty task.userEstimates}" style="width: 20%; text-align: center;">
+                                            <p:commandLink action="#{pokerRequestBean.sendTaskSelected}" immediate="true" update="form:estimateTask form:pokerRules">
+                                                <f:setPropertyActionListener target="#{pokerViewBean.taskSelected}" value="#{task}"/>     
+                                                <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="false"/>                                             
+                                                <p:graphicImage url="#{resource['images:discussion.png']}" class="iconVote"/>
+                                            </p:commandLink>
+                                            <p:commandLink action="#{pokerRequestBean.sendTaskSelected}" immediate="true" update="form:estimateTask form:pokerRules">                                            
+                                                <f:setPropertyActionListener target="#{pokerViewBean.taskSelected}" value="#{task}"/>                                            
+                                                <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="true"/>  
+                                                <f:setPropertyActionListener target="#{pokerViewBean.isVoted}" value="false"/>
+                                                <p:graphicImage url="#{resource['images:vote2.png']}" class="iconVote"/>
+                                            </p:commandLink>                                        
+                                        </p:column>       
+                                        <p:rowExpansion>
+                                            <p:dataGrid id="task#{task.id}" var="votes" value="#{task.userEstimates}" layout="grid" columns="6">
+                                                <p:graphicImage url="../#{votes.sprintUser.user.avatar}" width="45" height="45" class="sprintListAvatar avatarVote"/>
+                                                <p:outputLabel value="#{votes.formattedPoints}" escape="false" class="pointsList pointVote"/>                            
+                                                <p:outputLabel value="#{votes.sprintUser.user.completeName}" class="pointHour userVote"/>   
+                                            </p:dataGrid>
+                                        </p:rowExpansion>
+                                    </p:dataTable>
+                                </p:tab>
+                            </c:forEach>
+                        </p:accordionPanel>
 
+                    </c:forEach>
                 </c:forEach>
+
             </p:panel>
 
         </h:panelGroup>

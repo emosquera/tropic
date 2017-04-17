@@ -5,10 +5,12 @@
  */
 package com.tropicscrum.frontend.controllers.view;
 
+import com.tropicscrum.backend.client.facade.ArtifactFacadeRemote;
 import com.tropicscrum.backend.client.facade.HistoryFacadeRemote;
 import com.tropicscrum.backend.client.facade.MilestoneFacadeRemote;
 import com.tropicscrum.backend.client.facade.SprintUserFacadeRemote;
 import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
@@ -54,6 +56,9 @@ public class PokerViewBean implements Serializable {
 
     @EJB(lookup = MilestoneFacadeRemote.JNDI_REMOTE_NAME)
     MilestoneFacadeRemote milestoneFacadeRemote;
+    
+    @EJB(lookup = ArtifactFacadeRemote.JNDI_REMOTE_NAME)
+    ArtifactFacadeRemote artifactFacadeRemote;
 
     @EJB(lookup = TaskFacadeRemote.JNDI_REMOTE_NAME)
     TaskFacadeRemote taskFacadeRemote;
@@ -162,7 +167,10 @@ public class PokerViewBean implements Serializable {
             for (History history : getSprintHistories()) {
                 history.setMilestones(milestoneFacadeRemote.findSprintHistoryMilestones(history, sprint));
                 for (Milestone milestone : history.getMilestones()) {
-                    milestone.setTasks(taskFacadeRemote.findSprintMilestoneTasks(milestone, sprint));
+                    milestone.setArtifacts(artifactFacadeRemote.findMilestoneArtifacts(milestone));
+                    for (Artifact artifact : milestone.getArtifacts()) {
+                        artifact.setTasks(taskFacadeRemote.findArtifactTasks(artifact));
+                    }                    
                 }
             }
 

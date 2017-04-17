@@ -39,7 +39,7 @@ import javax.persistence.Temporal;
 })
 public class Sprint extends BasicAttributes {
 
-    private List<Milestone> milestones;
+    private Collection<Milestone> milestones;
 
     private Collection<SprintVelocity> sprintVelocitys;
     private String code;
@@ -47,7 +47,6 @@ public class Sprint extends BasicAttributes {
     private Date start;
     private GeneralStatus status;
     private Collection<SprintUser> sprintUsers;
-    private Collection<Task> tasks;
     private User author;
     private Project project;        
 
@@ -137,18 +136,6 @@ public class Sprint extends BasicAttributes {
         return "com.tropicscrum.backend.model.Sprint[ id=" + getId() + " ]";
     }
 
-    @OneToMany(mappedBy = "sprint")
-    public Collection<Task> getTasks() {
-        if (tasks == null) {
-            tasks = new ArrayList<>();
-        }
-        return tasks;
-    }
-
-    public void setTasks(Collection<Task> tasks) {
-        this.tasks = tasks;
-    }
-
     @OneToMany(mappedBy = "sprint", cascade = CascadeType.ALL, orphanRemoval = true)
     public Collection<SprintUser> getSprintUsers() {
         if (sprintUsers == null) {
@@ -178,11 +165,14 @@ public class Sprint extends BasicAttributes {
     }
 
     @OneToMany(mappedBy = "sprint")
-    public List<Milestone> getMilestones() {
+    public Collection<Milestone> getMilestones() {
+        if (milestones == null) {
+            milestones = new ArrayList<>();
+        }
         return milestones;
     }
 
-    public void setMilestones(List<Milestone> milestones) {
+    public void setMilestones(Collection<Milestone> milestones) {
         this.milestones = milestones;
     }
     

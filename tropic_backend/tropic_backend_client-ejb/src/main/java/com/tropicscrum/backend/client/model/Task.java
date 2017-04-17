@@ -33,9 +33,9 @@ import javax.persistence.Transient;
 @Table(name = "task")
 @NamedQueries({
     @NamedQuery(name = "findAllTasksByUser", query = "Select t from Task t where t.author = :user"),    
-    @NamedQuery(name = "findAllTasksByCollaborator", query = "Select DISTINCT t from Task t where :user != t.author and (:user MEMBER OF t.sprint.project.collaborators or :user = t.sprint.project.author)"),
-    @NamedQuery(name = "findAllTasksBySprint", query = "Select t from Task t where t.sprint = :sprint"),
-    @NamedQuery(name = "findAllTasksByMilestonAndSprint", query = "Select t from Task t where t.sprint = :sprint and t.milestone = :milestone"),    
+    @NamedQuery(name = "findAllTasksByCollaborator", query = "Select DISTINCT t from Task t where :user != t.author and (:user MEMBER OF t.artifact.milestone.sprint.project.collaborators or :user = t.artifact.milestone.sprint.project.author)"),
+    @NamedQuery(name = "findAllTasksBySprint", query = "Select t from Task t where t.artifact.milestone.sprint = :sprint"),
+    @NamedQuery(name = "findAllTasksByArtifact", query = "Select t from Task t where t.artifact = :artifact"),    
 })
 public class Task extends BasicAttributes implements Comparable<Task>{
     private String code;
@@ -46,9 +46,8 @@ public class Task extends BasicAttributes implements Comparable<Task>{
     private GeneralStatus status;
     private Collection<TaskProgress> taskProgresss;
     private Collection<UserEstimate> userEstimates;
-    private Milestone milestone;
     private User author;
-    private Sprint sprint;
+    private Artifact artifact;
     
     private transient NumberToFormattedString numberToFormattedString = new NumberToFormattedString();
 
@@ -109,19 +108,6 @@ public class Task extends BasicAttributes implements Comparable<Task>{
     }
 
     @ManyToOne
-    @JoinColumn(name = "milestone_id")
-    public Milestone getMilestone() {
-        if (milestone == null) {
-            milestone = new Milestone();
-        }
-        return milestone;
-    }
-
-    public void setMilestone(Milestone milestone) {
-        this.milestone = milestone;
-    }
-
-    @ManyToOne
     @JoinColumn(name = "user_id")
     public User getAuthor() {
         if (author == null) {
@@ -135,16 +121,13 @@ public class Task extends BasicAttributes implements Comparable<Task>{
     }
 
     @ManyToOne
-    @JoinColumn(name = "sprint_id")
-    public Sprint getSprint() {
-        if (sprint == null) {
-            sprint = new Sprint();
-        }
-        return sprint;
+    @JoinColumn(name = "artifact_id")
+    public Artifact getArtifact() {
+        return artifact;
     }
 
-    public void setSprint(Sprint sprint) {
-        this.sprint = sprint;
+    public void setArtifact(Artifact artifact) {
+        this.artifact = artifact;
     }
     
     @Override

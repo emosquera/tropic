@@ -8,11 +8,14 @@ package com.tropicscrum.backend.business.facade;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
+import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
+import com.tropicscrum.backend.persistence.facade.ArtifactFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.HistoryFacadeLocal;
+import com.tropicscrum.backend.persistence.facade.MilestoneFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.ProjectFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.SprintFacadeLocal;
 import java.util.Collection;
@@ -36,6 +39,12 @@ public class SprintBusinessFacade implements SprintFacadeRemote{
     
     @EJB
     HistoryFacadeLocal historyFacadeLocal;
+    
+    @EJB
+    MilestoneFacadeLocal milestoneFacadeLocal;
+    
+    @EJB
+    ArtifactFacadeLocal artifactFacadeLocal;
     
     @Override
     public Sprint create(Sprint sprint) {
@@ -118,10 +127,15 @@ public class SprintBusinessFacade implements SprintFacadeRemote{
             }
         }
         
-        for (Sprint s : mySprints) {
-            s.getProject().setHistories(historyFacadeLocal.findByProject(s.getProject()));
+        for (Sprint s : mySprints) {            
+            for (Milestone m : s.getMilestones()) {
+                m.getArtifacts().size();
+            }
+            
             for (History h : s.getProject().getHistories()) {
-                h.getMilestones().size();
+                for (Milestone milestone : h.getMilestones()) {
+                    milestone.getArtifacts().size();
+                }
             }
         }
         return mySprints;

@@ -29,14 +29,12 @@ import javax.persistence.Transient;
     @NamedQuery(name = "findAllMielstoneByCollaborator", query = "Select DISTINCT m from Milestone m where :user != m.author and (:user MEMBER OF m.history.project.collaborators or :user = m.history.project.author)"),
     @NamedQuery(name = "findByHistory", query = "Select m from Milestone m where m.history = :history"),
     @NamedQuery(name = "findMilestonesBySprint", query = "Select m from Milestone m where m.sprint = :sprint"),
-    @NamedQuery(name = "findByHistoryAndSprint", query = "Select DISTINCT m from Milestone m where m.history = :history and m.sprint = :sprint"),
-})
+    @NamedQuery(name = "findByHistoryAndSprint", query = "Select DISTINCT m from Milestone m where m.history = :history and m.sprint = :sprint"),})
 public class Milestone extends BasicAttributes {
 
     private Collection<Artifact> artifacts;
 
     private String milestone;
-    private Collection<Task> tasks;
     private User author;
     private History history;
     private Sprint sprint;
@@ -88,7 +86,7 @@ public class Milestone extends BasicAttributes {
     public void setSprint(Sprint sprint) {
         this.sprint = sprint;
     }
-        
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -111,29 +109,19 @@ public class Milestone extends BasicAttributes {
         return "com.tropicscrum.backend.model.Milestone[ id=" + getId() + " ]";
     }
 
-    @OneToMany(mappedBy = "milestone")
-    public Collection<Task> getTasks() {
-        if (tasks == null) {
-            tasks = new ArrayList<>();
-        }
-        return tasks;
-    }
-
-    public void setTasks(Collection<Task> tasks) {
-        this.tasks = tasks;
-    }    
-    
     @Transient
     @JsonIgnore
     public Double getTaskEstimates() {
         Double total = 0.0;
-        for (Task task : getTasks()) {
-            if (task.getEstimatedDuration() != null) {
-                total += task.getEstimatedDuration();
+        for (Artifact artifact : getArtifacts()) {
+            for (Task task : artifact.getTasks()) {
+                if (task.getEstimatedDuration() != null) {
+                    total += task.getEstimatedDuration();
+                }
             }
         }
         return total;
-    }    
+    }
 
     @OneToMany(mappedBy = "milestone")
     public Collection<Artifact> getArtifacts() {

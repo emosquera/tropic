@@ -6,7 +6,7 @@
 package com.tropicscrum.backend.client.facade;
 
 import com.tropicscrum.backend.client.exceptions.UpdateException;
-import com.tropicscrum.backend.client.model.Milestone;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.Task;
@@ -43,7 +43,7 @@ public interface TaskFacadeRemote {
     
     Collection<Task> findSprintTasks(Sprint sprint);
     
-    Collection<Task> findSprintMilestoneTasks(Milestone milestone, Sprint sprint);
+    Collection<Task> findArtifactTasks(Artifact artifact);
     
     Collection<Task> findSprintTasksWithProgress(Sprint sprint);
     

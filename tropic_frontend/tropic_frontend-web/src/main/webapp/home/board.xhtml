@@ -33,8 +33,8 @@
                             <p:dataGrid id="taskToDo" value="#{boardViewBean.toDoTasks}" var="task" columns="3" layout="grid" emptyMessage="No hay Tareas por hacer">
                                 <p:panel id="toDoTask" class="taskToDo">
                                     <p:outputLabel value="#{task.code} - #{task.formattedHours}h" escape="false" class="codeTaskToDo"/>
-                                    <p:outputLabel value="#{task.milestone.history.title}" class="historyLabel"/>
-                                    <p:outputLabel value="#{task.milestone.milestone}" class="milestoneLabel"/>
+                                    <p:outputLabel value="#{task.artifact.milestone.history.title}" class="historyLabel"/>
+                                    <p:outputLabel value="#{task.artifact.milestone.milestone}" class="milestoneLabel"/>
                                     <span class="contentContent">
                                         #{task.content}
                                     </span>                                    
@@ -52,8 +52,8 @@
                                 <p:panel id="doingTask" class="taskToDo" style="background-color: #{taskProgress.sprintUser.color.hexColor}; color: #{taskProgress.sprintUser.color.hexBorderColor}">
                                     <p:graphicImage url="../#{taskProgress.sprintUser.user.avatar}" width="30" height="30" class="sprintListAvatar"/>
                                     <p:outputLabel value="#{taskProgress.task.code} - #{taskProgress.task.formattedHours}h" escape="false" class="codeTaskToDo codeTaskDoing" style="color: #{taskProgress.sprintUser.color.hexBorderColor}"/>                                                                          
-                                    <p:outputLabel value="#{taskProgress.task.milestone.history.title}" class="historyLabel" style="color: #{taskProgress.sprintUser.color.hexColor}; background-color: #{taskProgress.sprintUser.color.hexBorderColor}"/>
-                                    <p:outputLabel value="#{taskProgress.task.milestone.milestone}" class="milestoneLabel" style="color: #{taskProgress.sprintUser.color.hexBorderColor}" />
+                                    <p:outputLabel value="#{taskProgress.task.artifact.milestone.history.title}" class="historyLabel" style="color: #{taskProgress.sprintUser.color.hexColor}; background-color: #{taskProgress.sprintUser.color.hexBorderColor}"/>
+                                    <p:outputLabel value="#{taskProgress.task.artifact.milestone.milestone}" class="milestoneLabel" style="color: #{taskProgress.sprintUser.color.hexBorderColor}" />
                                     <span class="contentContent contentContentDoing">
                                         #{taskProgress.task.content}
                                     </span>   

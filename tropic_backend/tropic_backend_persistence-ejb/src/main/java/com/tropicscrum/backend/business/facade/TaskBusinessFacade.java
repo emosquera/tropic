@@ -8,6 +8,7 @@ package com.tropicscrum.backend.business.facade;
 import com.tropicscrum.backend.client.enums.GeneralStatus;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
@@ -16,6 +17,9 @@ import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.TaskProgress;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
+import com.tropicscrum.backend.persistence.facade.ArtifactFacadeLocal;
+import com.tropicscrum.backend.persistence.facade.HistoryFacadeLocal;
+import com.tropicscrum.backend.persistence.facade.MilestoneFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.TaskFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.TaskProgressFacadeLocal;
 import java.util.Calendar;
@@ -38,6 +42,15 @@ public class TaskBusinessFacade implements TaskFacadeRemote {
     @EJB
     TaskProgressFacadeLocal taskProgressFacadeLocal;
 
+    @EJB
+    HistoryFacadeLocal historyFacadeLocal;
+    
+    @EJB
+    MilestoneFacadeLocal milestoneFacadeLocal;
+    
+    @EJB
+    ArtifactFacadeLocal artifactFacadeLocal;
+    
     @Override
     public Task create(Task task) {
         taskFacadeLocal.create(task);
@@ -80,25 +93,13 @@ public class TaskBusinessFacade implements TaskFacadeRemote {
     }
 
     @Override
-    public Collection<Task> findMyTasks(User you) {
-        Collection<Task> myTasks = taskFacadeLocal.findAllTasksByUser(you);
-        for (Task myTask : myTasks) {
-            for (History h : myTask.getSprint().getProject().getHistories()) {
-                h.getMilestones().size();
-            }
-        }
-        return myTasks;
+    public Collection<Task> findMyTasks(User you) {        
+        return deepTask(taskFacadeLocal.findAllTasksByUser(you));
     }
 
     @Override
     public Collection<Task> findMyCollabs(User you) {
-        Collection<Task> myTasks = taskFacadeLocal.findAllTasksByCollaborator(you);
-        for (Task myTask : myTasks) {
-            for (History h : myTask.getSprint().getProject().getHistories()) {
-                h.getMilestones().size();
-            }
-        }
-        return myTasks;
+        return deepTask(taskFacadeLocal.findAllTasksByCollaborator(you));
     }
 
     @Override
@@ -107,8 +108,8 @@ public class TaskBusinessFacade implements TaskFacadeRemote {
     }
 
     @Override
-    public Collection<Task> findSprintMilestoneTasks(Milestone milestone, Sprint sprint) {
-        Collection<Task> myTasks = taskFacadeLocal.findAllTasksByMilestonAndSprint(milestone, sprint);
+    public Collection<Task> findArtifactTasks(Artifact artifact) {
+        Collection<Task> myTasks = taskFacadeLocal.findAllTasksByArtifact(artifact);
         for (Task task : myTasks) {
             task.getUserEstimates().size();
         }
@@ -151,5 +152,18 @@ public class TaskBusinessFacade implements TaskFacadeRemote {
         } catch (OldVersionException ex) {
             throw new UpdateException("No se puede actualizar la Tarea. Esta ha sido modificada en otra sesion. Se muestra la Tarea actualizada");
         }
+    }
+    
+    private Collection<Task> deepTask(Collection<Task> tasks) {
+        for (Task myTask : tasks) {
+            myTask.getArtifact().getMilestone().getSprint().getProject().setHistories(historyFacadeLocal.findBySprint(myTask.getArtifact().getMilestone().getSprint()));
+            for (History h : myTask.getArtifact().getMilestone().getSprint().getProject().getHistories()) {
+                h.setMilestones(milestoneFacadeLocal.findByHistory(h));
+                for (Milestone milestone : h.getMilestones()) {
+                    milestone.setArtifacts(artifactFacadeLocal.findAllArtifactsByMilestone(milestone));
+                }
+            }
+        }
+        return tasks;
     }
 }

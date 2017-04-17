@@ -5,13 +5,14 @@
  */
 package com.tropicscrum.frontend.controllers.view;
 
-import com.tropicscrum.backend.client.enums.TaskType;
+import com.tropicscrum.backend.client.enums.MeasureUnit;
+import com.tropicscrum.backend.client.facade.ArtifactFacadeRemote;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
-import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
+import com.tropicscrum.backend.client.facade.TechnologyFacadeRemote;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
-import com.tropicscrum.backend.client.model.Task;
+import com.tropicscrum.backend.client.model.Technology;
 import com.tropicscrum.backend.client.model.User;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,12 +28,12 @@ import javax.servlet.http.HttpSession;
  *
  * @author Edgar Mosquera
  */
-@Named(value = "taskViewBean")
+@Named(value = "artifactViewBean")
 @ViewScoped
-public class TaskViewBean implements Serializable {
+public class ArtifactViewBean implements Serializable {
 
     private User user;
-    private Task task;
+    private Artifact artifact;
     private Boolean modify = false;
     private Boolean delete = false;
     private Boolean lockSprint = false;
@@ -41,16 +42,19 @@ public class TaskViewBean implements Serializable {
     
     private Sprint sprintSelected;
     private History historySelected;
-    private Milestone milestoneSelected;
     
-    private Collection<Task> myTasks;
-    private Collection<Task> myCollabTasks;
+    private Collection<Artifact> myArtifacts;
+    private Collection<Artifact> myCollabArtifacts;
+    private Collection<Technology> technologies;
     
     @EJB(lookup = SprintFacadeRemote.JNDI_REMOTE_NAME)
     SprintFacadeRemote sprintFacadeRemote;
     
-    @EJB(lookup = TaskFacadeRemote.JNDI_REMOTE_NAME)
-    TaskFacadeRemote taskFacadeRemote;
+    @EJB(lookup = ArtifactFacadeRemote.JNDI_REMOTE_NAME)
+    ArtifactFacadeRemote artifactFacadeRemote;
+    
+    @EJB(lookup = TechnologyFacadeRemote.JNDI_REMOTE_NAME)
+    TechnologyFacadeRemote technologyFacadeRemote;
 
     public User getUser() {
         return user;
@@ -60,12 +64,12 @@ public class TaskViewBean implements Serializable {
         this.user = user;
     }
 
-    public Task getTask() {
-        return task;
+    public Artifact getArtifact() {
+        return artifact;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setArtifact(Artifact artifact) {
+        this.artifact = artifact;
     }
 
     public Boolean getModify() {
@@ -103,36 +107,6 @@ public class TaskViewBean implements Serializable {
         this.mySprints = mySprints;
     }
 
-    public History getHistorySelected() {
-        return historySelected;
-    }
-
-    public void setHistorySelected(History historySelected) {
-        this.historySelected = historySelected;
-    }
-
-    public Collection<Task> getMyTasks() {
-        if (myTasks == null) {
-            myTasks = new ArrayList<>();
-        }
-        return myTasks;
-    }
-
-    public void setMyTasks(Collection<Task> myTasks) {
-        this.myTasks = myTasks;
-    }
-
-    public Collection<Task> getMyCollabTasks() {
-        if (myCollabTasks == null) {
-            myCollabTasks = new ArrayList<>();
-        }
-        return myCollabTasks;
-    }
-
-    public void setMyCollabTasks(Collection<Task> myCollabTasks) {
-        this.myCollabTasks = myCollabTasks;
-    }
-
     public Sprint getSprintSelected() {
         return sprintSelected;
     }
@@ -141,32 +115,66 @@ public class TaskViewBean implements Serializable {
         this.sprintSelected = sprintSelected;
     }
 
-    public Milestone getMilestoneSelected() {
-        return milestoneSelected;
+    public History getHistorySelected() {
+        return historySelected;
     }
 
-    public void setMilestoneSelected(Milestone milestoneSelected) {
-        this.milestoneSelected = milestoneSelected;
+    public void setHistorySelected(History historySelected) {
+        this.historySelected = historySelected;
+    }
+
+    public Collection<Artifact> getMyArtifacts() {
+        if (myArtifacts == null) {
+            myArtifacts = new ArrayList<>();
+        }
+        return myArtifacts;
+    }
+
+    public void setMyArtifacts(Collection<Artifact> myArtifacts) {
+        this.myArtifacts = myArtifacts;
+    }
+
+    public Collection<Artifact> getMyCollabArtifacts() {
+        if (myCollabArtifacts == null) {
+            myCollabArtifacts = new ArrayList<>();
+        }
+        return myCollabArtifacts;
+    }
+
+    public void setMyCollabArtifacts(Collection<Artifact> myCollabArtifacts) {
+        this.myCollabArtifacts = myCollabArtifacts;
+    }
+
+    public Collection<Technology> getTechnologies() {
+        if (technologies == null) {
+            technologies = new ArrayList<>();
+        }
+        return technologies;
+    }
+
+    public void setTechnologies(Collection<Technology> technologies) {
+        this.technologies = technologies;
     }
  
     /**
      * Creates a new instance of TaskViewBean
      */
-    public TaskViewBean() {
+    public ArtifactViewBean() {
     }
     
     @PostConstruct
     public void init() {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         user = (User) session.getAttribute("user");    
-        setTask(new Task());
+        setArtifact(new Artifact());
         setMySprints(sprintFacadeRemote.findSprintsCreateTask(user));
         
-        setMyTasks(taskFacadeRemote.findMyTasks(user));
-        setMyCollabTasks(taskFacadeRemote.findMyCollabs(user));
+        setMyArtifacts(artifactFacadeRemote.findMyArtifacts(user));
+        setMyCollabArtifacts(artifactFacadeRemote.findMyCollabs(user));
+        setTechnologies(technologyFacadeRemote.findAll());        
     }
     
-    public TaskType[] getTaskType() {
-        return TaskType.values();
+    public MeasureUnit[] getMeasureUnit() {
+        return MeasureUnit.values();
     }
 }

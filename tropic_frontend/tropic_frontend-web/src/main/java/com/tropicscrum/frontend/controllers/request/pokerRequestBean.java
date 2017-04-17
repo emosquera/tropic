@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.SprintVelocity;
@@ -157,18 +158,21 @@ public class pokerRequestBean implements Serializable {
                 pokerViewBean.setIsVoted(Boolean.FALSE);
                 pokerViewBean.getUserEstimate().setPoints(null);
                 pokerViewBean.getUserEstimate().setHours(null);
-                pokerViewBean.getPokerMessage().setShowEstimate(Boolean.FALSE);   
+                pokerViewBean.getPokerMessage().setShowEstimate(Boolean.FALSE);
                 mainLoop:
                 for (History history : pokerViewBean.getSprintHistories()) {
                     for (Milestone milestone : history.getMilestones()) {
-                        for (Task task : milestone.getTasks()) {
-                            if (task.equals(pokerViewBean.getTaskSelected())) {
-                                task.setPoints(pokerViewBean.getTaskSelected().getPoints());
-                                task.setEstimatedDuration(pokerViewBean.getTaskSelected().getEstimatedDuration());
-                                task.setUserEstimates(pokerViewBean.getTaskSelected().getUserEstimates());
-                                break mainLoop;
+                        for (Artifact artifact : milestone.getArtifacts()) {
+                            for (Task task : artifact.getTasks()) {
+                                if (task.equals(pokerViewBean.getTaskSelected())) {
+                                    task.setPoints(pokerViewBean.getTaskSelected().getPoints());
+                                    task.setEstimatedDuration(pokerViewBean.getTaskSelected().getEstimatedDuration());
+                                    task.setUserEstimates(pokerViewBean.getTaskSelected().getUserEstimates());
+                                    break mainLoop;
+                                }
                             }
                         }
+
                     }
                 }
                 pokerViewBean.setTaskSelected(null);

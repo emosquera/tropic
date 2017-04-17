@@ -5,6 +5,7 @@
  */
 package com.tropicscrum.backend.persistence.facade;
 
+import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.Task;
@@ -49,8 +50,8 @@ public class TaskFacade extends AbstractFacade<Task> implements TaskFacadeLocal 
     }
 
     @Override
-    public Collection<Task> findAllTasksByMilestonAndSprint(Milestone milestone, Sprint sprint) {
-        return em.createNamedQuery("findAllTasksByMilestonAndSprint").setParameter("milestone", milestone).setParameter("sprint", sprint).getResultList();
+    public Collection<Task> findAllTasksByArtifact(Artifact artifact) {
+        return em.createNamedQuery("findAllTasksByArtifact").setParameter("artifact", artifact).getResultList();
     }
     
 }
