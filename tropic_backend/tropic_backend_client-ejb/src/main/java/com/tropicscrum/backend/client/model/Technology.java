@@ -24,12 +24,19 @@ public class Technology extends BasicAttributes {
     
     private String technology;
 
+    public Technology() {
+    }
+
     @Column(name = "technology")
     public String getTechnology() {
         return technology;
     }
 
     public void setTechnology(String technology) {
+        this.technology = technology;
+    }
+
+    public Technology(String technology) {
         this.technology = technology;
     }
         
