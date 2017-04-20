@@ -33,8 +33,8 @@
                             <p:dataGrid id="taskToDo" value="#{boardViewBean.toDoTasks}" var="task" columns="3" layout="grid" emptyMessage="No hay Tareas por hacer">
                                 <p:panel id="toDoTask" class="taskToDo">
                                     <p:outputLabel value="#{task.code} - #{task.formattedHours}h" escape="false" class="codeTaskToDo"/>
-                                    <p:outputLabel value="#{task.artifact.milestone.history.title}" class="historyLabel"/>
-                                    <p:outputLabel value="#{task.artifact.milestone.milestone}" class="milestoneLabel"/>
+                                    <p:outputLabel value="#{task.artifact.milestone.milestone}" class="historyLabel"/>
+                                    <p:outputLabel value="#{task.artifact.description}" class="milestoneLabel"/>
                                     <span class="contentContent">
                                         #{task.content}
                                     </span>                                    
@@ -49,11 +49,21 @@
                     <p:column width="33%">
                         <p:fieldset id="doingArea" legend="TAREAS EN PROGRESO ( #{boardViewBean.taskProgresss.size()} )" class="boxInput">                            
                             <p:dataGrid id="taskDoing" value="#{boardViewBean.taskProgresss}" var="taskProgress" columns="3" layout="grid" emptyMessage="No hay Tareas en progreso">
-                                <p:panel id="doingTask" class="taskToDo" style="background-color: #{taskProgress.sprintUser.color.hexColor}; color: #{taskProgress.sprintUser.color.hexBorderColor}">
+                                <p:panel id="doingTask" class="taskToDo" style="background-color: #{taskProgress.sprintUser.color.hexBorderColor}; color: #{taskProgress.sprintUser.color.hexColor}; border: 3px solid #{taskProgress.sprintUser.color.hexColor}">
+                                    <p:commandLink class="controlTaskImage" rendered="#{not empty taskProgress.finalDate and boardViewBean.sprintUser == taskProgress.sprintUser}" action="#{boardRequestBean.playTask}" process="@this" update="form:doingArea">
+                                        <p:graphicImage id="play" url="#{resource['images:play.png']}" width="24" height="24" />                                        
+                                        <f:setPropertyActionListener target="#{boardRequestBean.taskProgressClicked}" value="#{taskProgress}"/>
+                                    </p:commandLink>                                    
+                                    <p:outputLabel rendered="#{not empty taskProgress.finalDate and boardViewBean.sprintUser != taskProgress.sprintUser}" value="PAUSADA" class="infoStatusTask infoStatusTaskPaused"/>
+                                    <p:commandLink class="controlTaskImage" rendered="#{empty taskProgress.finalDate and boardViewBean.sprintUser == taskProgress.sprintUser}" action="#{boardRequestBean.pauseTask}" process="@this" update="form:doingArea">
+                                        <p:graphicImage id="pause" url="#{resource['images:pause.png']}" width="24" height="24" />                                        
+                                        <f:setPropertyActionListener target="#{boardRequestBean.taskProgressClicked}" value="#{taskProgress}"/>
+                                    </p:commandLink>                                    
+                                    <p:outputLabel rendered="#{empty taskProgress.finalDate and boardViewBean.sprintUser != taskProgress.sprintUser}" value="CORRIENDO" class="infoStatusTask infoStatusTaskRunning"/>
                                     <p:graphicImage url="../#{taskProgress.sprintUser.user.avatar}" width="30" height="30" class="sprintListAvatar"/>
-                                    <p:outputLabel value="#{taskProgress.task.code} - #{taskProgress.task.formattedHours}h" escape="false" class="codeTaskToDo codeTaskDoing" style="color: #{taskProgress.sprintUser.color.hexBorderColor}"/>                                                                          
-                                    <p:outputLabel value="#{taskProgress.task.artifact.milestone.history.title}" class="historyLabel" style="color: #{taskProgress.sprintUser.color.hexColor}; background-color: #{taskProgress.sprintUser.color.hexBorderColor}"/>
-                                    <p:outputLabel value="#{taskProgress.task.artifact.milestone.milestone}" class="milestoneLabel" style="color: #{taskProgress.sprintUser.color.hexBorderColor}" />
+                                    <p:outputLabel value="#{taskProgress.task.code} - #{taskProgress.task.formattedHours}h" escape="false" class="codeTaskToDo codeTaskDoing" style="color: #{taskProgress.sprintUser.color.hexColor}"/>                                                                          
+                                    <p:outputLabel value="#{taskProgress.task.artifact.milestone.milestone}" class="historyLabel" style="color: #{taskProgress.sprintUser.color.hexColor}"/>
+                                    <p:outputLabel value="#{taskProgress.task.artifact.description}" class="milestoneLabel" style="color: #{taskProgress.sprintUser.color.hexBorderColor}; background-color: #{taskProgress.sprintUser.color.hexColor}"/>
                                     <span class="contentContent contentContentDoing">
                                         #{taskProgress.task.content}
                                     </span>   

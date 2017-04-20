@@ -192,11 +192,11 @@ public class PokerViewBean implements Serializable {
             }         
 
         } else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/tropic/home/sprints.xhtml?page=poker");
-            } catch (IOException ex) {
-                Logger.getLogger(PokerViewBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                FacesContext.getCurrentInstance().getExternalContext().redirect("/tropic/home/sprints.xhtml?page=poker");
+//            } catch (IOException ex) {
+//                Logger.getLogger(PokerViewBean.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         }
 
     }

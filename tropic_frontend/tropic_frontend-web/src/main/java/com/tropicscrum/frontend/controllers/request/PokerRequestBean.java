@@ -44,7 +44,7 @@ import org.primefaces.push.EventBusFactory;
  */
 @Named(value = "pokerRequestBean")
 @RequestScoped
-public class pokerRequestBean implements Serializable {
+public class PokerRequestBean implements Serializable {
 
     private final EventBus eventBus = EventBusFactory.getDefault().eventBus();
     private final static String CHANNEL = "/poker/";
@@ -179,7 +179,7 @@ public class pokerRequestBean implements Serializable {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(pokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -196,7 +196,7 @@ public class pokerRequestBean implements Serializable {
             String jsonMessage = mapper.writeValueAsString(pokerViewBean.getPokerMessage());
             eventBus.publish(CHANNEL + sprintCode + "/*", jsonMessage);
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(pokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -217,7 +217,7 @@ public class pokerRequestBean implements Serializable {
             String jsonMessage = mapper.writeValueAsString(pokerViewBean.getPokerMessage());
             eventBus.publish(CHANNEL + sprintCode + "/*", jsonMessage);
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(pokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -245,7 +245,7 @@ public class pokerRequestBean implements Serializable {
     /**
      * Creates a new instance of pokerRequestBean
      */
-    public pokerRequestBean() {
+    public PokerRequestBean() {
     }
 
 }

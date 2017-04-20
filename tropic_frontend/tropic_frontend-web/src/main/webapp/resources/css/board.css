@@ -99,23 +99,23 @@ and open the template in the editor.
 .historyLabel {
     display: block;
     font-size: 12px;
-    color: #225d20;
-    background-color: #fbfbf0;
-    padding: 2px;
-    border-radius: 6px;
+    color: #0a5a0a;    
     text-align: center;
     max-height: 40px;
     overflow: hidden;
 }
 
 .milestoneLabel {
-    display: block;font-size: 13px;
+    display: block;
+    font-size: 13px;
     text-align: center;
-    color: #0a5a0a;
+    color: #225d20;
+    background-color: #fbfbf0;
+    padding: 2px;
+    border-radius: 6px;
     margin-bottom: 5px;
     max-height: 40px;
-    overflow: hidden;
-    
+    overflow: hidden;    
 }
 
 .codeTaskDoing {
@@ -172,4 +172,36 @@ and open the template in the editor.
 .contentContentDoing::-webkit-scrollbar-thumb
 {
 	background-color: #b7b7b7;
+}
+
+.controlTaskImage {
+    display: inline-block;
+    position: absolute;
+    margin-left: 108px;
+    margin-top: -8px;
+}
+
+.controlTaskImage:hover {
+    cursor: pointer;
+}
+
+.infoStatusTask {
+    display: inline-block;
+    position: absolute;
+    font-family: 'Dosis';
+    font-size: 13px;
+    margin-left: 40px;
+    margin-top: -10px;
+    border-radius: 3px;
+    padding: 2px;    
+}
+
+.infoStatusTaskPaused {
+    background-color: #da8989;
+    color: #ffffff;
+}
+
+.infoStatusTaskRunning {
+    background-color: #4db6ac;
+    color: #ffffff;
 }

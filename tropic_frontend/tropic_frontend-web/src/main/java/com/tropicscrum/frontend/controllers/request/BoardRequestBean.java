@@ -7,6 +7,7 @@ package com.tropicscrum.frontend.controllers.request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tropicscrum.backend.client.enums.GeneralStatus;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.SprintUserFacadeRemote;
 import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
@@ -18,6 +19,7 @@ import com.tropicscrum.frontend.controllers.view.BoardViewBean;
 import com.tropicscrum.frontend.push.model.BoardMessage;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -38,6 +40,8 @@ import org.primefaces.push.EventBusFactory;
 @Named(value = "boardRequestBean")
 @RequestScoped
 public class BoardRequestBean implements Serializable {
+    
+    private TaskProgress taskProgressClicked;
 
     private final Comparator<Task> comparatorTask = new Comparator<Task>() {
         @Override
@@ -60,6 +64,17 @@ public class BoardRequestBean implements Serializable {
     
     @EJB(lookup = SprintUserFacadeRemote.JNDI_REMOTE_NAME)
     SprintUserFacadeRemote sprintUserFacadeRemote;
+
+    public TaskProgress getTaskProgressClicked() {
+        if (taskProgressClicked == null) {
+            taskProgressClicked = new TaskProgress();
+        }
+        return taskProgressClicked;
+    }
+
+    public void setTaskProgressClicked(TaskProgress taskProgressClicked) {
+        this.taskProgressClicked = taskProgressClicked;
+    }
 
     /**
      * Creates a new instance of BoardRequestBean
@@ -98,11 +113,12 @@ public class BoardRequestBean implements Serializable {
         }
     }
 
-    private void publishNotification(String action, String taskProgressId, SprintUser sprintUser) {
+    private void publishNotification(String action, String taskId, String taskProgressId, SprintUser sprintUser) {
         try {
             final ObjectMapper mapper = new ObjectMapper();
             BoardMessage boardMessage = new BoardMessage(action, taskProgressId);
             boardMessage.setSprintUserId(sprintUser.getId().toString());
+            boardMessage.setTaskId(taskId);
             String jsonMessage = mapper.writeValueAsString(boardMessage);
             for (SprintUser su : boardViewBean.getSprint().getSprintUsers()) {
                 if (!su.getUser().equals(boardViewBean.getUser())) {
@@ -112,6 +128,10 @@ public class BoardRequestBean implements Serializable {
         } catch (JsonProcessingException ex) {
             Logger.getLogger(BoardRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void publishNotification(String action, String taskProgressId, SprintUser sprintUser) {
+        publishNotification(action, "", taskProgressId, sprintUser);
     }
 
     public void closeTask(DragDropEvent ddEvent) {
@@ -169,10 +189,57 @@ public class BoardRequestBean implements Serializable {
                 case "stop":
                     stopTaskOnBoard(Long.parseLong(boardMessage.getTaskProgressId()));
                     break;
+                    
+                case "pause":
+                    pauseTaskOnBoard(Long.parseLong(boardMessage.getTaskProgressId()));
+                    break;
+                    
+                case "play":
+                    playTaskOnBoard(Long.parseLong(boardMessage.getTaskId()), Long.parseLong(boardMessage.getTaskProgressId()));
+                    break;
             }
         } catch (IOException ex) {
             Logger.getLogger(BoardRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void playTask() {
+        TaskProgress taskProgress = new TaskProgress();
+        taskProgress.setDateExecution(Calendar.getInstance());
+        taskProgress.setStartEstatus(GeneralStatus.IN_PROGRESS);
+        taskProgress.setTask(getTaskProgressClicked().getTask());
+        taskProgress.setSprintUser(boardViewBean.getSprintUser());
+        taskProgress = taskProgressFacadeRemote.create(taskProgress);
+        boardViewBean.getTaskProgresss().remove(getTaskProgressClicked());
+        boardViewBean.getTaskProgresss().add(taskProgress);
+        publishNotification("play", getTaskProgressClicked().getId().toString(), taskProgress.getId().toString(), boardViewBean.getSprintUser());
+    }
+    
+    private void playTaskOnBoard(Long taskProgressToRemoveId, Long taskProgressToAddId) {
+        TaskProgress taskProgressToRemove = taskProgressFacadeRemote.find(taskProgressToRemoveId);
+        boardViewBean.getTaskProgresss().remove(taskProgressToRemove);
+        TaskProgress taskProgressToAdd = taskProgressFacadeRemote.find(taskProgressToAddId);
+        boardViewBean.getTaskProgresss().add(taskProgressToAdd);
+    }
 
+    public void pauseTask() {
+        try {
+            getTaskProgressClicked().setFinalDate(Calendar.getInstance());
+            double timeElapsed = getTaskProgressClicked().getFinalDate().getTimeInMillis() - getTaskProgressClicked().getDateExecution().getTimeInMillis();
+            getTaskProgressClicked().setTimeInProgress(timeElapsed);
+            getTaskProgressClicked().setFinalStatus(GeneralStatus.IN_PROGRESS);
+            taskProgressFacadeRemote.edit(getTaskProgressClicked());
+            boardViewBean.getTaskProgresss().remove(getTaskProgressClicked());
+            boardViewBean.getTaskProgresss().add(taskProgressFacadeRemote.find(getTaskProgressClicked().getId()));
+            publishNotification("pause", getTaskProgressClicked().getId().toString(), boardViewBean.getSprintUser());
+        } catch (UpdateException ex) {
+            Logger.getLogger(BoardRequestBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void pauseTaskOnBoard(Long taskProgressId) {
+        TaskProgress taskProgress = taskProgressFacadeRemote.find(taskProgressId);        
+        boardViewBean.getTaskProgresss().remove(taskProgress);
+        boardViewBean.getTaskProgresss().add(taskProgress);
+    }
 }

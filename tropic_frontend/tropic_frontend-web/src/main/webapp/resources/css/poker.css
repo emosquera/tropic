@@ -134,20 +134,8 @@ and open the template in the editor.
 }
 
 .milestoneTitle {
-    font-family: 'Dosis', sans-serif;
-    font-size: 18px;
-    font-weight: 300;
-    color: #652525;
-    background: #f9f9f9;
-    margin-left: 18px;
-    padding: 3px 0px 3px 0px!important;
-    border: 1px solid #ececec;
-    border-radius: 5px;
-    top: 5px;
-    margin-bottom: 5px;   
-    display: inline-block;
-    width: 100%;
-    text-align: center
+    font-size: 21px;
+    color: #3d9a75;
 }
 
 .taskSelected {
@@ -356,5 +344,22 @@ a {
 
 .sprintTable .ui-row-toggler.ui-icon-circle-triangle-s {
     background-image: url(#{resource["images:eyeclose32.png"]});
+}
+
+.artifactDescription {
+    font-family: 'Dosis', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: #652525;
+    background: #f9f9f9;
+    margin-left: 18px;
+    padding: 3px 0px 3px 0px!important;
+    border: 1px solid #ececec;
+    border-radius: 5px;
+    top: 5px;
+    margin-bottom: 5px;   
+    display: inline-block;
+    width: 100%;
+    text-align: center;    
 }
 

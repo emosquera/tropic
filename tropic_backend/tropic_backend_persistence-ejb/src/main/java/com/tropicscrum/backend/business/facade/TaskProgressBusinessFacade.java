@@ -81,7 +81,11 @@ public class TaskProgressBusinessFacade implements TaskProgressFacadeRemote {
 
     @Override
     public void closeTaskProgress(TaskProgress taskProgress) throws UpdateException {
-        taskProgress.setFinalDate(Calendar.getInstance());
+        if (taskProgress.getFinalStatus() == null || !taskProgress.getFinalStatus().equals(GeneralStatus.IN_PROGRESS)) {
+            taskProgress.setFinalDate(Calendar.getInstance());
+        }        
+        double timeElapsed = taskProgress.getFinalDate().getTimeInMillis() - taskProgress.getDateExecution().getTimeInMillis();
+        taskProgress.setTimeInProgress(timeElapsed);
         taskProgress.setFinalStatus(GeneralStatus.FINISHED);
         taskProgress.getTask().setStatus(GeneralStatus.FINISHED);
         try {
@@ -95,6 +99,8 @@ public class TaskProgressBusinessFacade implements TaskProgressFacadeRemote {
     @Override
     public void stopTaskProgres(TaskProgress taskProgress) throws UpdateException {
         taskProgress.setFinalStatus(GeneralStatus.PENDING);
+        double timeElapsed = taskProgress.getFinalDate().getTimeInMillis() - taskProgress.getDateExecution().getTimeInMillis();
+        taskProgress.setTimeInProgress(timeElapsed);
         taskProgress.getTask().setStatus(GeneralStatus.PENDING);
         try {
             taskProgressFacadeLocal.edit(taskProgress);
@@ -103,5 +109,4 @@ public class TaskProgressBusinessFacade implements TaskProgressFacadeRemote {
             throw new UpdateException("No se puede actualizar el Progreso. Este ha sido modificada en otra sesion.");
         }
     }
-
 }

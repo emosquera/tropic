@@ -734,3 +734,9 @@ textArea.boxInput.ui-state-error {
     font-family: 'Dosis', sans-serif;
     color: grey;
 }
+
+.toolTip {
+    font-size: 14px;
+    font-weight: 400!important;
+    font-family: 'Dosis', sans-serif;
+}

@@ -26,7 +26,7 @@ import javax.persistence.Temporal;
 @Table(name = "task_progress")
 @NamedQueries({
     @NamedQuery(name = "findAllProgressByTask", query = "Select t from TaskProgress t where t.task = :task ORDER BY t.dateExecution DESC"),
-    @NamedQuery(name = "findAllProgressInProgressBySprintUser", query = "Select t from TaskProgress t where t.sprintUser = :sprintUser AND t.startEstatus = com.tropicscrum.backend.client.enums.GeneralStatus.IN_PROGRESS AND t.finalStatus IS NULL AND t.task.status = com.tropicscrum.backend.client.enums.GeneralStatus.IN_PROGRESS"),
+    @NamedQuery(name = "findAllProgressInProgressBySprintUser", query = "Select t from TaskProgress t where t.sprintUser = :sprintUser AND t.startEstatus = com.tropicscrum.backend.client.enums.GeneralStatus.IN_PROGRESS AND (t.finalStatus IS NULL OR t.finalStatus = com.tropicscrum.backend.client.enums.GeneralStatus.IN_PROGRESS) AND t.task.status = com.tropicscrum.backend.client.enums.GeneralStatus.IN_PROGRESS"),
 })
 public class TaskProgress extends BasicAttributes {
     private Calendar dateExecution;

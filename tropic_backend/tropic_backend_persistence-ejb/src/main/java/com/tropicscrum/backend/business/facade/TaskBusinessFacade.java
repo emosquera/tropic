@@ -129,14 +129,22 @@ public class TaskBusinessFacade implements TaskFacadeRemote {
     public void startTaskProgress(Task task, SprintUser sprintUser) throws UpdateException {
         Collection<TaskProgress> myInProgress = taskProgressFacadeLocal.findAllProgressInProgressBySprintUser(sprintUser);
         for (TaskProgress tp : myInProgress) {
-            tp.setFinalDate(Calendar.getInstance());
-            tp.setFinalStatus(GeneralStatus.PENDING);
+            if (tp.getFinalDate() == null) {
+                tp.setFinalDate(Calendar.getInstance());
+                double timeElapsed = tp.getFinalDate().getTimeInMillis() - tp.getDateExecution().getTimeInMillis();
+                tp.setTimeInProgress(timeElapsed);
+                tp.setFinalStatus(GeneralStatus.PENDING);
+                try {
+                    taskProgressFacadeLocal.edit(tp);
+                } catch (OldVersionException ex) {
+                    throw new UpdateException("No se puede actualizar el Progreso. Este ha sido modificado en otra sesion.");
+                }
+            }            
             tp.getTask().setStatus(GeneralStatus.PENDING);
-            try {
-                taskProgressFacadeLocal.edit(tp);
+            try {                
                 taskFacadeLocal.edit(tp.getTask());
             } catch (OldVersionException ex) {
-                throw new UpdateException("No se puede actualizar el Progreso. Este ha sido modificado en otra sesion.");
+                throw new UpdateException("No se puede actualizar la Tarea del Progreso. Esta ha sido modificada en otra sesion.");
             }
         }
         task.setStatus(GeneralStatus.IN_PROGRESS);
