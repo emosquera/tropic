@@ -202,12 +202,12 @@
                     <p:column style="width: 8%" headerText="Tipo" filterBy="#{myTask.type.name}" filterMatchMode="contains">                                                                                    
                         #{myTask.type.name}                                        
                     </p:column>
+                    <p:column style="width: 17%" headerText="Componente" filterBy="#{myTask.artifact.code}" filterMatchMode="contains">
+                        #{myTask.artifact.code}
+                    </p:column>
                     <p:column style="width: 17%" headerText="Sprint" filterBy="#{myTask.artifact.milestone.sprint.code}" filterMatchMode="contains">
                         #{myTask.artifact.milestone.sprint.code}
-                    </p:column>              
-                    <p:column style="width: 17%" headerText="Proyecto" filterBy="#{myTask.artifact.milestone.sprint.project.code}" filterMatchMode="contains">
-                        #{myTask.artifact.milestone.sprint.project.code}
-                    </p:column>
+                    </p:column>                                  
                 </p:dataTable>
             </h:panelGroup>
             <h:panelGroup id="rowMyCollabTasks" style="width: 100%; display: inline-block; margin-bottom: 20px;">
@@ -231,12 +231,12 @@
                     <p:column style="width: 15%" headerText="Autor" filterBy="#{myCollabTask.author.firstName} #{myCollabTask.author.lastName}" filterMatchMode="contains">                                                                                    
                         #{myCollabTask.author.firstName} #{myCollabTask.author.lastName}                                        
                     </p:column> 
+                    <p:column style="width: 15%" headerText="Componente" filterBy="#{myCollabTask.artifact.code}" filterMatchMode="contains">
+                        #{myCollabTask.artifact.code}
+                    </p:column>
                     <p:column style="width: 15%" headerText="Sprint" filterBy="#{myCollabTask.artifact.milestone.sprint.code}" filterMatchMode="contains">
                         #{myCollabTask.artifact.milestone.sprint.code}
-                    </p:column>              
-                    <p:column style="width: 15%" headerText="Proyecto" filterBy="#{myCollabTask.artifact.milestone.sprint.project.code}" filterMatchMode="contains">
-                        #{myCollabTask.artifact.milestone.sprint.project.code}
-                    </p:column>
+                    </p:column>                                  
                 </p:dataTable>
             </h:panelGroup>
         </h:panelGroup>               
