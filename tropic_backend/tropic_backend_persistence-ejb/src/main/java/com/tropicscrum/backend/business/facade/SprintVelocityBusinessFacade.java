@@ -11,19 +11,19 @@ import com.tropicscrum.backend.client.model.SprintVelocity;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.SprintVelocityFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
  * @author Edgar Mosquera
  */
-@Stateless(name = "sprintVelocityBusinessFacade", mappedName = SprintVelocityFacadeRemote.JNDI_REMOTE_NAME)
+@Stateless(name = "sprintVelocityFacadeRemote", mappedName = SprintVelocityFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(SprintVelocityFacadeRemote.class)
 public class SprintVelocityBusinessFacade implements SprintVelocityFacadeRemote {
 
-    @EJB
+    @Inject
     SprintVelocityFacadeLocal sprintVelocityFacadeLocal; 
 
     @Override

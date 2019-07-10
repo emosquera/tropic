@@ -8,14 +8,15 @@ package com.tropicscrum.frontend.controllers.view;
 import com.tropicscrum.backend.client.facade.ProjectFacadeRemote;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -27,9 +28,11 @@ import javax.servlet.http.HttpSession;
 public class MyDataViewBean implements Serializable{
     private User user;
     private Collection<Project> myProjects;
+
+    ProjectFacadeRemote projectFacadeRemote = new ServiceLocatorDelegate<ProjectFacadeRemote>().getService(ProjectFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = ProjectFacadeRemote.JNDI_REMOTE_NAME)
-    ProjectFacadeRemote projectFacadeRemote;
+    @Inject
+    ExternalContext extContext;
 
     public User getUser() {
         return user;
@@ -58,7 +61,7 @@ public class MyDataViewBean implements Serializable{
     
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");     
         
         Collection<Project> projects = projectFacadeRemote.findAllMine(user);
@@ -66,11 +69,9 @@ public class MyDataViewBean implements Serializable{
         
         getMyProjects().addAll(projects);
         
-        for (Project p : collabsProjects) {
-            if (!p.getAuthor().equals(user)) {
-                getMyProjects().add(p);
-            }
-        }
+        collabsProjects.stream().filter((p) -> (!p.getAuthor().equals(user))).forEachOrdered((p) -> {
+            getMyProjects().add(p);
+        });
     }
     
 }

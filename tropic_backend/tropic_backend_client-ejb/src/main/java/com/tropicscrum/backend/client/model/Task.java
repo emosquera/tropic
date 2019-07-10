@@ -11,6 +11,7 @@ import com.tropicscrum.backend.client.enums.TaskType;
 import com.tropicscrum.backend.client.utils.NumberToFormattedString;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,12 +33,15 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "task")
 @NamedQueries({
-    @NamedQuery(name = "findAllTasksByUser", query = "Select t from Task t where t.author = :user"),    
-    @NamedQuery(name = "findAllTasksByCollaborator", query = "Select DISTINCT t from Task t where :user != t.author and (:user MEMBER OF t.artifact.milestone.sprint.project.collaborators or :user = t.artifact.milestone.sprint.project.author)"),
-    @NamedQuery(name = "findAllTasksBySprint", query = "Select t from Task t where t.artifact.milestone.sprint = :sprint"),
-    @NamedQuery(name = "findAllTasksByArtifact", query = "Select t from Task t where t.artifact = :artifact"),    
-})
-public class Task extends BasicAttributes implements Comparable<Task>{
+    @NamedQuery(name = "findAllTasksByUser", query = "Select t from Task t where t.author = :user")
+    ,    
+    @NamedQuery(name = "findAllTasksByCollaborator", query = "Select DISTINCT t from Task t where :user != t.author and (:user MEMBER OF t.artifact.milestone.sprint.project.collaborators or :user = t.artifact.milestone.sprint.project.author)")
+    ,
+    @NamedQuery(name = "findAllTasksBySprint", query = "Select t from Task t where t.artifact.milestone.sprint = :sprint")
+    ,
+    @NamedQuery(name = "findAllTasksByArtifact", query = "Select t from Task t where t.artifact = :artifact"),})
+public class Task extends BasicAttributes implements Comparable<Task> {
+
     private String code;
     private String content;
     private Double points;
@@ -48,7 +52,7 @@ public class Task extends BasicAttributes implements Comparable<Task>{
     private Collection<UserEstimate> userEstimates;
     private User author;
     private Artifact artifact;
-    
+
     private transient NumberToFormattedString numberToFormattedString = new NumberToFormattedString();
 
     @Column(name = "code")
@@ -129,7 +133,7 @@ public class Task extends BasicAttributes implements Comparable<Task>{
     public void setArtifact(Artifact artifact) {
         this.artifact = artifact;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -185,23 +189,46 @@ public class Task extends BasicAttributes implements Comparable<Task>{
         }
         return numberToFormattedString;
     }
-    
+
     @Transient
     @JsonIgnore
     public String getFormattedPoints() {
         return getNumberToFormattedString().DoubleToString(points);
     }
-    
+
     @Transient
     @JsonIgnore
     public String getFormattedHours() {
         return getNumberToFormattedString().DoubleToString(estimatedDuration);
     }
 
+    @Transient
+    @JsonIgnore
+    public Double getTotalTime() {
+        Double totalTime = 0.0;
+        if (getTaskProgresss() != null) {
+            totalTime = getTaskProgresss().stream().map((taskProgress) -> taskProgress.getTimeInProgress()).reduce(totalTime, (accumulator, _item) -> accumulator + _item);
+        }
+        return totalTime;
+    }
+
+    @Transient
+    @JsonIgnore
+    public HashMap<SprintUser, Double> getTaskProgressByUsers() {
+        HashMap<SprintUser, Double> progressByUser = new HashMap<>();
+        getTaskProgresss().forEach((taskProgress) -> {
+            if (progressByUser.get(taskProgress.getSprintUser()) == null) {
+                progressByUser.put(taskProgress.getSprintUser(), taskProgress.getTimeInProgress());
+            } else {
+                progressByUser.put(taskProgress.getSprintUser(), progressByUser.get(taskProgress.getSprintUser()) + taskProgress.getTimeInProgress());
+            }
+        });
+        return progressByUser;
+    }
+
     @Override
     public int compareTo(Task o) {
         return getCode().compareTo(o.getCode());
     }
-    
-    
+
 }

@@ -14,9 +14,9 @@ import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.HistoryFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -26,7 +26,7 @@ import javax.ejb.Stateless;
 @Remote(HistoryFacadeRemote.class)
 public class HistoryBusinessFacade implements HistoryFacadeRemote {
 
-    @EJB
+    @Inject
     HistoryFacadeLocal historyFacadeLocal;
     
     @Override

@@ -16,7 +16,8 @@ import javax.ejb.Remote;
 
 @Remote
 public interface UserEstimateFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/userEstimateFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/userEstimateFacadeRemote!com.tropicscrum.backend.client.facade.UserEstimateFacadeRemote";
+    //public final String JNDI_REMOTE_NAME = "ejb/userEstimateFacadeRemote";
     
     UserEstimate create(UserEstimate userEstimate);
 

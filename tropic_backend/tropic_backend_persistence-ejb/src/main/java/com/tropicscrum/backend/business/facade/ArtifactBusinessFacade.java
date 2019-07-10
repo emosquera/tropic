@@ -8,15 +8,14 @@ package com.tropicscrum.backend.business.facade;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.ArtifactFacadeRemote;
 import com.tropicscrum.backend.client.model.Artifact;
-import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.ArtifactFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -26,7 +25,7 @@ import javax.ejb.Stateless;
 @Remote(ArtifactFacadeRemote.class)
 public class ArtifactBusinessFacade implements ArtifactFacadeRemote {
 
-    @EJB
+    @Inject
     ArtifactFacadeLocal artifactFacadeLocal;
     
     @Override
@@ -82,11 +81,11 @@ public class ArtifactBusinessFacade implements ArtifactFacadeRemote {
     
     private Collection<Artifact> deepArtifact(Collection<Artifact> artifacts) {
         Collection<Artifact> myArtifacts = artifacts;
-        for (Artifact artifact : myArtifacts) {
-            for (History history : artifact.getMilestone().getSprint().getProject().getHistories()) {
+        myArtifacts.forEach((artifact) -> {
+            artifact.getMilestone().getSprint().getProject().getHistories().forEach((history) -> {
                 history.getMilestones().size();
-            }
-        }
+            });
+        });
         return myArtifacts;
     }
 

@@ -3,7 +3,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 template="/template/generalTemplate.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">    
@@ -34,9 +34,9 @@
                                 <p:panel id="toDoTask" class="taskToDo">
                                     <p:outputLabel value="#{task.code} - #{task.formattedHours}h" escape="false" class="codeTaskToDo"/>
                                     <p:outputLabel value="#{task.artifact.milestone.milestone}" class="historyLabel"/>
-                                    <p:outputLabel value="#{task.artifact.description}" class="milestoneLabel"/>
+                                    <p:outputLabel value="#{task.content}" class="milestoneLabel"/>
                                     <span class="contentContent">
-                                        #{task.content}
+                                        #{task.artifact.description}                                        
                                     </span>                                    
                                 </p:panel>
                                 <p:draggable for="toDoTask" revert="true" handle=".ui-panel-content" stack=".ui-panel" scope="doingArea"/>
@@ -51,7 +51,7 @@
                             <p:dataGrid id="taskDoing" value="#{boardViewBean.taskProgresss}" var="taskProgress" columns="3" layout="grid" emptyMessage="No hay Tareas en progreso">
                                 <p:panel id="doingTask" class="taskToDo" style="background-color: #{taskProgress.sprintUser.color.hexBorderColor}; color: #{taskProgress.sprintUser.color.hexColor}; border: 3px solid #{taskProgress.sprintUser.color.hexColor}">
                                     <p:commandLink class="controlTaskImage" rendered="#{not empty taskProgress.finalDate and boardViewBean.sprintUser == taskProgress.sprintUser}" action="#{boardRequestBean.playTask}" process="@this" update="form:doingArea">
-                                        <p:graphicImage id="play" url="#{resource['images:play.png']}" width="24" height="24" />                                        
+                                        <p:graphicImage id="play" url="#{resource['images:play.png']}" width="24" height="24" style="vertical-align: middle;" />                                        
                                         <f:setPropertyActionListener target="#{boardRequestBean.taskProgressClicked}" value="#{taskProgress}"/>
                                     </p:commandLink>                                    
                                     <p:outputLabel rendered="#{not empty taskProgress.finalDate and boardViewBean.sprintUser != taskProgress.sprintUser}" value="PAUSADA" class="infoStatusTask infoStatusTaskPaused"/>
@@ -63,9 +63,9 @@
                                     <p:graphicImage url="../#{taskProgress.sprintUser.user.avatar}" width="30" height="30" class="sprintListAvatar"/>
                                     <p:outputLabel value="#{taskProgress.task.code} - #{taskProgress.task.formattedHours}h" escape="false" class="codeTaskToDo codeTaskDoing" style="color: #{taskProgress.sprintUser.color.hexColor}"/>                                                                          
                                     <p:outputLabel value="#{taskProgress.task.artifact.milestone.milestone}" class="historyLabel" style="color: #{taskProgress.sprintUser.color.hexColor}"/>
-                                    <p:outputLabel value="#{taskProgress.task.artifact.description}" class="milestoneLabel" style="color: #{taskProgress.sprintUser.color.hexBorderColor}; background-color: #{taskProgress.sprintUser.color.hexColor}"/>
+                                    <p:outputLabel value="#{taskProgress.task.content}" class="milestoneLabel" style="color: #{taskProgress.sprintUser.color.hexBorderColor}; background-color: #{taskProgress.sprintUser.color.hexColor}"/>
                                     <span class="contentContent contentContentDoing">
-                                        #{taskProgress.task.content}
+                                        #{taskProgress.task.artifact.description}
                                     </span>   
                                 </p:panel>
                                 <p:draggable for="doingTask" revert="true" handle=".ui-panel-content" stack=".ui-panel" scope="doneArea" rendered="#{boardViewBean.sprintUser == taskProgress.sprintUser}"/>
@@ -80,7 +80,13 @@
                             <p:dataGrid id="taskDone" value="#{boardViewBean.finishedProgresss}" var="finishedProgress" columns="3" layout="grid" emptyMessage="No hay Tareas finalizadas">
                                 <p:panel id="doneTask" class="taskToDo">
                                     <p:outputLabel value="#{finishedProgress.task.code} - #{finishedProgress.task.formattedHours}h" escape="false" class="codeTaskToDo"/>
-                                    <p:outputLabel value="#{finishedProgress.task.content}"/>
+                                    <ui:repeat value="#{boardViewBean.getProgressByUser(finishedProgress.task)}" var="entry">   
+                                        <h:panelGroup class="panelTimeElapsed" style="background-color: #{entry.color.hexBorderColor}; color: #{entry.color.hexColor}; border: 1px solid #{entry.color.hexColor}">
+                                            <p:graphicImage url="../#{entry.user.avatar}" width="30" height="30" class="sprintListAvatar avatarTimeElapsed"/>
+                                            <p:outputLabel value="#{boardViewBean.millisecondsToRedeableTime(boardViewBean.progressByUsers[entry])}" escape="false" class="codeTaskDoing" style="color: #{entry.color.hexColor}; font-weight: normal;"/>                                                                          
+                                        </h:panelGroup>                                        
+                                    </ui:repeat>                                    
+                                    <p:outputLabel value="Total - #{boardViewBean.millisecondsToRedeableTime(boardViewBean.getTaskTotalTime(finishedProgress.task))}" escape="false" class="totalTimeElapsed"/>
                                 </p:panel>
                                 <p:draggable for="doneTask" revert="true" handle=".ui-panel-content" stack=".ui-panel" scope="toDoArea" rendered="#{boardViewBean.isScrumMaster}"/>
                             </p:dataGrid>
@@ -92,10 +98,10 @@
                 </p:row>                                                
             </p:panelGrid>
         </h:panelGroup>  
-        <p:socket onMessage="handleMessage" channel="/board/#{boardViewBean.sprint.id}/#{boardViewBean.user.id}" autoConnect="true" widgetVar='subscriber'/>
+                
         <script type="text/javascript">
             function handleMessage(message) {
-                updateTask([{name: 'boardMessage', value: JSON.stringify(message)}]);
+                updateTask([{name: 'boardMessage', value: message}]);
             }
         </script>
         <script type="text/javascript">
@@ -105,5 +111,8 @@
                 droppedCar.fadeOut('fast');
             }
         </script>
+        
+        <f:websocket onmessage="handleMessage" channel="board" user="#{boardViewBean.sprintUser.id}"/>
+        
     </ui:define>
 </ui:composition>

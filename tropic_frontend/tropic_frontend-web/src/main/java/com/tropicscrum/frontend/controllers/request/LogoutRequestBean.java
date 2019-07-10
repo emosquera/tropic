@@ -7,7 +7,8 @@ package com.tropicscrum.frontend.controllers.request;
 
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -17,6 +18,9 @@ import javax.servlet.http.HttpSession;
 @Named(value = "logoutRequestBean")
 @RequestScoped
 public class LogoutRequestBean {
+    
+    @Inject
+    ExternalContext extContext;
 
     /**
      * Creates a new instance of LogoutRequestBean
@@ -25,7 +29,7 @@ public class LogoutRequestBean {
     }
     
     public String logout() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         if (session != null) {
             session.invalidate();
         }

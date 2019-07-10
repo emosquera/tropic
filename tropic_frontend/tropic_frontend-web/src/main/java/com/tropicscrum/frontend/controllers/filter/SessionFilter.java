@@ -140,6 +140,7 @@ public class SessionFilter implements Filter {
 
     /**
      * Init method for this filter
+     * @param filterConfig
      */
     public void init(FilterConfig filterConfig) {        
         this.filterConfig = filterConfig;
@@ -158,7 +159,7 @@ public class SessionFilter implements Filter {
         if (filterConfig == null) {
             return ("SessionFilter()");
         }
-        StringBuffer sb = new StringBuffer("SessionFilter(");
+        StringBuilder sb = new StringBuilder("SessionFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
@@ -181,7 +182,7 @@ public class SessionFilter implements Filter {
                 pw.close();
                 ps.close();
                 response.getOutputStream().close();
-            } catch (Exception ex) {
+            } catch (IOException ex) {
             }
         } else {
             try {
@@ -189,7 +190,7 @@ public class SessionFilter implements Filter {
                 t.printStackTrace(ps);
                 ps.close();
                 response.getOutputStream().close();
-            } catch (Exception ex) {
+            } catch (IOException ex) {
             }
         }
     }
@@ -203,7 +204,7 @@ public class SessionFilter implements Filter {
             pw.close();
             sw.close();
             stackTrace = sw.getBuffer().toString();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
         }
         return stackTrace;
     }

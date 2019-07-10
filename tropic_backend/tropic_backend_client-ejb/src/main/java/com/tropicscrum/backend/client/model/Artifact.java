@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tropicscrum.backend.client.enums.MeasureUnit;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -150,11 +149,7 @@ public class Artifact extends BasicAttributes {
     @JsonIgnore
     public Double getTaskEstimates() {
         Double total = 0.0;
-        for (Task task : getTasks()) {
-            if (task.getEstimatedDuration() != null) {
-                total += task.getEstimatedDuration();
-            }
-        }
+        total = getTasks().stream().filter((task) -> (task.getEstimatedDuration() != null)).map((task) -> task.getEstimatedDuration()).reduce(total, (accumulator, _item) -> accumulator + _item);
         return total;
     }
 

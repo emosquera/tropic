@@ -11,14 +11,13 @@ import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
-import com.tropicscrum.backend.client.model.SprintVelocity;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.client.utils.Fibonacci;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.view.SprintViewBean;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -40,12 +39,13 @@ public class SprintRequestBean implements Serializable {
     
     @Inject
     SprintViewBean sprintViewBean;
+
+    UsersFacadeRemote usersFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
+
+    SprintFacadeRemote sprintFacadeRemote = new ServiceLocatorDelegate<SprintFacadeRemote>().getService(SprintFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    UsersFacadeRemote usersFacadeRemote;
-    
-    @EJB(lookup = SprintFacadeRemote.JNDI_REMOTE_NAME)
-    SprintFacadeRemote sprintFacadeRemote;
+    @Inject
+    FacesContext context;
 
     public SprintUser getSprintUserToRemove() {
         return sprintUserToRemove;
@@ -68,9 +68,9 @@ public class SprintRequestBean implements Serializable {
         }
         sprintViewBean.setSprint(new Sprint());
         sprintViewBean.getSprint().setSprintVelocitys(fibonacci.getSprintVelocitys());
-        for (SprintVelocity sv : sprintViewBean.getSprint().getSprintVelocitys()) {
+        sprintViewBean.getSprint().getSprintVelocitys().forEach((sv) -> {
             sv.setSprint(sprintViewBean.getSprint());
-        }
+        });
         sprintViewBean.getSprint().setProject(project);
         sprintViewBean.setModify(Boolean.FALSE);
         sprintViewBean.setDelete(Boolean.FALSE);
@@ -84,9 +84,9 @@ public class SprintRequestBean implements Serializable {
     
     public Collection<User> getUsersByEmail(String query) {
         Collection<User> users = usersFacadeRemote.filterByEmail(query); 
-        for (SprintUser sprintUser : sprintViewBean.getSprint().getSprintUsers()) {
+        sprintViewBean.getSprint().getSprintUsers().forEach((sprintUser) -> {
             users.remove(sprintUser.getUser());
-        }        
+        });        
         return users;                
     }
     
@@ -129,10 +129,8 @@ public class SprintRequestBean implements Serializable {
             Sprint s = sprintFacadeRemote.create(sprintViewBean.getSprint());  
             sprintViewBean.getSprints().add(s);            
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Sprint creado satisfactoriamente"));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo crear el Sprint"));
         }
     }
@@ -142,11 +140,9 @@ public class SprintRequestBean implements Serializable {
             sprintViewBean.getSprints().remove(sprintViewBean.getSprint());
             sprintFacadeRemote.remove(sprintViewBean.getSprint());
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Sprint eliminado satisfactoriamente"));
         } catch (Exception ex) {
             sprintViewBean.getSprints().add(sprintViewBean.getSprint());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo eliminar el Sprint"));
         }
     }
@@ -154,13 +150,10 @@ public class SprintRequestBean implements Serializable {
     public void updateSprint(ActionEvent actionEvent) {
         try {
             sprintFacadeRemote.edit(sprintViewBean.getSprint());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Sprint actualizado satisfactoriamente"));
         } catch (UpdateException e) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", e.getMessage()));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo actualizar el Sprint"));
         }
     }

@@ -16,6 +16,7 @@ public class PokerMessage {
     private Boolean isTask;
     private Boolean isClean;
     private Boolean isShow;
+    private Boolean isLogin; 
     private PokerVote pokerVote;
 
     public String getTaskCode() {
@@ -64,6 +65,14 @@ public class PokerMessage {
 
     public void setIsShow(Boolean isShow) {
         this.isShow = isShow;
+    }
+
+    public Boolean getIsLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(Boolean isLogin) {
+        this.isLogin = isLogin;
     }
 
     public PokerVote getPokerVote() {

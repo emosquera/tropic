@@ -5,6 +5,7 @@
  */
 package com.tropicscrum.base.locator;
 
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.naming.Context;
@@ -19,12 +20,15 @@ public class ServiceLocator {
 
     private static volatile ServiceLocator instance = null;
 
-    private final Map<String, ServiceVerifier> services = new TreeMap<>();
+    private final Map<String, Object> services = new TreeMap<>();
 
+    private Hashtable jndiProperties = new Hashtable();
     private Context ctx;
 
-    private ServiceLocator() throws NamingException {
-        ctx = new InitialContext();
+    private ServiceLocator() throws NamingException {        
+        jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY,  "org.wildfly.naming.client.WildFlyInitialContextFactory");
+        jndiProperties.put(Context.PROVIDER_URL,"http-remoting://localhost:8080");
+        ctx = new InitialContext(jndiProperties);
     }
 
     public static ServiceLocator instance() throws NamingException {
@@ -36,7 +40,7 @@ public class ServiceLocator {
                     instance = new ServiceLocator();
                 } else {
                     if (instance.ctx == null) {
-                        instance.ctx = new InitialContext();
+                        instance.ctx = new InitialContext(instance.jndiProperties);
                     }
                 }
             }
@@ -47,12 +51,12 @@ public class ServiceLocator {
 
     public Object get(String beanName) throws NamingException {
 
-        ServiceVerifier vs = services.get(beanName);
+        Object vs = services.get(beanName);
         Object serviceRef = null;
 
         if (vs != null) {
             try {
-                vs.isAlive();
+                //vs.isAlive();
                 serviceRef = vs;
             } catch (Exception e) {
             }
@@ -60,8 +64,8 @@ public class ServiceLocator {
         }
         if (serviceRef == null) {
             serviceRef = ctx.lookup(beanName);
-            assert ServiceVerifier.class.isAssignableFrom(serviceRef.getClass());
-            services.put(beanName, (ServiceVerifier) serviceRef);
+            //assert ServiceVerifier.class.isAssignableFrom(serviceRef.getClass());
+            services.put(beanName, serviceRef);
         }
         return serviceRef;
     }

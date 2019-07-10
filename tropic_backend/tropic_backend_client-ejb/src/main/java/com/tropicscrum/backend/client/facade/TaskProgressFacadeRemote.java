@@ -18,7 +18,9 @@ import javax.ejb.Remote;
 
 @Remote
 public interface TaskProgressFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/taskProgressFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/taskProgressFacadeRemote!com.tropicscrum.backend.client.facade.TaskProgressFacadeRemote";
+    
+    //public final String JNDI_REMOTE_NAME = "ejb/taskProgressFacadeRemote";
     
     TaskProgress create(TaskProgress taskProgress);
 

@@ -363,3 +363,23 @@ a {
     text-align: center;    
 }
 
+.logged {
+    width:20px; 
+    height: 20px;
+    border-radius: 50%;
+    background-color: #3d9a75;
+}
+
+@keyframes borderTilt {
+    from {border-color: #3d9a75;}
+    to {border-color: #e8e8e8;}
+}
+
+.animateBorderActive {
+    border-color: #3d9a75;
+    animation-name: borderTilt;
+    animation-duration: 1s;
+    animation-iteration-count: 10;
+}
+
+

@@ -10,7 +10,7 @@ import com.tropicscrum.frontend.controllers.view.ListSprintsViewBean;
 import java.io.Serializable;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
 
 /**
@@ -25,6 +25,9 @@ public class ListSprintsRequestBean implements Serializable {
     
     @Inject
     ListSprintsViewBean listSprintsViewBean;
+    
+    @Inject
+    ExternalContext extContext;
 
     public Sprint getSprintRedirect() {
         return sprintRedirect;
@@ -42,7 +45,7 @@ public class ListSprintsRequestBean implements Serializable {
     
     public String initSprint() {
         if (sprintRedirect != null) {           
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("sprint", sprintRedirect);
+            extContext.getFlash().put("sprint", sprintRedirect);
         }
         return "/home/" + listSprintsViewBean.getPage() + "?faces-redirect=true";
     }    

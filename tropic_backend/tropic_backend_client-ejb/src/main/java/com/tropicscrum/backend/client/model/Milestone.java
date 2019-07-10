@@ -114,11 +114,7 @@ public class Milestone extends BasicAttributes {
     public Double getTaskEstimates() {
         Double total = 0.0;
         for (Artifact artifact : getArtifacts()) {
-            for (Task task : artifact.getTasks()) {
-                if (task.getEstimatedDuration() != null) {
-                    total += task.getEstimatedDuration();
-                }
-            }
+            total = artifact.getTasks().stream().filter((task) -> (task.getEstimatedDuration() != null)).map((task) -> task.getEstimatedDuration()).reduce(total, (accumulator, _item) -> accumulator + _item);
         }
         return total;
     }

@@ -15,9 +15,9 @@ import com.tropicscrum.backend.persistence.facade.TaskFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.TaskProgressFacadeLocal;
 import java.util.Calendar;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -27,10 +27,10 @@ import javax.ejb.Stateless;
 @Remote(TaskProgressFacadeRemote.class)
 public class TaskProgressBusinessFacade implements TaskProgressFacadeRemote {
 
-    @EJB
+    @Inject
     TaskProgressFacadeLocal taskProgressFacadeLocal;
 
-    @EJB
+    @Inject
     TaskFacadeLocal taskFacadeLocal;
 
     @Override

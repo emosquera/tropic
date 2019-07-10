@@ -57,7 +57,9 @@
                     </p:fileUpload>
                     <p:imageCropper immediate="true" id="avatar" class="avatar" value="#{registerViewBean.croppedImage}" image="#{request.requestURL.substring(0, request.requestURL.length() - request.requestURI.length())}#{request.contextPath}#{registerViewBean.avatarURL}" aspectRatio="1.0" minSize="150" maxSize="250" initialCoords="10, 10, 160, 160"/>                  
                     <p:commandButton class="registerLink registerWidth" action="#{registerRequestBean.registerUser}" update="form" value="Registrar"/>            
-                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+                    <p:messages id="messages" showDetail="true" closable="true" globalOnly="true" >
+                        <p:autoUpdate />
+                    </p:messages>
                 </h:panelGrid> 
             </div>
         </h:form>

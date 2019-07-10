@@ -7,10 +7,7 @@ package com.tropicscrum.backend.business.facade;
 
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
-import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
-import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.ArtifactFacadeLocal;
@@ -19,9 +16,9 @@ import com.tropicscrum.backend.persistence.facade.MilestoneFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.ProjectFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.SprintFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -31,27 +28,27 @@ import javax.ejb.Stateless;
 @Remote(SprintFacadeRemote.class)
 public class SprintBusinessFacade implements SprintFacadeRemote{
     
-    @EJB
+    @Inject
     SprintFacadeLocal sprintFacadeLocal;
     
-    @EJB
+    @Inject
     ProjectFacadeLocal projectFacadeLocal;
     
-    @EJB
+    @Inject
     HistoryFacadeLocal historyFacadeLocal;
     
-    @EJB
+    @Inject
     MilestoneFacadeLocal milestoneFacadeLocal;
     
-    @EJB
+    @Inject
     ArtifactFacadeLocal artifactFacadeLocal;
     
     @Override
     public Sprint create(Sprint sprint) {
         sprintFacadeLocal.create(sprint);        
-        for (SprintUser sprintUser : sprint.getSprintUsers()) {
+        sprint.getSprintUsers().forEach((sprintUser) -> {
             sprintUser.getSchedules().size();
-        }
+        });
         return sprint;
     }
 
@@ -93,24 +90,28 @@ public class SprintBusinessFacade implements SprintFacadeRemote{
     @Override
     public Collection<Sprint> findMySprints(User you) {
         Collection<Sprint> mySprints = sprintFacadeLocal.findAllByUser(you);
-        for (Sprint sprint : mySprints) {
+        mySprints.stream().map((sprint) -> {
             sprint.getSprintVelocitys().size();
-            for (SprintUser sprintUser : sprint.getSprintUsers()) {
+            return sprint;
+        }).forEachOrdered((sprint) -> {
+            sprint.getSprintUsers().forEach((sprintUser) -> {
                 sprintUser.getSchedules().size();
-            }
-        }
+            });
+        });
         return mySprints;
     }
 
     @Override
     public Collection<Sprint> findMyColabs(User you) {
         Collection<Sprint> mySprints = sprintFacadeLocal.findAllByCollaborator(you);
-        for (Sprint sprint : mySprints) {
+        mySprints.stream().map((sprint) -> {
             sprint.getSprintVelocitys().size();
-            for (SprintUser sprintUser : sprint.getSprintUsers()) {
+            return sprint;
+        }).forEachOrdered((sprint) -> {
+            sprint.getSprintUsers().forEach((sprintUser) -> {
                 sprintUser.getSchedules().size();
-            }
-        }
+            });
+        });
         return mySprints;
     }    
 
@@ -121,23 +122,22 @@ public class SprintBusinessFacade implements SprintFacadeRemote{
         Collection<Sprint> mySprintsCanCreate = sprintFacadeLocal.findAllSprintsByUserCanCreateTask(you);
         
         mySprints.addAll(myCollabSprints);
-        for (Sprint sprint : mySprintsCanCreate) {
-            if (!mySprints.contains(sprint)) {
-                mySprints.add(sprint);
-            }
-        }
+        mySprintsCanCreate.stream().filter((sprint) -> (!mySprints.contains(sprint))).forEachOrdered((sprint) -> {
+            mySprints.add(sprint);
+        });
         
-        for (Sprint s : mySprints) {            
-            for (Milestone m : s.getMilestones()) {
+        mySprints.stream().map((s) -> {            
+            s.getMilestones().forEach((m) -> {
                 m.getArtifacts().size();
-            }
-            
-            for (History h : s.getProject().getHistories()) {
-                for (Milestone milestone : h.getMilestones()) {
+            });
+            return s;            
+        }).forEachOrdered((s) -> {
+            s.getProject().getHistories().forEach((h) -> {
+                h.getMilestones().forEach((milestone) -> {
                     milestone.getArtifacts().size();
-                }
-            }
-        }
+                });
+            });
+        });
         return mySprints;
     }
 

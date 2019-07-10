@@ -16,7 +16,8 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface ScheduleFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/scheduleFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/scheduleFacadeRemote!com.tropicscrum.backend.client.facade.ScheduleFacadeRemote";
+    //public final String JNDI_REMOTE_NAME = "ejb/scheduleFacadeRemote";
 
     Schedule create(Schedule schedule);
 

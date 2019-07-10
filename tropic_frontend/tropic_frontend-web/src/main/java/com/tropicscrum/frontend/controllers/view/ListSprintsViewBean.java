@@ -8,13 +8,14 @@ package com.tropicscrum.frontend.controllers.view;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -30,9 +31,11 @@ public class ListSprintsViewBean implements Serializable {
     private String page;
     private String title;
     private Collection<Sprint> sprints;
+
+    SprintFacadeRemote sprintFacadeRemote = new ServiceLocatorDelegate<SprintFacadeRemote>().getService(SprintFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = SprintFacadeRemote.JNDI_REMOTE_NAME)
-    SprintFacadeRemote sprintFacadeRemote;
+    @Inject
+    ExternalContext extContext;
 
     public User getUser() {
         return user;
@@ -74,12 +77,12 @@ public class ListSprintsViewBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");    
         
         setSprints(sprintFacadeRemote.findSprintsTeam(user));
         
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request = (HttpServletRequest) extContext.getRequest();
         setPage(request.getParameter("page"));
         
         if (getPage().equals("poker")) {

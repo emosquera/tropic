@@ -9,8 +9,6 @@ import com.tropicscrum.backend.client.enums.GeneralStatus;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
 import com.tropicscrum.backend.client.model.Artifact;
-import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.Task;
@@ -24,9 +22,9 @@ import com.tropicscrum.backend.persistence.facade.TaskFacadeLocal;
 import com.tropicscrum.backend.persistence.facade.TaskProgressFacadeLocal;
 import java.util.Calendar;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -36,19 +34,19 @@ import javax.ejb.Stateless;
 @Remote(TaskFacadeRemote.class)
 public class TaskBusinessFacade implements TaskFacadeRemote {
 
-    @EJB
+    @Inject
     TaskFacadeLocal taskFacadeLocal;
     
-    @EJB
+    @Inject
     TaskProgressFacadeLocal taskProgressFacadeLocal;
 
-    @EJB
+    @Inject
     HistoryFacadeLocal historyFacadeLocal;
     
-    @EJB
+    @Inject
     MilestoneFacadeLocal milestoneFacadeLocal;
     
-    @EJB
+    @Inject
     ArtifactFacadeLocal artifactFacadeLocal;
     
     @Override
@@ -110,18 +108,18 @@ public class TaskBusinessFacade implements TaskFacadeRemote {
     @Override
     public Collection<Task> findArtifactTasks(Artifact artifact) {
         Collection<Task> myTasks = taskFacadeLocal.findAllTasksByArtifact(artifact);
-        for (Task task : myTasks) {
+        myTasks.forEach((task) -> {
             task.getUserEstimates().size();
-        }
+        });
         return myTasks;
     }
 
     @Override
     public Collection<Task> findSprintTasksWithProgress(Sprint sprint) {
         Collection<Task> myTasks = taskFacadeLocal.findAllTasksBySprint(sprint);
-        for (Task task : myTasks) {
+        myTasks.forEach((task) -> {
             task.getTaskProgresss().size();
-        }
+        });
         return myTasks;
     }
 
@@ -165,12 +163,14 @@ public class TaskBusinessFacade implements TaskFacadeRemote {
     private Collection<Task> deepTask(Collection<Task> tasks) {
         for (Task myTask : tasks) {
             myTask.getArtifact().getMilestone().getSprint().getProject().setHistories(historyFacadeLocal.findBySprint(myTask.getArtifact().getMilestone().getSprint()));
-            for (History h : myTask.getArtifact().getMilestone().getSprint().getProject().getHistories()) {
+            myTask.getArtifact().getMilestone().getSprint().getProject().getHistories().stream().map((h) -> {
                 h.setMilestones(milestoneFacadeLocal.findByHistory(h));
-                for (Milestone milestone : h.getMilestones()) {
+                return h;
+            }).forEachOrdered((h) -> {
+                h.getMilestones().forEach((milestone) -> {
                     milestone.setArtifacts(artifactFacadeLocal.findAllArtifactsByMilestone(milestone));
-                }
-            }
+                });
+            });
         }
         return tasks;
     }

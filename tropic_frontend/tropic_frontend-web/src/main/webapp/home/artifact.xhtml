@@ -152,7 +152,9 @@
                 <p:message class="boxInput" for="artifactMeasureUnit"/>
             </h:panelGroup>
             <h:panelGroup style="width: 100%; display: inline-block;">
-                <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+                <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true">
+                    <p:autoUpdate />
+                </p:messages>
             </h:panelGroup>
             <h:panelGroup style="width: 100%; display: inline-block; margin-bottom: 20px;">
                 <p:commandButton class="boxInput succesText"  value="Crear Componente" actionListener="#{artifactRequetsBean.createArtifact}" rendered="#{not artifactViewBean.modify}" update="form"/>

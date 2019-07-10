@@ -18,7 +18,8 @@ import javax.ejb.Remote;
 
 @Remote
 public interface ProjectFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/projectFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/projectFacadeRemote!com.tropicscrum.backend.client.facade.ProjectFacadeRemote";
+    //public final String JNDI_REMOTE_NAME = "ejb/projectFacadeRemote";
     
     Project create(Project project);
 

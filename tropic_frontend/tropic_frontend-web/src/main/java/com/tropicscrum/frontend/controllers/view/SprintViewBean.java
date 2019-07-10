@@ -13,16 +13,15 @@ import com.tropicscrum.backend.client.facade.ScheduleFacadeRemote;
 import com.tropicscrum.backend.client.facade.SprintFacadeRemote;
 import com.tropicscrum.backend.client.model.Schedule;
 import com.tropicscrum.backend.client.model.SprintUser;
-import com.tropicscrum.backend.client.model.SprintVelocity;
 import com.tropicscrum.backend.client.utils.Fibonacci;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.application.ScheduleAppBean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -61,12 +60,13 @@ public class SprintViewBean implements Serializable {
     
     @Inject
     ScheduleAppBean scheduleAppBean;
+
+    ScheduleFacadeRemote scheduleFacadeRemote = new ServiceLocatorDelegate<ScheduleFacadeRemote>().getService(ScheduleFacadeRemote.JNDI_REMOTE_NAME);
+
+    SprintFacadeRemote sprintFacadeRemote = new ServiceLocatorDelegate<SprintFacadeRemote>().getService(SprintFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = ScheduleFacadeRemote.JNDI_REMOTE_NAME) 
-    ScheduleFacadeRemote scheduleFacadeRemote;
-    
-    @EJB(lookup = SprintFacadeRemote.JNDI_REMOTE_NAME)
-    SprintFacadeRemote sprintFacadeRemote;
+    @Inject
+    ExternalContext extContext;
 
     public User getUser() {
         return user;
@@ -220,14 +220,14 @@ public class SprintViewBean implements Serializable {
     @PostConstruct
     public void init() {
         setSprint(new Sprint());        
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");          
         colorSelected = Color.values()[0];
         styleColor = "color" + colorSelected.toString();                                        
         getSprint().setSprintVelocitys(fibonacci.getSprintVelocitys());
-        for (SprintVelocity sv : getSprint().getSprintVelocitys()) {
+        getSprint().getSprintVelocitys().forEach((sv) -> {
             sv.setSprint(getSprint());
-        }
+        });
         setUserSchedules(scheduleFacadeRemote.getDefaultByWeek());
         editingPerson = false;
         

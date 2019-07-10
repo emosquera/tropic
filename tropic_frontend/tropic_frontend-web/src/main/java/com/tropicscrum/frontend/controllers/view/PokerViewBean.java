@@ -10,26 +10,23 @@ import com.tropicscrum.backend.client.facade.HistoryFacadeRemote;
 import com.tropicscrum.backend.client.facade.MilestoneFacadeRemote;
 import com.tropicscrum.backend.client.facade.SprintUserFacadeRemote;
 import com.tropicscrum.backend.client.facade.TaskFacadeRemote;
-import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.History;
-import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.client.model.UserEstimate;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
+import com.tropicscrum.frontend.controllers.application.LoginAppBean;
 import com.tropicscrum.frontend.push.model.PokerMessage;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -50,21 +47,22 @@ public class PokerViewBean implements Serializable {
     private String styleAnimateTask = "";
     private String styleAnimateEstimate = "";
     private Boolean isVoted = Boolean.FALSE;
+
+    HistoryFacadeRemote historyFacadeRemote = new ServiceLocatorDelegate<HistoryFacadeRemote>().getService(HistoryFacadeRemote.JNDI_REMOTE_NAME);
+
+    MilestoneFacadeRemote milestoneFacadeRemote = new ServiceLocatorDelegate<MilestoneFacadeRemote>().getService(MilestoneFacadeRemote.JNDI_REMOTE_NAME);
+
+    ArtifactFacadeRemote artifactFacadeRemote = new ServiceLocatorDelegate<ArtifactFacadeRemote>().getService(ArtifactFacadeRemote.JNDI_REMOTE_NAME);
+
+    TaskFacadeRemote taskFacadeRemote = new ServiceLocatorDelegate<TaskFacadeRemote>().getService(TaskFacadeRemote.JNDI_REMOTE_NAME);
+
+    SprintUserFacadeRemote sprintUserFacadeRemote = new ServiceLocatorDelegate<SprintUserFacadeRemote>().getService(SprintUserFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = HistoryFacadeRemote.JNDI_REMOTE_NAME)
-    HistoryFacadeRemote historyFacadeRemote;
-
-    @EJB(lookup = MilestoneFacadeRemote.JNDI_REMOTE_NAME)
-    MilestoneFacadeRemote milestoneFacadeRemote;
-    
-    @EJB(lookup = ArtifactFacadeRemote.JNDI_REMOTE_NAME)
-    ArtifactFacadeRemote artifactFacadeRemote;
-
-    @EJB(lookup = TaskFacadeRemote.JNDI_REMOTE_NAME)
-    TaskFacadeRemote taskFacadeRemote;
-
-    @EJB(lookup = SprintUserFacadeRemote.JNDI_REMOTE_NAME)
-    SprintUserFacadeRemote sprintUserFacadeRemote;
+    @Inject
+    ExternalContext extContext;
+            
+    @Inject
+    private LoginAppBean loginAppBean;
 
     public User getUser() {
         return user;
@@ -81,7 +79,7 @@ public class PokerViewBean implements Serializable {
     public void setSprint(Sprint sprint) {
         this.sprint = sprint;
     }
-
+    
     public Collection<History> getSprintHistories() {
         if (sprintHistories == null) {
             sprintHistories = new ArrayList<>();
@@ -157,26 +155,29 @@ public class PokerViewBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");
 
-        final Sprint redirectSprint = (Sprint) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("sprint");
+        final Sprint redirectSprint = (Sprint) extContext.getFlash().get("sprint");
         if (redirectSprint != null) {
             setSprint(redirectSprint);
             setSprintHistories(historyFacadeRemote.findSprintHistories(sprint));
             for (History history : getSprintHistories()) {
                 history.setMilestones(milestoneFacadeRemote.findSprintHistoryMilestones(history, sprint));
-                for (Milestone milestone : history.getMilestones()) {
+                history.getMilestones().stream().map((milestone) -> {
                     milestone.setArtifacts(artifactFacadeRemote.findMilestoneArtifacts(milestone));
-                    for (Artifact artifact : milestone.getArtifacts()) {
+                    return milestone;
+                }).forEachOrdered((milestone) -> {
+                    milestone.getArtifacts().forEach((artifact) -> {
                         artifact.setTasks(taskFacadeRemote.findArtifactTasks(artifact));
-                    }                    
-                }
+                    });
+                });
             }
 
-            getSprint().setSprintUsers(sprintUserFacadeRemote.findSprintTeam(sprint));
+            getSprint().setSprintUsers(sprintUserFacadeRemote.findSprintTeam(sprint));                        
+            
             setIsScrumMaster(sprintUserFacadeRemote.isSprintUserScrumMaster(sprint, user));
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().remove("sprint");
+            extContext.getFlash().remove("sprint");
 
             pokerMessage = new PokerMessage();
             pokerMessage.setTaskCode(null);
@@ -186,14 +187,19 @@ public class PokerViewBean implements Serializable {
                         
             for (SprintUser su : getSprint().getSprintUsers()) {               
                 if (su.getUser().equals(user)) {
-                    userEstimate.setSprintUser(su);       
+                    userEstimate.setSprintUser(su);  
+                    if (!loginAppBean.isUserLogged(su)) {
+                        loginAppBean.getUsersLogged().add(su);
+                    }
                     break;
                 }
-            }         
+            }                               
+            
+            getSprint().getSprintUsers().forEach(su -> su.setIsLoged(loginAppBean.isUserLogged(su)));
 
         } else {
 //            try {
-//                FacesContext.getCurrentInstance().getExternalContext().redirect("/tropic/home/sprints.xhtml?page=poker");
+//                extContext.redirect("/tropic/home/sprints.xhtml?page=poker");
 //            } catch (IOException ex) {
 //                Logger.getLogger(PokerViewBean.class.getName()).log(Level.SEVERE, null, ex);
 //            }

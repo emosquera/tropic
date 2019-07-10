@@ -15,20 +15,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
  * @author Edgar Mosquera
  */
 
-@Stateless(name = "scheduleBusinessFacade", mappedName = ScheduleFacadeRemote.JNDI_REMOTE_NAME)
+@Stateless(name = "scheduleFacadeRemote", mappedName = ScheduleFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(ScheduleFacadeRemote.class)
 public class ScheduleBusinessFacade implements ScheduleFacadeRemote{
 
-    @EJB
+    @Inject
     ScheduleFacadeLocal scheduleFacadeLocal;
     
     @Override

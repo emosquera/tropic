@@ -7,6 +7,7 @@ package com.tropicscrum.web.service;
 
 import com.tropicscrum.backend.client.facade.ScheduleFacadeRemote;
 import com.tropicscrum.backend.client.model.Schedule;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,8 +27,8 @@ import javax.ws.rs.Produces;
 @Stateless
 @Path("init")
 public class InitData {
-    @EJB(lookup = ScheduleFacadeRemote.JNDI_REMOTE_NAME)
-    ScheduleFacadeRemote scheduleFacadeRemote;
+
+    ScheduleFacadeRemote scheduleFacadeRemote = new ServiceLocatorDelegate<ScheduleFacadeRemote>().getService(ScheduleFacadeRemote.JNDI_REMOTE_NAME);
     
     @GET
     @Produces({"application/json; charset=UTF-8"})

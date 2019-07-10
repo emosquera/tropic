@@ -11,14 +11,15 @@ import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -43,12 +44,13 @@ public class MilestoneViewBean implements Serializable{
     private Collection<Sprint> mySprints; 
     
     private Boolean lockSprint = false;
+
+    SprintFacadeRemote sprintFacadeRemote = new ServiceLocatorDelegate<SprintFacadeRemote>().getService(SprintFacadeRemote.JNDI_REMOTE_NAME);    
+
+    MilestoneFacadeRemote milestoneFacadeRemote = new ServiceLocatorDelegate<MilestoneFacadeRemote>().getService(MilestoneFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = SprintFacadeRemote.JNDI_REMOTE_NAME)
-    SprintFacadeRemote sprintFacadeRemote;    
-    
-    @EJB(lookup = MilestoneFacadeRemote.JNDI_REMOTE_NAME)
-    MilestoneFacadeRemote milestoneFacadeRemote;
+    @Inject
+    ExternalContext extContext;
 
     public User getUser() {
         return user;
@@ -140,10 +142,10 @@ public class MilestoneViewBean implements Serializable{
     
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");    
         
-        final Milestone redirectMilestone = (Milestone) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("milestone");
+        final Milestone redirectMilestone = (Milestone) extContext.getFlash().get("milestone");
         
         if (redirectMilestone != null) {
             setMilestone(redirectMilestone);

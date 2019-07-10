@@ -14,9 +14,9 @@ import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.MilestoneFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -26,7 +26,7 @@ import javax.ejb.Stateless;
 @Remote(MilestoneFacadeRemote.class)
 public class MilestoneBusinessFacade implements MilestoneFacadeRemote {
 
-    @EJB
+    @Inject
     MilestoneFacadeLocal milestoneFacadeLocal;
     
     @Override

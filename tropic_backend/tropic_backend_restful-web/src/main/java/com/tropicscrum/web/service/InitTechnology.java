@@ -7,9 +7,9 @@ package com.tropicscrum.web.service;
 
 import com.tropicscrum.backend.client.facade.TechnologyFacadeRemote;
 import com.tropicscrum.backend.client.model.Technology;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,8 +22,8 @@ import javax.ws.rs.Produces;
 @Stateless
 @Path("technology")
 public class InitTechnology {
-    @EJB(lookup = TechnologyFacadeRemote.JNDI_REMOTE_NAME)
-    TechnologyFacadeRemote technologyFacadeRemote;    
+
+    TechnologyFacadeRemote technologyFacadeRemote = new ServiceLocatorDelegate<TechnologyFacadeRemote>().getService(TechnologyFacadeRemote.JNDI_REMOTE_NAME);    
     
     @GET
     @Produces({"application/json; charset=UTF-8"})

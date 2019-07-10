@@ -15,23 +15,26 @@ import com.tropicscrum.backend.client.facade.TaskProgressFacadeRemote;
 import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.TaskProgress;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.view.BoardViewBean;
 import com.tropicscrum.frontend.push.model.BoardMessage;
+import com.tropicscrum.frontend.push.resource.BoardMessageResource;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+import java.util.stream.Collectors;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
 import org.primefaces.event.DragDropEvent;
-import org.primefaces.push.EventBus;
-import org.primefaces.push.EventBusFactory;
 
 /**
  *
@@ -43,27 +46,24 @@ public class BoardRequestBean implements Serializable {
     
     private TaskProgress taskProgressClicked;
 
-    private final Comparator<Task> comparatorTask = new Comparator<Task>() {
-        @Override
-        public int compare(Task t1, Task t2) {
-            return t1.getCode().compareTo(t2.getCode());
-        }
-    };
+    private final Comparator<Task> comparatorTask = (Task t1, Task t2) -> t1.getCode().compareTo(t2.getCode());
 
-    private final EventBus eventBus = EventBusFactory.getDefault().eventBus();
-    private final static String CHANNEL = "/board/";
+    private Collection<Long> users;
 
     @Inject
     BoardViewBean boardViewBean;
-
-    @EJB(lookup = TaskProgressFacadeRemote.JNDI_REMOTE_NAME)
-    TaskProgressFacadeRemote taskProgressFacadeRemote;
-
-    @EJB(lookup = TaskFacadeRemote.JNDI_REMOTE_NAME)
-    TaskFacadeRemote taskFacadeRemote;
     
-    @EJB(lookup = SprintUserFacadeRemote.JNDI_REMOTE_NAME)
-    SprintUserFacadeRemote sprintUserFacadeRemote;
+    @Inject
+    BoardMessageResource boardMessageResource;
+
+    TaskProgressFacadeRemote taskProgressFacadeRemote = new ServiceLocatorDelegate<TaskProgressFacadeRemote>().getService(TaskProgressFacadeRemote.JNDI_REMOTE_NAME);
+
+    TaskFacadeRemote taskFacadeRemote = new ServiceLocatorDelegate<TaskFacadeRemote>().getService(TaskFacadeRemote.JNDI_REMOTE_NAME);
+
+    SprintUserFacadeRemote sprintUserFacadeRemote = new ServiceLocatorDelegate<SprintUserFacadeRemote>().getService(SprintUserFacadeRemote.JNDI_REMOTE_NAME);
+    
+    @Inject
+    ExternalContext extContext;
 
     public TaskProgress getTaskProgressClicked() {
         if (taskProgressClicked == null) {
@@ -74,6 +74,13 @@ public class BoardRequestBean implements Serializable {
 
     public void setTaskProgressClicked(TaskProgress taskProgressClicked) {
         this.taskProgressClicked = taskProgressClicked;
+    }
+    
+    public Collection<Long> getUsers() {
+        users = new ArrayList<>();
+        List<SprintUser> otherUsers = boardViewBean.getSprint().getSprintUsers().stream().filter((su) -> (!su.getUser().equals(boardViewBean.getUser()))).collect(Collectors.toList());
+        otherUsers.forEach(su->users.add(su.getId()));
+        return users;
     }
 
     /**
@@ -120,11 +127,9 @@ public class BoardRequestBean implements Serializable {
             boardMessage.setSprintUserId(sprintUser.getId().toString());
             boardMessage.setTaskId(taskId);
             String jsonMessage = mapper.writeValueAsString(boardMessage);
-            for (SprintUser su : boardViewBean.getSprint().getSprintUsers()) {
-                if (!su.getUser().equals(boardViewBean.getUser())) {
-                    eventBus.publish(CHANNEL + boardViewBean.getSprint().getId().toString() + "/" + su.getUser().getId().toString(), jsonMessage);
-                }
-            }
+                        
+            boardMessageResource.getPush().send(jsonMessage, this.getUsers());
+            
         } catch (JsonProcessingException ex) {
             Logger.getLogger(BoardRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -149,6 +154,7 @@ public class BoardRequestBean implements Serializable {
         TaskProgress taskProgress = taskProgressFacadeRemote.find(taskProgressId);
         boardViewBean.getTaskProgresss().remove(taskProgress);
         boardViewBean.getDoingTasks().remove(taskProgress.getTask());
+        taskProgress.getTask().setTaskProgresss(taskProgressFacadeRemote.findTaskActivity(taskProgress.getTask()));
         boardViewBean.getDoneTasks().add(taskProgress.getTask());
         boardViewBean.getFinishedProgresss().add(taskProgress);
     }
@@ -174,8 +180,8 @@ public class BoardRequestBean implements Serializable {
     public void receiveBoardMessage() {
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            String jsonMessage = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("boardMessage");
-            BoardMessage boardMessage = mapper.readValue(jsonMessage, BoardMessage.class);
+            String jsonMessage = extContext.getRequestParameterMap().get("boardMessage");
+            BoardMessage boardMessage = mapper.readValue(jsonMessage.replace("\"{","{").replace("\\",""), BoardMessage.class);
             switch (boardMessage.getAction()) {
                 case "close":
                     closeTaskOnBoard(Long.parseLong(boardMessage.getTaskProgressId()));

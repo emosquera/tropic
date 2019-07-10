@@ -11,9 +11,9 @@ import com.tropicscrum.backend.client.model.Technology;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.TechnologyFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -23,7 +23,7 @@ import javax.ejb.Stateless;
 @Remote(TechnologyFacadeRemote.class)
 public class TechnologyBusinessFacade implements TechnologyFacadeRemote {
 
-    @EJB
+    @Inject
     TechnologyFacadeLocal technologyFacadeLocal;
     
     @Override

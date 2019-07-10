@@ -14,16 +14,19 @@ import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.TaskProgress;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.utils.FilterList;
 import com.tropicscrum.frontend.utils.facade.Predicate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -44,15 +47,17 @@ public class BoardViewBean implements Serializable {
     private SprintUser sprintUser;
     private Collection<TaskProgress> finishedProgresss;
     private Boolean isScrumMaster = false;    
+    private HashMap<SprintUser, Double> progressByUsers;
+    private List<SprintUser> progressByUsersKeys;
 
-    @EJB(lookup = TaskFacadeRemote.JNDI_REMOTE_NAME)
-    TaskFacadeRemote taskFacadeRemote;
+    TaskFacadeRemote taskFacadeRemote = new ServiceLocatorDelegate<TaskFacadeRemote>().getService(TaskFacadeRemote.JNDI_REMOTE_NAME);
 
-    @EJB(lookup = SprintUserFacadeRemote.JNDI_REMOTE_NAME)
-    SprintUserFacadeRemote sprintUserFacadeRemote;
+    SprintUserFacadeRemote sprintUserFacadeRemote = new ServiceLocatorDelegate<SprintUserFacadeRemote>().getService(SprintUserFacadeRemote.JNDI_REMOTE_NAME);
+
+    TaskProgressFacadeRemote taskProgressFacadeRemote = new ServiceLocatorDelegate<TaskProgressFacadeRemote>().getService(TaskProgressFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = TaskProgressFacadeRemote.JNDI_REMOTE_NAME)
-    TaskProgressFacadeRemote taskProgressFacadeRemote;
+    @Inject
+    ExternalContext extContext;
     
     public User getUser() {
         return user;
@@ -152,6 +157,77 @@ public class BoardViewBean implements Serializable {
         this.isScrumMaster = isScrumMaster;
     }
 
+    public HashMap<SprintUser, Double> getProgressByUsers() {
+        if (progressByUsers == null) {
+            progressByUsers = new HashMap<>();
+        }
+        return progressByUsers;
+    }
+
+    public void setProgressByUsers(HashMap<SprintUser, Double> progressByUsers) {
+        this.progressByUsers = progressByUsers;
+    }
+
+    public List<SprintUser> getProgressByUsersKeys() {     
+        
+        return progressByUsersKeys;
+    }
+
+    public void setProgressByUsersKeys(List<SprintUser> progressByUsersKeys) {
+        this.progressByUsersKeys = progressByUsersKeys;
+    }
+
+    public List<SprintUser> getProgressByUser(Task task) {           
+        for (Task t : getDoneTasks()) {
+            if (t.equals(task)) {      
+                setProgressByUsers(t.getTaskProgressByUsers());
+                break;
+            }
+        }
+        setProgressByUsersKeys(new ArrayList<>(getProgressByUsers().keySet()));
+        return getProgressByUsersKeys();
+    }
+
+    public Double getTaskTotalTime(Task task) {
+        Double taskTotalTime = 0.0;
+        for (Task t : getDoneTasks()) {
+            if (t.equals(task)) {                
+                taskTotalTime = t.getTotalTime();
+                break;
+            }
+        }
+        return taskTotalTime;
+    }
+    
+    public String millisecondsToRedeableTime(Double timeInMillies) {
+        Double hours = timeInMillies / (60 * 60 * 1000) % 24;
+        Double minutes = timeInMillies / (60 * 1000) % 60;
+        Double seconds = timeInMillies / 1000 % 60;
+        
+        String redeableTime = "";
+        if (hours >= 1) {
+            redeableTime = String.valueOf(hours.intValue()) + "h";
+        }
+                
+        if (minutes >= 1) {
+            if (seconds > 30) {
+                minutes += 1;
+            }
+            if (redeableTime.equals("")) {
+                redeableTime = String.valueOf(minutes.intValue()) + "m";
+            } else {
+                redeableTime = redeableTime + ", " + String.valueOf(minutes.intValue()) + "m";
+            }
+        }
+        
+        
+        if (redeableTime.equals("")) {
+            redeableTime = String.valueOf(seconds.intValue()) + "s";
+        }
+        
+        return redeableTime;
+    }
+    
     /**
      * Creates a new instance of BoardViewBean
      */
@@ -160,10 +236,10 @@ public class BoardViewBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");
 
-        final Sprint redirectSprint = (Sprint) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("sprint");
+        final Sprint redirectSprint = (Sprint) extContext.getFlash().get("sprint");
         if (redirectSprint != null) {
             setSprint(redirectSprint);
             getSprint().setSprintUsers(sprintUserFacadeRemote.findSprintTeam(sprint));
@@ -178,52 +254,33 @@ public class BoardViewBean implements Serializable {
             setIsScrumMaster(sprintUserFacadeRemote.isSprintUserScrumMaster(sprint, user));
             
             //Podamos las Listas
-            Predicate<Task> toDoFilter = new Predicate<Task>() {
-                @Override
-                public boolean apply(Task task) {
-                    return task.getStatus().equals(GeneralStatus.PENDING);
-                }
-
-            };            
+            Predicate<Task> toDoFilter = (Task task) -> task.getStatus().equals(GeneralStatus.PENDING);            
             setToDoTasks(FilterList.filter(sprintTasks, toDoFilter));
             
-            Predicate<Task> doingFilter = new Predicate<Task>() {
-                @Override
-                public boolean apply(Task task) {
-                    return task.getStatus().equals(GeneralStatus.IN_PROGRESS);
-                }
-
-            };  
+            Predicate<Task> doingFilter = (Task task) -> task.getStatus().equals(GeneralStatus.IN_PROGRESS);  
             setDoingTasks(FilterList.filter(sprintTasks, doingFilter));
             
-            Predicate<Task> doneFilter = new Predicate<Task>() {
-                @Override
-                public boolean apply(Task task) {
-                    return task.getStatus().equals(GeneralStatus.FINISHED);
-                }
-
-            };  
+            Predicate<Task> doneFilter = (Task task) -> task.getStatus().equals(GeneralStatus.FINISHED);  
             setDoneTasks(FilterList.filter(sprintTasks, doneFilter));
             
-            for (Task task : getDoingTasks()) {
+            getDoingTasks().stream().map((task) -> {
                 task.setTaskProgresss(taskProgressFacadeRemote.findTaskActivity(task));
-                if (task.getTaskProgresss().iterator().hasNext()) {
-                    getTaskProgresss().add(task.getTaskProgresss().iterator().next());
-                }                
-            }
+                return task;
+            }).filter((task) -> (task.getTaskProgresss().iterator().hasNext())).forEachOrdered((task) -> {
+                getTaskProgresss().add(task.getTaskProgresss().iterator().next());
+            });
             
-            for (Task task : getDoneTasks()) {
+            getDoneTasks().stream().map((task) -> {
                 task.setTaskProgresss(taskProgressFacadeRemote.findTaskActivity(task));
-                if (task.getTaskProgresss().iterator().hasNext()) {
-                    getFinishedProgresss().add(task.getTaskProgresss().iterator().next());
-                }                
-            }
+                return task;
+            }).filter((task) -> (task.getTaskProgresss().iterator().hasNext())).forEachOrdered((task) -> {
+                getFinishedProgresss().add(task.getTaskProgresss().iterator().next());
+            });
             
-            FacesContext.getCurrentInstance()
-                    .getExternalContext().getFlash().remove("sprint");
+            extContext.getFlash().remove("sprint");
         } else {
 //            try {
-//                FacesContext.getCurrentInstance().getExternalContext().redirect("/tropic/home/sprints.xhtml?page=board");
+//                extContext.redirect("/tropic/home/sprints.xhtml?page=board");
 //            } catch (IOException ex) {
 //                Logger.getLogger(PokerViewBean.class.getName()).log(Level.SEVERE, null, ex);
 //            }

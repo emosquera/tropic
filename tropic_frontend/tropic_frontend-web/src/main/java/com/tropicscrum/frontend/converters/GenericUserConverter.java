@@ -7,7 +7,7 @@ package com.tropicscrum.frontend.converters;
 
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.User;
-import javax.ejb.EJB;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import javax.enterprise.context.Dependent;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -24,8 +24,7 @@ import javax.inject.Named;
 @Dependent
 public class GenericUserConverter implements Converter {
     
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    UsersFacadeRemote usersFacadeRemote;
+    UsersFacadeRemote usersFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

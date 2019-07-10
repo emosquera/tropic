@@ -10,13 +10,10 @@ import com.tropicscrum.backend.client.facade.HistoryFacadeRemote;
 import com.tropicscrum.backend.client.facade.MilestoneFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
-import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.Sprint;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.view.MilestoneViewBean;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -35,12 +32,14 @@ public class MilestoneRequestBean implements Serializable {
     
     @Inject
     MilestoneViewBean milestoneViewBean;
+
+    MilestoneFacadeRemote milestoneFacadeRemote = new ServiceLocatorDelegate<MilestoneFacadeRemote>().getService(MilestoneFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = MilestoneFacadeRemote.JNDI_REMOTE_NAME)
-    MilestoneFacadeRemote milestoneFacadeRemote;
+    HistoryFacadeRemote historyFacadeRemote = new ServiceLocatorDelegate<HistoryFacadeRemote>().getService(HistoryFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = HistoryFacadeRemote.JNDI_REMOTE_NAME)
-    HistoryFacadeRemote historyFacadeRemote;
+    @Inject
+    FacesContext context;
+    
     /**
      * Creates a new instance of MilestoneRequestBean
      */
@@ -71,10 +70,8 @@ public class MilestoneRequestBean implements Serializable {
             Milestone m = milestoneFacadeRemote.create(milestoneViewBean.getMilestone());
             milestoneViewBean.getMilestones().add(m);
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Hito creado satisfactoriamente"));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo registrar el Hito"));
         }
     }
@@ -82,14 +79,11 @@ public class MilestoneRequestBean implements Serializable {
     public void updateMilestone(ActionEvent actionEvent) {
         try {
             milestoneFacadeRemote.edit(milestoneViewBean.getMilestone());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Hito actualizado satisfactoriamente"));
         } catch (UpdateException e) {
             milestoneViewBean.setMilestone(milestoneFacadeRemote.find(milestoneViewBean.getMilestone().getId()));
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", e.getMessage()));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo actualizar el Hito"));
         }
     }
@@ -99,11 +93,9 @@ public class MilestoneRequestBean implements Serializable {
             milestoneViewBean.getMilestones().remove(milestoneViewBean.getMilestone());
             milestoneFacadeRemote.remove(milestoneViewBean.getMilestone());
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Hito eliminado satisfactoriamente"));
         } catch (Exception ex) {
             milestoneViewBean.getMilestones().add(milestoneViewBean.getMilestone());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo eliminar el Hito"));
         }
     }

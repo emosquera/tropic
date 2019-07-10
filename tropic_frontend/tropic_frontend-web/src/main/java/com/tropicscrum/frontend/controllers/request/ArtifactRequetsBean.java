@@ -11,9 +11,9 @@ import com.tropicscrum.backend.client.model.Artifact;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.view.ArtifactViewBean;
 import java.io.Serializable;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -32,8 +32,10 @@ public class ArtifactRequetsBean implements Serializable {
     @Inject 
     ArtifactViewBean artifactViewBean; 
     
-    @EJB(lookup = ArtifactFacadeRemote.JNDI_REMOTE_NAME)
-    ArtifactFacadeRemote artifactFacadeRemote;
+    ArtifactFacadeRemote artifactFacadeRemote = new ServiceLocatorDelegate<ArtifactFacadeRemote>().getService(ArtifactFacadeRemote.JNDI_REMOTE_NAME);
+    
+    @Inject
+    FacesContext context;
     
     /**
      * Creates a new instance of TaskRequetsBean
@@ -66,10 +68,8 @@ public class ArtifactRequetsBean implements Serializable {
             Artifact a = artifactFacadeRemote.create(artifactViewBean.getArtifact());
             artifactViewBean.getMyArtifacts().add(a);
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Componente creado satisfactoriamente"));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo registrar el Componente"));
         }
     }
@@ -79,11 +79,9 @@ public class ArtifactRequetsBean implements Serializable {
             artifactFacadeRemote.remove(artifactViewBean.getArtifact());
             artifactViewBean.getMyArtifacts().remove(artifactViewBean.getArtifact());
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Componente eliminado satisfactoriamente"));
         } catch (Exception ex) {
             artifactViewBean.getMyArtifacts().add(artifactViewBean.getArtifact());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "No se pudo eliminar el Componente"));
         }
     }
@@ -91,14 +89,11 @@ public class ArtifactRequetsBean implements Serializable {
     public void updateArtifact(ActionEvent actionEvent) {
         try {
             artifactFacadeRemote.edit(artifactViewBean.getArtifact());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Componente actualizado satisfactoriamente"));
         } catch (UpdateException e) {
            artifactViewBean.setArtifact(artifactFacadeRemote.find(artifactViewBean.getArtifact().getId()));
-           FacesContext context = FacesContext.getCurrentInstance();
            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", e.getMessage()));
         } catch (Exception ex) {
-           FacesContext context = FacesContext.getCurrentInstance();
            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo actualizar el Componente")); 
         }
     }

@@ -5,7 +5,6 @@
  */
 package com.tropicscrum.frontend.converters;
 
-import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Technology;
 import com.tropicscrum.frontend.controllers.view.ArtifactViewBean;
 import javax.inject.Named;

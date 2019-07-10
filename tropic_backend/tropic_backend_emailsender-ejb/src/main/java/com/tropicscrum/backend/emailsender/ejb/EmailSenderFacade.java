@@ -27,11 +27,10 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailSenderFacade implements EmailSenderFacadeRemote {
 
-    @Resource(name = "mail/gmail")
+    @Resource(name = "java:/mail/gmail")
+//    @Resource(name = "mail/gmail")
     private Session mailSession;
 
-    public void businessMethod() {
-    }
     
     @Asynchronous
     @Override

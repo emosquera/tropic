@@ -109,7 +109,9 @@
                 </p:dataGrid>
             </p:panel>
             <h:panelGroup style="width: 100%; display: inline-block;">
-                <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+                <p:messages id="messages" class="boxInput" showDetail="true" closable="true" globalOnly="true">
+                    <p:autoUpdate />
+                </p:messages>
             </h:panelGroup>
             <h:panelGroup style="width: 100%; display: inline-block; margin-bottom: 20px;">
                 <p:commandButton class="boxInput succesText"  value="Crear Sprint" actionListener="#{sprintRequestBean.registerSprint}" rendered="#{not sprintViewBean.modify}" update="form"/>

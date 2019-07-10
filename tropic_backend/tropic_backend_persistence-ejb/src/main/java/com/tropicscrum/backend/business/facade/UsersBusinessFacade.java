@@ -13,25 +13,25 @@ import com.tropicscrum.backend.emailsender.facade.remote.EmailSenderFacadeRemote
 import com.tropicscrum.backend.persistence.exceptions.InvalidCredentials;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.UsersFacadeLocal;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
 /**
  *
  * @author Edgar Mosquera
  */
-@Stateless(name = "userBussinesFacade", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
+@Stateless(name = "usersFacadeRemote", mappedName = UsersFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(UsersFacadeRemote.class)
 public class UsersBusinessFacade implements UsersFacadeRemote {
 
-    @EJB
+    @Inject
     UsersFacadeLocal usersFacadeLocal;
     
-    @EJB(lookup = EmailSenderFacadeRemote.JNDI_REMOTE_NAME)
-    EmailSenderFacadeRemote emailSenderFacadeRemote;
+    EmailSenderFacadeRemote emailSenderFacadeRemote = new ServiceLocatorDelegate<EmailSenderFacadeRemote>().getService(EmailSenderFacadeRemote.JNDI_REMOTE_NAME);
 
     @Override
     public User create(User user) {

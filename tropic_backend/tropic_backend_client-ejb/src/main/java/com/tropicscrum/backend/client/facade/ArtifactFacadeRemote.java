@@ -18,7 +18,8 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface ArtifactFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/artifactFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/artifactFacadeRemote!com.tropicscrum.backend.client.facade.ArtifactFacadeRemote";
+//    public final String JNDI_REMOTE_NAME = "ejb/artifactFacadeRemote";
     
     Artifact create(Artifact artifact);
 

@@ -14,14 +14,15 @@ import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.Technology;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -46,15 +47,15 @@ public class ArtifactViewBean implements Serializable {
     private Collection<Artifact> myArtifacts;
     private Collection<Artifact> myCollabArtifacts;
     private Collection<Technology> technologies;
+
+    SprintFacadeRemote sprintFacadeRemote = new ServiceLocatorDelegate<SprintFacadeRemote>().getService(SprintFacadeRemote.JNDI_REMOTE_NAME);
+
+    ArtifactFacadeRemote artifactFacadeRemote = new ServiceLocatorDelegate<ArtifactFacadeRemote>().getService(ArtifactFacadeRemote.JNDI_REMOTE_NAME);
+
+    TechnologyFacadeRemote technologyFacadeRemote = new ServiceLocatorDelegate<TechnologyFacadeRemote>().getService(TechnologyFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = SprintFacadeRemote.JNDI_REMOTE_NAME)
-    SprintFacadeRemote sprintFacadeRemote;
-    
-    @EJB(lookup = ArtifactFacadeRemote.JNDI_REMOTE_NAME)
-    ArtifactFacadeRemote artifactFacadeRemote;
-    
-    @EJB(lookup = TechnologyFacadeRemote.JNDI_REMOTE_NAME)
-    TechnologyFacadeRemote technologyFacadeRemote;
+    @Inject
+    ExternalContext extContext;
 
     public User getUser() {
         return user;
@@ -164,7 +165,7 @@ public class ArtifactViewBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");    
         setArtifact(new Artifact());
         setMySprints(sprintFacadeRemote.findSprintsCreateTask(user));

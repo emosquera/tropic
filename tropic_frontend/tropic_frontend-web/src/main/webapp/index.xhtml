@@ -10,10 +10,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>   
         <h:outputStylesheet library="css" name="login.css" />
     </h:head>
-    <body>
+    <h:body id="bodyPage">
         <div class="divDarked">
             <h:form id="form"> 
-                <p:panelGrid columns="1" class="panelTable">
+                <p:panelGrid id="panel" columns="1" class="panelTable">
 
                     <h:outputLabel class="titleLogin">Inicia Sesion</h:outputLabel>
                     <p:inputText id="email" class="emailIcon" required="true" requiredMessage="Debes ingresar un correo electronico"
@@ -26,13 +26,21 @@
                     <p:password class="passwordIcon" id="pass" value="#{indexViewBean.password}" required="true" placeholder="Contrasena" 
                                 requiredMessage="Debes ingresar una contrasena" autocomplete="off"/>
                     <p:message for="pass"/>          
-                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+                    <p:messages id="messages" showDetail="true" closable="true" globalOnly="true" >
+                        <p:autoUpdate />
+                    </p:messages>
                     <p:commandButton id="botonLogin" action="#{loginRequestBean.login}" update="form" value="ENTRAR"/>
                     <p:link class="registerLink" outcome="register" value="Registrate"/>
                     <p:separator/>
                     <p:commandLink class="forgotLink" value="Olvidaste tu contrasena?"/>       
-                </p:panelGrid>
+                </p:panelGrid>   
+                <p:blockUI block="bodyPage" trigger="botonLogin">
+                    <div class="lds-dual-ring divLoader">
+                        <div></div>
+                        <div></div>
+                    </div>                    
+                </p:blockUI>
             </h:form>
         </div>
-    </body>
+    </h:body>
 </html>

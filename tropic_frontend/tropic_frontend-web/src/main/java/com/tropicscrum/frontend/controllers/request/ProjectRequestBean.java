@@ -11,13 +11,14 @@ import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.view.ProjectViewBean;
 import java.io.Serializable;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
@@ -34,12 +35,16 @@ public class ProjectRequestBean implements Serializable {
     
     @Inject
     ProjectViewBean projectViewBean;
+
+    ProjectFacadeRemote projectFacadeRemote = new ServiceLocatorDelegate<ProjectFacadeRemote>().getService(ProjectFacadeRemote.JNDI_REMOTE_NAME);
+
+    UsersFacadeRemote usersFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = ProjectFacadeRemote.JNDI_REMOTE_NAME) 
-    ProjectFacadeRemote projectFacadeRemote;
+    @Inject
+    FacesContext context;
     
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    UsersFacadeRemote usersFacadeRemote;
+    @Inject
+    ExternalContext extContext;
 
     public History getHistoryRedirect() {
         return historyRedirect;
@@ -60,10 +65,8 @@ public class ProjectRequestBean implements Serializable {
             projectViewBean.getProject().setAuthor(projectViewBean.getUser());       
             Project p = projectFacadeRemote.create(projectViewBean.getProject());  
             projectViewBean.getMyProyects().add(p);
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Proyecto creado satisfactoriamente"));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo registrar el Proyecto"));
         }
     }
@@ -71,13 +74,10 @@ public class ProjectRequestBean implements Serializable {
     public void updateProject(ActionEvent actionEvent) {
         try {            
             projectFacadeRemote.edit(projectViewBean.getProject());              
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Proyecto actualizado satisfactoriamente"));
         } catch (UpdateException e) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", e.getMessage()));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo actualizar el Proyecto"));
         }
     }
@@ -95,11 +95,9 @@ public class ProjectRequestBean implements Serializable {
             projectViewBean.setModify(Boolean.FALSE);
             projectViewBean.setDelete(Boolean.FALSE);
             projectViewBean.setProject(new Project());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Proyecto eliminado satisfactoriamente"));
         } catch (Exception ex) {
             projectViewBean.getMyProyects().add(projectViewBean.getProject());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo eliminar el Proyecto"));
         }        
     }
@@ -113,7 +111,7 @@ public class ProjectRequestBean implements Serializable {
     
     public String goToHistory() {
         if (historyRedirect != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("history", historyRedirect);
+            extContext.getFlash().put("history", historyRedirect);
         }
         return "/home/history?faces-redirect=true";
     }

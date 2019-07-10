@@ -17,11 +17,15 @@ import com.tropicscrum.backend.client.model.SprintUser;
 import com.tropicscrum.backend.client.model.Task;
 import com.tropicscrum.backend.client.model.UserEstimate;
 import com.tropicscrum.backend.client.utils.SortMapByValue;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
+import com.tropicscrum.frontend.controllers.application.LoginAppBean;
 import com.tropicscrum.frontend.controllers.view.PokerViewBean;
 import com.tropicscrum.frontend.push.model.PokerMessage;
+import com.tropicscrum.frontend.push.resource.TaskSprintMessageResource;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,14 +33,12 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import org.primefaces.push.EventBus;
-import org.primefaces.push.EventBusFactory;
 
 /**
  *
@@ -46,16 +48,26 @@ import org.primefaces.push.EventBusFactory;
 @RequestScoped
 public class PokerRequestBean implements Serializable {
 
-    private final EventBus eventBus = EventBusFactory.getDefault().eventBus();
-    private final static String CHANNEL = "/poker/";
-
     private Boolean showEstimate = Boolean.FALSE;
+    
+    private Collection<Long> users;
 
-    @EJB(lookup = TaskFacadeRemote.JNDI_REMOTE_NAME)
-    TaskFacadeRemote taskFacadeRemote;
+    TaskFacadeRemote taskFacadeRemote = new ServiceLocatorDelegate<TaskFacadeRemote>().getService(TaskFacadeRemote.JNDI_REMOTE_NAME);
 
     @Inject
     PokerViewBean pokerViewBean;
+    
+    @Inject
+    FacesContext context;
+    
+    @Inject
+    ExternalContext extContext;
+    
+    @Inject
+    TaskSprintMessageResource taskSprintMessageResource;
+    
+    @Inject
+    private LoginAppBean loginAppBean;
 
     public Boolean getShowEstimate() {
         return showEstimate;
@@ -65,6 +77,16 @@ public class PokerRequestBean implements Serializable {
         this.showEstimate = showEstimate;
     }
 
+    public Collection<Long> getUsers() {
+        users = new ArrayList<>();
+        pokerViewBean.getSprint().getSprintUsers().forEach(su->users.add(su.getId()));
+        return users;
+    }
+
+    public void setUsers(Collection<Long> users) {
+        this.users = users;
+    }
+    
     private SprintVelocity calculateWinnignPoint() {
         Double sumVotes = 0.0;
         int countVotes = 0;
@@ -127,8 +149,8 @@ public class PokerRequestBean implements Serializable {
     public void receiveTaskSprintMessage() {
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            String jsonMessage = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("pokerMessage");
-            PokerMessage pokerMessage = mapper.readValue(jsonMessage, PokerMessage.class);
+            String jsonMessage = extContext.getRequestParameterMap().get("pokerMessage");
+            PokerMessage pokerMessage = mapper.readValue(jsonMessage.replace("\"{","{").replace("\\",""), PokerMessage.class);
             pokerViewBean.getPokerMessage().setIsVote(pokerMessage.getIsVote());
             pokerViewBean.getPokerMessage().setIsClean(pokerMessage.getIsClean());
             if (pokerMessage.getIsVote()) {
@@ -149,7 +171,7 @@ public class PokerRequestBean implements Serializable {
                 pokerViewBean.getPokerMessage().setShowEstimate(pokerMessage.getShowEstimate());
                 pokerViewBean.setIsVoted(Boolean.FALSE);
                 Task task = taskFacadeRemote.find(Long.parseLong(pokerMessage.getTaskCode()));
-                task.setUserEstimates(new ArrayList<UserEstimate>());
+                task.setUserEstimates(new ArrayList<>());
                 pokerViewBean.setTaskSelected(task);
                 pokerViewBean.getUserEstimate().setTask(task);
                 pokerViewBean.getUserEstimate().setPoints(null);
@@ -176,6 +198,8 @@ public class PokerRequestBean implements Serializable {
                     }
                 }
                 pokerViewBean.setTaskSelected(null);
+            } else if (pokerMessage.getIsLogin()) {
+                pokerViewBean.getSprint().getSprintUsers().forEach(su -> su.setIsLoged(loginAppBean.isUserLogged(su)));
             }
 
         } catch (IOException ex) {
@@ -193,8 +217,9 @@ public class PokerRequestBean implements Serializable {
             pokerViewBean.getPokerMessage().setIsVote(Boolean.FALSE);
             pokerViewBean.getPokerMessage().setIsTask(Boolean.TRUE);
             pokerViewBean.getPokerMessage().setIsClean(Boolean.FALSE);
+            pokerViewBean.getPokerMessage().setIsLogin(Boolean.FALSE);
             String jsonMessage = mapper.writeValueAsString(pokerViewBean.getPokerMessage());
-            eventBus.publish(CHANNEL + sprintCode + "/*", jsonMessage);
+            taskSprintMessageResource.getPush().send(jsonMessage, this.getUsers());
         } catch (JsonProcessingException ex) {
             Logger.getLogger(PokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -211,11 +236,12 @@ public class PokerRequestBean implements Serializable {
             pokerViewBean.getPokerMessage().setIsVote(Boolean.TRUE);
             pokerViewBean.getPokerMessage().setIsTask(Boolean.FALSE);
             pokerViewBean.getPokerMessage().setIsClean(Boolean.FALSE);
+            pokerViewBean.getPokerMessage().setIsLogin(Boolean.FALSE);
             pokerViewBean.getPokerMessage().getPokerVote().getSprintVelocity().setPoint(pokerViewBean.getUserEstimate().getPoints());
             pokerViewBean.getPokerMessage().getPokerVote().getSprintVelocity().setHours(pokerViewBean.getUserEstimate().getHours());
             pokerViewBean.getPokerMessage().getPokerVote().setSprintUser(pokerViewBean.getUserEstimate().getSprintUser().getId().toString());
-            String jsonMessage = mapper.writeValueAsString(pokerViewBean.getPokerMessage());
-            eventBus.publish(CHANNEL + sprintCode + "/*", jsonMessage);
+            String jsonMessage = mapper.writeValueAsString(pokerViewBean.getPokerMessage()); 
+            taskSprintMessageResource.getPush().send(jsonMessage, this.getUsers());            
         } catch (JsonProcessingException ex) {
             Logger.getLogger(PokerRequestBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -231,13 +257,12 @@ public class PokerRequestBean implements Serializable {
             pokerViewBean.getPokerMessage().setIsVote(Boolean.FALSE);
             pokerViewBean.getPokerMessage().setIsTask(Boolean.FALSE);
             pokerViewBean.getPokerMessage().setIsClean(Boolean.TRUE);
+            pokerViewBean.getPokerMessage().setIsLogin(Boolean.FALSE);
             String jsonMessage = mapper.writeValueAsString(pokerViewBean.getPokerMessage());
-            eventBus.publish(CHANNEL + sprintCode + "/*", jsonMessage);
+            taskSprintMessageResource.getPush().send(jsonMessage, this.getUsers());            
         } catch (UpdateException ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", ex.getMessage()));
         } catch (JsonProcessingException e) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo regsitrar el voto"));
         }
     }

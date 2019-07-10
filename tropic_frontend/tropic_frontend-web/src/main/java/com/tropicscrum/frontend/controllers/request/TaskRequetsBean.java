@@ -13,9 +13,9 @@ import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Milestone;
 import com.tropicscrum.backend.client.model.Sprint;
 import com.tropicscrum.backend.client.model.Task;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.view.TaskViewBean;
 import java.io.Serializable;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -33,9 +33,11 @@ public class TaskRequetsBean implements Serializable {
 
     @Inject 
     TaskViewBean taskViewBean; 
+
+    TaskFacadeRemote taskFacadeRemote = new ServiceLocatorDelegate<TaskFacadeRemote>().getService(TaskFacadeRemote.JNDI_REMOTE_NAME);
     
-    @EJB(lookup = TaskFacadeRemote.JNDI_REMOTE_NAME)
-    TaskFacadeRemote taskFacadeRemote;
+    @Inject
+    FacesContext context;
     
     /**
      * Creates a new instance of TaskRequetsBean
@@ -69,10 +71,8 @@ public class TaskRequetsBean implements Serializable {
             Task t = taskFacadeRemote.create(taskViewBean.getTask());
             taskViewBean.getMyTasks().add(t);
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Tarea creada satisfactoriamente"));
         } catch (Exception ex) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo registrar la Tarea"));
         }
     }
@@ -82,11 +82,9 @@ public class TaskRequetsBean implements Serializable {
             taskFacadeRemote.remove(taskViewBean.getTask());
             taskViewBean.getMyTasks().remove(taskViewBean.getTask());
             clean();
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Tarea eliminada satisfactoriamente"));
         } catch (Exception ex) {
             taskViewBean.getMyTasks().add(taskViewBean.getTask());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "No se pudo eliminar la Tarea"));
         }
     }
@@ -94,14 +92,11 @@ public class TaskRequetsBean implements Serializable {
     public void updateTask(ActionEvent actionEvent) {
         try {
             taskFacadeRemote.edit(taskViewBean.getTask());
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", "Tarea actualizada satisfactoriamente"));
         } catch (UpdateException e) {
            taskViewBean.setTask(taskFacadeRemote.find(taskViewBean.getTask().getId()));
-           FacesContext context = FacesContext.getCurrentInstance();
            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", e.getMessage()));
         } catch (Exception ex) {
-           FacesContext context = FacesContext.getCurrentInstance();
            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "", "No se pudo actualizar la Tarea")); 
         }
     }

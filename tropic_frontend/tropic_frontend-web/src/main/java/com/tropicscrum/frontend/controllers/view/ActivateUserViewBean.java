@@ -5,17 +5,19 @@
  */
 package com.tropicscrum.frontend.controllers.view;
 
+import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.io.Serializable;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import org.primefaces.util.Base64;
+import javax.inject.Inject;
+import java.util.Base64;
 
 /**
  *
@@ -25,19 +27,20 @@ import org.primefaces.util.Base64;
 @ViewScoped
 public class ActivateUserViewBean implements Serializable {
 
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    UsersFacadeRemote usersFacadeRemote;
+    UsersFacadeRemote usersFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
 
     private User user;
     private String message;
+    
+    @Inject
+    FacesContext context;
 
     @PostConstruct
     public void init() {
         try {
-            FacesContext context = FacesContext.getCurrentInstance();
             Map<String, String> parameterMap = (Map<String, String>) context.getExternalContext().getRequestParameterMap();
             String paramEncoded = parameterMap.get("id");
-            String param = new String(Base64.decode(paramEncoded));
+            String param = new String(Base64.getDecoder().decode(paramEncoded));
             user = usersFacadeRemote.find(Long.parseLong(param));
             if (!user.getConfirmed()) {
                 user.setConfirmed(Boolean.TRUE);
@@ -46,8 +49,7 @@ public class ActivateUserViewBean implements Serializable {
             } else {
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Informacion!", "Este usuario ya se encuentra activo"));
             }                                     
-        } catch (Exception e) {
-            FacesContext context = FacesContext.getCurrentInstance();
+        } catch (UpdateException | NumberFormatException e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Error al activar tu cuenta"));
         }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-app>
+    <module>
+        <web>
+            <web-uri>tropic_frontend-web-1.0-SNAPSHOT.war</web-uri>
+            <context-root>/tropic</context-root>
+        </web>
+    </module>
+</jboss-app>

@@ -20,7 +20,8 @@ import javax.ejb.Remote;
 
 @Remote
 public interface MilestoneFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/milestoneFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/milestoneFacadeRemote!com.tropicscrum.backend.client.facade.MilestoneFacadeRemote";
+    //public final String JNDI_REMOTE_NAME = "ejb/milestoneFacadeRemote";
     
     Milestone create(Milestone milestone);
 

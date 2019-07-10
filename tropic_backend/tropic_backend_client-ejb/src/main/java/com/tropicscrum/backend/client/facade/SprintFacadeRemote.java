@@ -18,7 +18,8 @@ import javax.ejb.Remote;
 
 @Remote
 public interface SprintFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/sprintFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/sprintFacadeRemote!com.tropicscrum.backend.client.facade.SprintFacadeRemote";
+    //public final String JNDI_REMOTE_NAME = "ejb/sprintFacadeRemote";
     
     Sprint create(Sprint sprint);
 

@@ -3,7 +3,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 template="/template/generalTemplate.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">    
@@ -13,7 +13,7 @@
     </ui:define>
 
     <ui:define name="content">
-        <p:remoteCommand name="updateTask" action="#{pokerRequestBean.receiveTaskSprintMessage}" update="estimateTask pokerRules sprintTasks"/>
+        <p:remoteCommand name="updateTask" action="#{pokerRequestBean.receiveTaskSprintMessage}" update="estimateTask pokerRules sprintTasks sprintTeam"/>
         <p:focus id="focusCode"/>
         <h:panelGroup id="pokerData" style="display: block; padding: 10px;">
             <h:panelGroup class="displayTableCell divUser">
@@ -27,14 +27,17 @@
                 <p:outputLabel value="#{pokerViewBean.sprint.project.code}" class="displayInlineBlock projectName"/>
                 <p:panel style="display: inline-block; width: 93%" class="boxInput" header="EQUIPO">
                     <p:dataGrid id="sprintTeam" var="sprintTeam" value="#{pokerViewBean.sprint.sprintUsers}" layout="grid" columns="3">      
-                        <p:panelGrid columns="2" class="contentTeam">
+                        <p:panelGrid columns="3" class="contentTeam #{sprintTeam.isLoged ? 'animateBorderActive' : ''}">
                             <p:column style="width: 20%">
                                 <p:graphicImage url="../#{sprintTeam.user.avatar}" width="45" height="45" style="display: block;" class="sprintListAvatar"/>
                             </p:column>
                             <p:column>
                                 <p:outputLabel value="#{sprintTeam.user.completeName}" class="pointHour userTeam userNameTeam"/>
                                 <p:outputLabel value="#{sprintTeam.role.name}" class="pointHour userTeam"/>
-                            </p:column>                                                     
+                            </p:column>  
+                            <p:column style="width: 10%" rendered="#{sprintTeam.isLoged}">
+                                <div class="logged"></div>
+                            </p:column>
                         </p:panelGrid>                        
                     </p:dataGrid>
                 </p:panel>
@@ -42,7 +45,9 @@
 
             <p:panel id="estimateTask" style="display: inline-block; width: 95%" class="boxInput #{not pokerViewBean.pokerMessage.showEstimate ? 'animateBackground' : ''}" header="TAREA A ESTIMAR">            
                 <h:panelGroup id="taskSelected" style="display: inline-block; width: 100%">
-                    <p:messages id="messages" class="boxInput" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+                    <p:messages id="messages" class="boxInput" showDetail="true" closable="true" globalOnly="true">
+                        <p:autoUpdate />
+                    </p:messages>
                     <p:outputLabel value="#{pokerViewBean.taskSelected.artifact.milestone.history.title}" class="historyTitle" rendered="#{not empty pokerViewBean.taskSelected}"/>
                     <p:outputLabel value="#{not empty pokerViewBean.taskSelected ? pokerViewBean.taskSelected.artifact.milestone.milestone : 'Esperando que el Scrum Master inicie la discusion de una tarea...'}" class="#{not empty pokerViewBean.taskSelected ? 'historyTitle milestoneTitle' : 'artifactDescription'}"/>
                     <p:outputLabel value="#{pokerViewBean.taskSelected.artifact.description}" class="artifactDescription" rendered="#{not empty pokerViewBean.taskSelected}"/> 
@@ -138,7 +143,7 @@
                                                 <f:setPropertyActionListener target="#{pokerRequestBean.showEstimate}" value="true"/>  
                                                 <f:setPropertyActionListener target="#{pokerViewBean.isVoted}" value="false"/>
                                                 <p:graphicImage url="#{resource['images:vote2.png']}" class="iconVote"/>
-                                            </p:commandLink>                                        
+                                            </p:commandLink>                                            
                                         </p:column>       
                                         <p:rowExpansion>
                                             <p:dataGrid id="task#{task.id}" var="votes" value="#{task.userEstimates}" layout="grid" columns="6">
@@ -158,11 +163,19 @@
             </p:panel>
 
         </h:panelGroup>
-        <p:socket onMessage="handleMessage" channel="/poker/#{pokerViewBean.sprint.id}/#{pokerViewBean.user.id}" autoConnect="true" widgetVar='subscriber'/>
+         
+        
         <script type="text/javascript">
-            function handleMessage(message) {
-                updateTask([{name: 'pokerMessage', value: JSON.stringify(message)}]);
+            
+            function socketListener(message, channel, event) {                       
+                console.log(message);
+                updateTask([{name: 'pokerMessage', value: message}]);
             }
+
         </script>
+        
+        <!--EL websocket debe ir definido despues del script para que reconozca la funcion llamada en onmessage-->
+        <f:websocket channel="poker" user="#{pokerViewBean.userEstimate.sprintUser.id}" onmessage="socketListener"/>       
+        
     </ui:define>
 </ui:composition>

@@ -12,9 +12,9 @@ import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.ProjectFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.Remote;
+import javax.inject.Inject;
 
 /**
  *
@@ -24,7 +24,7 @@ import javax.ejb.Remote;
 @Remote(ProjectFacadeRemote.class)
 public class ProjectBussinesFacade implements ProjectFacadeRemote {
 
-    @EJB
+    @Inject
     ProjectFacadeLocal projectFacadeLocal;
     
     @Override
@@ -79,18 +79,18 @@ public class ProjectBussinesFacade implements ProjectFacadeRemote {
     @Override
     public Collection<Project> findAllMine(User you) {
         Collection<Project> myProjects = projectFacadeLocal.findAllByUser(you);
-        for (Project p : myProjects) {
+        myProjects.forEach((p) -> {
             p.getCollaborators().size();
-        }
+        });
         return myProjects;
     }
 
     @Override
     public Collection<Project> findAllMyCollabs(User you) {
         Collection<Project> collabProjects = projectFacadeLocal.findAllByCollaborator(you);
-        for (Project p : collabProjects) {
+        collabProjects.forEach((p) -> {
             p.getCollaborators().size();
-        }
+        });
         return collabProjects;
     }
 }

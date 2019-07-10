@@ -20,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -40,6 +41,7 @@ public class SprintUser extends BasicAttributes {
     private Sprint sprint;
     private User user;    
     private Collection<Schedule> schedules;
+    private Boolean isLoged;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "color")
@@ -150,4 +152,19 @@ public class SprintUser extends BasicAttributes {
     public void setTaskProgresss(Collection<TaskProgress> taskProgresss) {
         this.taskProgresss = taskProgresss;
     }
+
+    @Transient
+    public Boolean getIsLoged() {
+        return isLoged;
+    }
+
+    public void setIsLoged(Boolean isLoged) {
+        this.isLoged = isLoged;
+    }
+
+    public SprintUser() {
+        this.isLoged = Boolean.FALSE;
+    }
+    
+    
 }

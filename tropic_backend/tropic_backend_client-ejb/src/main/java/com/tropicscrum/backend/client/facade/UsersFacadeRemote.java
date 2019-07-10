@@ -18,7 +18,8 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface UsersFacadeRemote extends ServiceVerifier {
-    public final String JNDI_REMOTE_NAME = "ejb/usersFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/usersFacadeRemote!com.tropicscrum.backend.client.facade.UsersFacadeRemote";
+    //public final String JNDI_REMOTE_NAME = "ejb/usersFacadeRemote";
     
     User create(User user);
 

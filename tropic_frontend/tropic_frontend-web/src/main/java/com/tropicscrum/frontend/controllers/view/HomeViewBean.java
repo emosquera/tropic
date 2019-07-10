@@ -7,12 +7,13 @@ package com.tropicscrum.frontend.controllers.view;
 
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -25,8 +26,10 @@ public class HomeViewBean implements Serializable {
 
     private User user;
 
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    private UsersFacadeRemote usersFacadeRemote;
+    private UsersFacadeRemote usersFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
+    
+    @Inject
+    ExternalContext extContext;
     
     public User getUser() {
         return user;
@@ -45,7 +48,7 @@ public class HomeViewBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         User userSession = (User) session.getAttribute("user");
         //Refresh User from BD
         user = usersFacadeRemote.find(userSession.getId());

@@ -14,20 +14,20 @@ import com.tropicscrum.backend.client.model.User;
 import com.tropicscrum.backend.persistence.exceptions.OldVersionException;
 import com.tropicscrum.backend.persistence.facade.SprintUserFacadeLocal;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
  * @author Edgar Mosquera
  */
-@Stateless(name = "sprinUserFacadeRemote", mappedName = SprintUserFacadeRemote.JNDI_REMOTE_NAME)
+@Stateless(name = "sprintUserFacadeRemote", mappedName = SprintUserFacadeRemote.JNDI_REMOTE_NAME)
 @Remote(SprintUserFacadeRemote.class)
 public class SprintUserBusinessFacade implements SprintUserFacadeRemote {
 
-    @EJB
+    @Inject
     SprintUserFacadeLocal sprintUserFacadeLocal;
     
     @Override

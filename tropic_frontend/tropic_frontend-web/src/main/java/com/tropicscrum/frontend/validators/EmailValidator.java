@@ -6,9 +6,9 @@
 package com.tropicscrum.frontend.validators;
 
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -30,9 +30,8 @@ public class EmailValidator implements Validator{
     
     private final Pattern pattern;
     private Matcher matcher;
-    
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    UsersFacadeRemote userFacadeRemote;
+
+    UsersFacadeRemote userFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
 
     public EmailValidator() {
         pattern = Pattern.compile(EMAIL_PATTERN);

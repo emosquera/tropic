@@ -7,16 +7,16 @@ package com.tropicscrum.frontend.controllers.email;
 
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.utils.RequestDomain;
 import java.io.Serializable;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
-import org.primefaces.util.Base64;
+import java.util.Base64;
 
 /**
  *
@@ -28,9 +28,8 @@ public class confirmEmail implements Serializable {
     
     private final RequestDomain requestDomain = new RequestDomain();
     private final FacesContext context = FacesContext.getCurrentInstance();
-    
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    UsersFacadeRemote usersFacadeRemote;
+
+    UsersFacadeRemote usersFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
     
     private User user;
     private String encodedId;
@@ -73,10 +72,10 @@ public class confirmEmail implements Serializable {
         ExternalContext extContext = context.getExternalContext();
         Map<String, String> parameterMap = (Map<String, String>) extContext.getRequestParameterMap();
         String paramEncoded = parameterMap.get("id");
-        String param = new String(Base64.decode(paramEncoded));        
+        String param = new String(Base64.getDecoder().decode(paramEncoded));        
         User myUser = usersFacadeRemote.find(Long.parseLong(param));            
         setUser(myUser);
-        setEncodedId(Base64.encodeToString(getUser().getId().toString().getBytes(), true));
+        setEncodedId(Base64.getEncoder().encodeToString(getUser().getId().toString().getBytes()));
     }
     
 }

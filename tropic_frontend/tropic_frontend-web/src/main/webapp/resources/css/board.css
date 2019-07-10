@@ -175,10 +175,9 @@ and open the template in the editor.
 }
 
 .controlTaskImage {
-    display: inline-block;
-    position: absolute;
-    margin-left: 108px;
-    margin-top: -8px;
+    display: block;
+    margin: auto;
+    text-align: center;
 }
 
 .controlTaskImage:hover {
@@ -186,14 +185,14 @@ and open the template in the editor.
 }
 
 .infoStatusTask {
-    display: inline-block;
-    position: absolute;
+    display: block;
+    position: relative;
     font-family: 'Dosis';
     font-size: 13px;
-    margin-left: 40px;
-    margin-top: -10px;
     border-radius: 3px;
     padding: 2px;    
+    text-align: center;
+    margin-bottom: 4px;
 }
 
 .infoStatusTaskPaused {
@@ -204,4 +203,20 @@ and open the template in the editor.
 .infoStatusTaskRunning {
     background-color: #4db6ac;
     color: #ffffff;
+}
+
+.panelTimeElapsed {
+    display: inline-block;
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 3px;
+}
+
+.avatarTimeElapsed {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.totalTimeElapsed {
+    font-weight: normal;
 }

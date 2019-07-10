@@ -5,29 +5,26 @@
  */
 package com.tropicscrum.frontend.push.resource;
 
-import com.tropicscrum.frontend.push.encoders.BoardMessageDecoder;
-import com.tropicscrum.frontend.push.encoders.BoardMessageEncoder;
-import javax.faces.application.FacesMessage;
-import org.primefaces.push.annotation.OnMessage;
-import org.primefaces.push.annotation.PathParam;
-import org.primefaces.push.annotation.PushEndpoint;
-import org.primefaces.push.annotation.Singleton;
+import java.io.Serializable;
+import javax.enterprise.context.ApplicationScoped;
+import javax.faces.push.Push;
+import javax.faces.push.PushContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  *
  * @author Edgar Mosquera
  */
-@PushEndpoint("/board/{sprint}/{userid}")
-@Singleton
-public class BoardMessageResource {
-    @PathParam("sprint")
-    private String sprint;
+@Named
+@ApplicationScoped
+public class BoardMessageResource implements Serializable {
 
-    @PathParam("userid")
-    private String userid;
+    @Inject
+    @Push(channel = "board")
+    private PushContext push;
 
-    @OnMessage(decoders = {BoardMessageDecoder.class}, encoders = {BoardMessageEncoder.class})
-    public FacesMessage onMessage(FacesMessage message) {
-        return message;
-    }
+    public PushContext getPush() {
+        return push;
+    }  
 }

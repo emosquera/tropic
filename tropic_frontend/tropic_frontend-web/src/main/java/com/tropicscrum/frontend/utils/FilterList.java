@@ -17,11 +17,9 @@ public class FilterList {
 
     public static <T> Collection<T> filter(Collection<T> col, Predicate<T> predicate) {
         Collection<T> result = new ArrayList<>();
-        for (T element : col) {
-            if (predicate.apply(element)) {
-                result.add(element);
-            }
-        }
+        col.stream().filter((element) -> (predicate.apply(element))).forEachOrdered((element) -> {
+            result.add(element);
+        });
         return result;
     }
 }

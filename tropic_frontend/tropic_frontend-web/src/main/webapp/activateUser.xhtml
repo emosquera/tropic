@@ -13,7 +13,9 @@
             <p>Hola #{activateUserViewBean.user.firstName} #{activateUserViewBean.user.lastName}</p>
             <br/>
             <p>#{activateUserViewBean.message}</p>
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true" />
+            <p:messages id="messages" showDetail="true" closable="true" globalOnly="true">
+                <p:autoUpdate />
+            </p:messages>
         </h:form>
     </body>
 </html>

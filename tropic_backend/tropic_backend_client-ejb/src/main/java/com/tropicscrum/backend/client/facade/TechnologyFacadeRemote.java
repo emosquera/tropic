@@ -16,7 +16,8 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface TechnologyFacadeRemote {
-    public final String JNDI_REMOTE_NAME = "ejb/technologyFacadeRemote";
+    public final String JNDI_REMOTE_NAME = "ejb:tropic_backend-ear-1.0-SNAPSHOT/tropic_backend_persistence-ejb-1.0-SNAPSHOT/technologyFacadeRemote!com.tropicscrum.backend.client.facade.TechnologyFacadeRemote";
+    //public final String JNDI_REMOTE_NAME = "ejb/technologyFacadeRemote";
     
     Technology create(Technology technology);
 

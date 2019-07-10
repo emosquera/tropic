@@ -8,9 +8,9 @@ package com.tropicscrum.web.service;
 import com.tropicscrum.backend.client.exceptions.UpdateException;
 import com.tropicscrum.backend.client.facade.TaskProgressFacadeRemote;
 import com.tropicscrum.backend.client.model.TaskProgress;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.util.ArrayList;
 import java.util.Collection;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,8 +24,7 @@ import javax.ws.rs.Produces;
 @Path("fixtime")
 public class FixTaskTime {
 
-    @EJB(lookup = TaskProgressFacadeRemote.JNDI_REMOTE_NAME)
-    TaskProgressFacadeRemote taskProgressFacadeRemote;
+    TaskProgressFacadeRemote taskProgressFacadeRemote = new ServiceLocatorDelegate<TaskProgressFacadeRemote>().getService(TaskProgressFacadeRemote.JNDI_REMOTE_NAME);
 
     @GET
     @Produces({"application/json; charset=UTF-8"})

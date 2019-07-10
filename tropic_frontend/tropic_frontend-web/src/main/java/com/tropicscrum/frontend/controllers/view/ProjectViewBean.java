@@ -10,14 +10,15 @@ import com.tropicscrum.backend.client.facade.ProjectFacadeRemote;
 import com.tropicscrum.backend.client.model.History;
 import com.tropicscrum.backend.client.model.Project;
 import com.tropicscrum.backend.client.model.User;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -35,12 +36,13 @@ public class ProjectViewBean implements Serializable {
     private Collection<Project> collabProyects;
     private Boolean modify = false;
     private Boolean delete = false;
-    
-    @EJB(lookup = ProjectFacadeRemote.JNDI_REMOTE_NAME)
-    ProjectFacadeRemote projectFacadeRemote;        
 
-    @EJB(lookup = HistoryFacadeRemote.JNDI_REMOTE_NAME)
-    HistoryFacadeRemote historyFacadeRemote;
+    ProjectFacadeRemote projectFacadeRemote = new ServiceLocatorDelegate<ProjectFacadeRemote>().getService(ProjectFacadeRemote.JNDI_REMOTE_NAME);        
+
+    HistoryFacadeRemote historyFacadeRemote = new ServiceLocatorDelegate<HistoryFacadeRemote>().getService(HistoryFacadeRemote.JNDI_REMOTE_NAME);
+    
+    @Inject
+    ExternalContext extContext;
     
     public Collection<Project> getMyProyects() {
         if (myProyects == null) {
@@ -123,7 +125,7 @@ public class ProjectViewBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+        HttpSession session = (HttpSession) extContext.getSession(false);
         user = (User) session.getAttribute("user");                       
         setMyProyects(projectFacadeRemote.findAllMine(user));    
         setCollabProyects(projectFacadeRemote.findAllMyCollabs(user));

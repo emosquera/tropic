@@ -7,6 +7,7 @@ package com.tropicscrum.frontend.controllers.request;
 
 import com.tropicscrum.backend.client.facade.UsersFacadeRemote;
 import com.tropicscrum.backend.client.utils.Md5Converter;
+import com.tropicscrum.base.facade.ServiceLocatorDelegate;
 import com.tropicscrum.frontend.controllers.view.RegisterViewBean;
 import com.tropicscrum.frontend.utils.RequestDomain;
 import java.io.File;
@@ -17,7 +18,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
-import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -25,7 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
-import org.primefaces.util.Base64;
+import java.util.Base64;
 
 
 /**
@@ -40,10 +40,11 @@ public class RegisterRequestBean implements Serializable {
 
     @Inject
     RegisterViewBean registerViewBean;
+
+    UsersFacadeRemote userFacadeRemote = new ServiceLocatorDelegate<UsersFacadeRemote>().getService(UsersFacadeRemote.JNDI_REMOTE_NAME);
     
-    
-    @EJB(lookup = UsersFacadeRemote.JNDI_REMOTE_NAME)
-    UsersFacadeRemote userFacadeRemote;
+    @Inject
+    FacesContext context;
     
     /**
      * Creates a new instance of RegisterRequestBean
@@ -68,14 +69,12 @@ public class RegisterRequestBean implements Serializable {
                 }
             }
             registerViewBean.setUser(userFacadeRemote.create(registerViewBean.getUser()));
-            String encodedId = Base64.encodeToString(registerViewBean.getUser().getId().toString().getBytes(), true);
+            String encodedId = Base64.getEncoder().encodeToString(registerViewBean.getUser().getId().toString().getBytes());
             RequestDomain requestDomain = new RequestDomain();
-            FacesContext context = FacesContext.getCurrentInstance();    
             InputStream input = new URL(requestDomain.getApplicationPath(context) + "/template/email/confirmEmail.xhtml?id=" + encodedId).openStream();
             String result = IOUtils.toString(input, StandardCharsets.UTF_8);
             userFacadeRemote.sendConfirmEmail(registerViewBean.getUser(), result);                            
         } catch (NoSuchAlgorithmException | IOException e) {
-            FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", "No se pudo registrar el usuario"));
         }
         

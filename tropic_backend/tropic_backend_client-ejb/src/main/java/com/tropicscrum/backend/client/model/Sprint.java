@@ -10,7 +10,6 @@ import com.tropicscrum.backend.client.utils.Fibonacci;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -154,9 +153,9 @@ public class Sprint extends BasicAttributes {
         if (sprintVelocitys == null) {
             sprintVelocitys = new Fibonacci().getSprintVelocitys();
         }
-        for (SprintVelocity sv : sprintVelocitys) {
+        sprintVelocitys.forEach((sv) -> {
             sv.setSprint(this);
-        }
+        });
         return sprintVelocitys;
     }
 
